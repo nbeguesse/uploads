@@ -5,20 +5,23 @@ hls.HomeView = Backbone.View.extend({
       'click button.login': '_login'
     },
     initialize:function(){
-        this.model.bind('reload', this._reload, this);
+        this.model.bind('reload', this._render, this);
         return this;
     },
     render:function (eventName) {
       var template = _.template($('#home').html());
-      if(hls.user.logged_in){
+      if(hls.logged_in()){
         template = _.template($('#user').html(),{user:hls.user});
       }
       $(this.el).html(template);
       return this;
     },
-    _reload:function(){
+    _render:function(){
+        // this.render(); //redraw HTML template
+        // $(this.el).trigger("create"); //trigger Jquery Mobile styling
         this.remove();
         app.changePage(new hls.HomeView({model:hls.user}));
+
     },
     _login:function(e){
         e.preventDefault();

@@ -35,6 +35,7 @@ hls.Model = Backbone.Model.extend({
 hls.Car = hls.Model.extend({
     initialize:function(){
         console.log('Creating Car:', this.attributes);
+        this.showUrl = hls.server+"/cars/"+this.attributes.id+".json"
     },
     description:function(){
         var parts = [this.attributes.year, this.attributes.make, this.attributes.model];
@@ -48,21 +49,20 @@ hls.UserModel = hls.Model.extend({
       first_name:null
      },
     initialize:function(){
-        this.logged_in = false;
         console.log('Creating User:', this.attributes);
-        this.bind('change',this._change, this)
+        this.bind('change:id',this._login_or_out, this)
 
         return this;
     },
-    _change:function(){
-      this.logged_in = true;
+    _login_or_out:function(){
       console.log('User: User changed');
-      if(!this.cars){
+      if(this.attributes.id != null){ //TODO: change this to attributes.id != null
         this.cars = new hls.CarList();
         this.cars.user = this;
         this.cars.bind('loaded', this._updateCarList, this);
         this.cars.fetch();
       }
+      //TODO: Put trigger reload here
     },
     _updateCarList:function(){
       console.log('User: Car List updated');

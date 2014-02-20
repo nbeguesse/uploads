@@ -41,10 +41,10 @@
               <input type="password" name="user_session[password]" placeholder="Password">
               <button class="login">Go</button>
             </form>
-            <ul data-role="listview" data-inset="true">
+            <!--<ul data-role="listview" data-inset="true">
                 <li><a href="#page1">Sign Up (coming soon)</a></li>
                 <li><a href="#page2">More Info (coming soon)</a></li>
-            </ul>
+            </ul>-->
         </div>
 
     </script>
@@ -112,7 +112,8 @@
     <script src="js/vendor/backbone.js"></script>
     <script>
       window.hls = {};
-      hls.server = "http://localhost:3000"
+      hls.server = "http://localhost:3000";
+
     </script>
     <script src="js/utilities.js"></script>
     <script src="js/models.js"></script>
@@ -120,6 +121,9 @@
     
     <script>
       hls.user = new hls.UserModel();
+      hls.logged_in = function(){
+        return hls.user.attributes.id != null;
+      }
     </script>
     <script src="js/main.js"></script>
   </head>
