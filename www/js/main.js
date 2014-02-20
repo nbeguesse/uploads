@@ -1,89 +1,24 @@
-window.hls = {};
-hls.user = null;
-
-hls.HlsModel = Backbone.Model.extend({
-    getUrl:function(url, options){
-      var model = this;
-      var options = options;
-      options || (options = {});
-      options.data || (options.data = {});
-      options.dataType || (options.dataType = "GET");
-      var success = options.success;
-      var error = options.error || this.defaultError;
-      // if (ss.user && ss.user.mobile){
-      //   options.data = addAccessToken(options.data)
-      // }
-      this.set({isLoadingUrl:true});
-      $.mobile.loading('show');
-      $.ajax({
-        type: options.dataType,
-        url: url,
-        data:options.data,
-        success:function(data){
-          model.set({isLoadingUrl:false});
-          $.mobile.loading('hide');
-            if(success){ 
-              success(data); 
-            }
-        },
-        dataType: "jsonp"
-      });
-    },
-    defaultError:function(){
-      alert('There was an error contacting the server. Please try again later.');
-    },
-});
-hls.Car = Backbone.Model.extend({
-    initialize:function(){
-        console.log('Creating Car:', this.attributes);
-    },
-    description:function(){
-        var parts = [this.attributes.year, this.attributes.make, this.attributes.model];
-        return parts.join(" ");
-    }
-});
-hls.UserModel = Backbone.Model.extend({
-    initialize:function(){
-        console.log('Creating User:', this.attributes);
-        this.cars = new hls.CarList( this.attributes.own_cars);
-        this.cars.user = this;
-        //TODO: Save User in local storage, then use to initialize hls.user
-    }
-});
-hls.UserSession = hls.HlsModel.extend({
-  url:"http://localhost:3000/user_sessions/create.json",
-  login:function(){
-    var data = $("#login-form").serialize();
-    this.getUrl(this.url,{
-        data:data,
-        success:function(data){
-          if(data.errors){
-            alert(data.errors[0]); //tell them why they can't login
-          } else {
-            hls.user = new hls.UserModel(data.user);
-            app.navigate("login",true);
-          }
-        }
-    });
-  },
-});
-
-
-
-hls.CarList = Backbone.Collection.extend({
-  model:hls.Car
-});
 
 
 hls.HomeView = Backbone.View.extend({
     events: {
       'click button.login': '_login'
     },
-    template:_.template($('#home').html()),
-
-    render:function (eventName) {
-        $(this.el).html(this.template());
+    initialize:function(){
+        this.model.bind('reload', this._reload, this);
         return this;
+    },
+    render:function (eventName) {
+      var template = _.template($('#home').html());
+      if(hls.user.logged_in){
+        template = _.template($('#user').html(),{user:hls.user});
+      }
+      $(this.el).html(template);
+      return this;
+    },
+    _reload:function(){
+        this.remove();
+        app.changePage(new hls.HomeView({model:hls.user}));
     },
     _login:function(e){
         e.preventDefault();
@@ -92,14 +27,7 @@ hls.HomeView = Backbone.View.extend({
         return;
     }
 });
-hls.UserView = Backbone.View.extend({
 
-    render:function (eventName) {
-        var template = _.template($('#user').html(),{user:this.model});
-        $(this.el).html(template);
-        return this;
-    }
-});
 hls.Page1View = Backbone.View.extend({
 
     template:_.template($('#page1').html()),
@@ -124,7 +52,7 @@ hls.AppRouter = Backbone.Router.extend({
 
     routes:{
         "":"home",
-        "login":"login",
+        "login":"home",
         "page1":"page1",
         "page2":"page2",
 
@@ -141,19 +69,8 @@ hls.AppRouter = Backbone.Router.extend({
 
     home:function () {
         console.log('#home');
-        if(hls.user){
-            this.changePage(new hls.UserView({model:hls.user}));
-        } else {
-            this.changePage(new hls.HomeView());
-        }
-    },
-    login:function () {
-        console.log('#login');
-        if(hls.user){
-            this.changePage(new hls.UserView({model:hls.user}));
-        } else {
-            this.changePage(new hls.HomeView());
-        }
+        this.changePage(new hls.HomeView({model:hls.user}));
+        
     },
     page1:function () {
         console.log('#page1');

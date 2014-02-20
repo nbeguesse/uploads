@@ -42,8 +42,8 @@
               <button class="login">Go</button>
             </form>
             <ul data-role="listview" data-inset="true">
-                <li><a href="#page1">Sign Up</a></li>
-                <li><a href="#page2">More Info</a></li>
+                <li><a href="#page1">Sign Up (coming soon)</a></li>
+                <li><a href="#page2">More Info (coming soon)</a></li>
             </ul>
         </div>
 
@@ -57,7 +57,7 @@
 
         <div data-role="content">
             <h3>Welcome <%= user.get('first_name') %>!</h3>
-            <button>Add A Car</button>
+            <button>Add A Car (coming soon)</button>
             <h3>My Inventory</h3>
             <ul data-role="listview" data-inset="true">
               <% _.each(user.cars.models, function(car) { %>
@@ -110,6 +110,17 @@
     <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>
     <script src="js/vendor/underscore-min.js"></script>
     <script src="js/vendor/backbone.js"></script>
+    <script>
+      window.hls = {};
+      hls.server = "http://localhost:3000"
+    </script>
+    <script src="js/utilities.js"></script>
+    <script src="js/models.js"></script>
+    <script src="js/collections.js"></script>
+    
+    <script>
+      hls.user = new hls.UserModel();
+    </script>
     <script src="js/main.js"></script>
   </head>
   <body>
