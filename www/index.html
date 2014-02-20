@@ -18,32 +18,54 @@
     under the License.
 -->
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
-        <title>Highlinesale.com Mobile App</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
+    <title>Highlinesale.com Mobile App</title>
 
 
-<script type="text/template" id="home">
+    <script type="text/template" id="home">
 
         <div data-role="header">
-            <h1>Backbone.js + jQuery Mobile</h1>
+            <h1>HighlineSale</h1>
         </div>
 
         <div data-role="content">
-            <h3>Application Template for using Backbone.js and jQuery Mobile.</h3>
-            <p>Backbone.js is used for code organization (Models, Views) and "routing".</p>
-            <p>jQuery Mobile is used for its mobile styles and widgets. The routing and navigation capabilities of jQuery Mobile are disbled to let Backbone.js handle these requirements.</p>
-            <p>This is the Home page. It was created dynamically using an underscore.js template.</p>
-            <p>Navigate to:</p>
+            <h3>Log In</h3>
+            <form id="login-form">
+              <input type="email" name="user_session[email]" placeholder="Email">
+              <input type="password" name="user_session[password]" placeholder="Password">
+              <button class="login">Go</button>
+            </form>
             <ul data-role="listview" data-inset="true">
-                <li><a href="#page1">Page 1</a></li>
-                <li><a href="#page2">Page 2</a></li>
+                <li><a href="#page1">Sign Up</a></li>
+                <li><a href="#page2">More Info</a></li>
             </ul>
+        </div>
+
+    </script>
+
+    <script type="text/template" id="user">
+
+        <div data-role="header">
+            <h1>HighlineSale</h1>
+        </div>
+
+        <div data-role="content">
+            <h3>Welcome <%= user.get('first_name') %>!</h3>
+            <button>Add A Car</button>
+            <h3>My Inventory</h3>
+            <ul data-role="listview" data-inset="true">
+              <% _.each(user.cars.models, function(car) { %>
+                <li><a href="#"><%=car.description()%></a></li>
+              <% });%>
+            </ul>
+            
+
         </div>
 
     </script>
@@ -89,8 +111,8 @@
     <script src="js/vendor/underscore-min.js"></script>
     <script src="js/vendor/backbone.js"></script>
     <script src="js/main.js"></script>
-    </head>
-    <body>
-        <script type="text/javascript" src="phonegap.js"></script>
-    </body>
+  </head>
+  <body>
+    <script type="text/javascript" src="phonegap.js"></script>
+  </body>
 </html>
