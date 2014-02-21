@@ -1,27 +1,34 @@
-
+hls.View = Backbone.View.extend({
+    _render:function(){
+         this.render(); //redraw HTML template
+         $(this.el).trigger("create"); //trigger Jquery Mobile styling
+    },
+});
 
 hls.HomeView = Backbone.View.extend({
     events: {
       'click button.login': '_login'
     },
     initialize:function(){
-        this.model.bind('reload', this._render, this);
+        this.model.bind('login', this._render, this);
         return this;
     },
     render:function (eventName) {
-      var template = _.template($('#home').html());
-      if(hls.logged_in()){
-        template = _.template($('#user').html(),{user:hls.user});
+      if(hls.user.logged_in()){
+        var template = _.template($('#user').html(),{user:hls.user});
+        $(this.el).html(template);
+        var carlistView = new hls.CarlistView({model: hls.user.cars });
+        $('.carlist-holder', this.el).append(carlistView.render().el);
+      } else {
+        var template = _.template($('#home').html());
+        $(this.el).html(template);
       }
-      $(this.el).html(template);
       return this;
     },
     _render:function(){
-        // this.render(); //redraw HTML template
-        // $(this.el).trigger("create"); //trigger Jquery Mobile styling
+        //force entire page to reload on login and logout
         this.remove();
-        app.changePage(new hls.HomeView({model:hls.user}));
-
+        app.changePage(new hls.HomeView({model:hls.user})); 
     },
     _login:function(e){
         e.preventDefault();
@@ -31,10 +38,20 @@ hls.HomeView = Backbone.View.extend({
     }
 });
 
+hls.CarlistView = hls.View.extend({
+    initialize:function(){
+        this.model.bind('loaded', this._render, this);
+        return this;
+    },
+    render:function (eventName) {
+      var template = _.template($('#carlist').html(),{cars:this.model});
+      $(this.el).html(template);
+      return this;
+    },
+});
+
 hls.Page1View = Backbone.View.extend({
-
     template:_.template($('#page1').html()),
-
     render:function (eventName) {
         $(this.el).html(this.template());
         return this;
@@ -52,7 +69,6 @@ hls.Page2View = Backbone.View.extend({
 });
 
 hls.AppRouter = Backbone.Router.extend({
-
     routes:{
         "":"home",
         "login":"home",
@@ -60,7 +76,6 @@ hls.AppRouter = Backbone.Router.extend({
         "page2":"page2",
 
     },
-
     initialize:function () {
         // Handle back button throughout the application
         $('.back').live('click', function(event) {
@@ -89,13 +104,7 @@ hls.AppRouter = Backbone.Router.extend({
         $(page.el).attr('data-role', 'page');
         page.render();
         $('body').append($(page.el));
-        var transition = $.mobile.defaultPageTransition;
-        // We don't want to slide the first page
-        if (this.firstPage) {
-            transition = 'none';
-            this.firstPage = false;
-        }
-        $.mobile.changePage($(page.el), {changeHash:false, transition: transition});
+        $.mobile.changePage($(page.el), {changeHash:false});
     }
 
 });

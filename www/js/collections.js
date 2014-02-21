@@ -55,7 +55,6 @@
   });
 hls.CarList = hls.Collection.extend({
   url: function(){
-  	if(!this.user) throw new Error('CarList: A user must be specified');
     return hls.server+"/users/"+this.user.id+"/cars.json"
   },
   model:hls.Car,

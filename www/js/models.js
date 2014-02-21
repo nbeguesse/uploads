@@ -49,26 +49,22 @@ hls.UserModel = hls.Model.extend({
       first_name:null
      },
     initialize:function(){
-        console.log('Creating User:', this.attributes);
-        this.bind('change:id',this._login_or_out, this)
-
+        this.cars = new hls.CarList();
+        this.cars.user = this;
+        this.bind('change:id',this._login_or_out, this);
         return this;
+    },
+    logged_in:function(){
+      return this.attributes.id != null;
     },
     _login_or_out:function(){
       console.log('User: User changed');
-      if(this.attributes.id != null){ //TODO: change this to attributes.id != null
-        this.cars = new hls.CarList();
-        this.cars.user = this;
-        this.cars.bind('loaded', this._updateCarList, this);
+      if(this.logged_in()){ 
         this.cars.fetch();
+        this.trigger('login'); //redraw homepage
       }
       //TODO: Put trigger reload here
     },
-    _updateCarList:function(){
-      console.log('User: Car List updated');
-      this.trigger('reload')
-
-    }
 });
 hls.UserSession = hls.Model.extend({
   url: hls.server+"/user_sessions/create.json",
@@ -78,8 +74,10 @@ hls.UserSession = hls.Model.extend({
         data:data,
         success:function(data){
           if(data.errors){
-            alert(data.errors[0]); //tell them why they can't login
+            //tell them why they can't login
+            alert(data.errors[0]); 
           } else {
+            //this will trigger login
             hls.user.set(data.user);
           }
         }

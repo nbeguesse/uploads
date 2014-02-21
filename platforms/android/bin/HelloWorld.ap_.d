@@ -27,8 +27,11 @@
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/css/index.css \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/css/jquery.mobile-1.4.1.min.css \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/img/logo.png \
+/Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/collections.js \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/jqm-config.js \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/main.js \
+/Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/models.js \
+/Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/utilities.js \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/vendor \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/vendor/backbone.js \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/vendor/jquery-1.10.2.min.js \

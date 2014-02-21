@@ -29,11 +29,9 @@
 
 
     <script type="text/template" id="home">
-
         <div data-role="header">
             <h1>HighlineSale</h1>
         </div>
-
         <div data-role="content">
             <h3>Log In</h3>
             <form id="login-form">
@@ -46,37 +44,34 @@
                 <li><a href="#page2">More Info (coming soon)</a></li>
             </ul>-->
         </div>
-
     </script>
 
     <script type="text/template" id="user">
-
         <div data-role="header">
             <h1>HighlineSale</h1>
         </div>
-
         <div data-role="content">
             <h3>Welcome <%= user.get('first_name') %>!</h3>
             <button>Add A Car (coming soon)</button>
             <h3>My Inventory</h3>
-            <ul data-role="listview" data-inset="true">
-              <% _.each(user.cars.models, function(car) { %>
-                <li><a href="#"><%=car.description()%></a></li>
-              <% });%>
-            </ul>
-            
-
+            <div class="carlist-holder"></div>
         </div>
+    </script>
 
+    <script type="text/template" id="carlist">
+        This is the carlist view
+        <ul data-role="listview" data-inset="true">
+          <% _.each(cars.models, function(car) { %>
+            <li><a href="#"><%=car.description()%></a></li>
+          <% });%>
+        </ul>
     </script>
 
     <script type="text/template" id="page1">
-
         <div data-role="header">
             <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
             <h1>Page 1</h1>
         </div>
-
         <div data-role="content">
             <p>This is Page 1. It was created dynamically using an underscore.js template.</p>
             <p>Navigate to:</p>
@@ -85,16 +80,13 @@
                 <li><a href="#page2">Page 2</a></li>
             </ul>
         </div>
-
     </script>
 
     <script type="text/template" id="page2">
-
         <div data-role="header">
             <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
             <h1>Page 2</h1>
         </div>
-
         <div data-role="content">
             <p>This is Page 2. It was created dynamically using an underscore.js template.</p>
             <p>Navigate to:</p>
@@ -103,7 +95,6 @@
                 <li><a href="#page1">Page 1</a></li>
             </ul>
         </div>
-
     </script>
     <script src="js/vendor/jquery-1.7.1.min.js"></script>
     <script src="js/jqm-config.js"></script>
@@ -121,11 +112,8 @@
     
     <script>
       hls.user = new hls.UserModel();
-      hls.logged_in = function(){
-        return hls.user.attributes.id != null;
-      }
     </script>
-    <script src="js/main.js"></script>
+    <script src="js/app.js"></script>
   </head>
   <body>
     <script type="text/javascript" src="phonegap.js"></script>
