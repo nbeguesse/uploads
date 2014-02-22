@@ -1,3 +1,4 @@
+
 hls.View = Backbone.View.extend({
     _render:function(){
          this.render(); //redraw HTML template
@@ -50,30 +51,39 @@ hls.CarlistView = hls.View.extend({
     },
 });
 
-hls.Page1View = Backbone.View.extend({
-    template:_.template($('#page1').html()),
+hls.CarView = Backbone.View.extend({
+    initialize:function(){
+        return this;
+    },    
     render:function (eventName) {
-        $(this.el).html(this.template());
+        var template = _.template($('#car').html(), {car:this.model})
+        $(this.el).html(template);
         return this;
     }
 });
 
-hls.Page2View = Backbone.View.extend({
-
-    template:_.template($('#page2').html()),
-
-    render:function (eventName) {
-        $(this.el).html(this.template());
+hls.WelcomeView = hls.View.extend({
+    events: {
+      'click button.take-picture': '_takePicture'
+    },
+    initialize:function(){
         return this;
+    },    
+    render:function (eventName) {
+        var template = _.template($('#welcome').html())
+        $(this.el).html(template);
+        return this;
+    },
+    _takePicture:function(){
+        hls.camera.takePicture();
     }
 });
 
 hls.AppRouter = Backbone.Router.extend({
     routes:{
-        "":"home",
+        "":"welcome",
         "login":"home",
-        "page1":"page1",
-        "page2":"page2",
+        "cars/:id":"cars",
 
     },
     initialize:function () {
@@ -90,16 +100,18 @@ hls.AppRouter = Backbone.Router.extend({
         this.changePage(new hls.HomeView({model:hls.user}));
         
     },
-    page1:function () {
-        console.log('#page1');
-        this.changePage(new hls.Page1View());
-    },
 
-    page2:function () {
-        console.log('#page2');
-        this.changePage(new hls.Page2View());
+    cars:function(id) {
+        console.log('#cars');
+        if(!hls.user.logged_in()){ this.home(); return; }
+        var car = hls.user.cars.get(id);
+        this.changePage(new hls.CarView({model:car}));
     },
-
+    welcome:function () {
+        console.log('#welcome');
+        this.changePage(new hls.WelcomeView({model:hls.user.curr_car}));
+        
+    },
     changePage:function (page) {
         $(page.el).attr('data-role', 'page');
         page.render();

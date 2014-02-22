@@ -32,15 +32,53 @@ hls.Model = Backbone.Model.extend({
       alert('There was an error contacting the server. Please try again later.');
     },
 });
+hls.Camera = hls.Model.extend({
+    initialize:function(){
+        return this;
+    },
+    takePicture:function(){
+      if(navigator.camera){
+        var api_type = "camera"
+        if(api_type == "camera"){
+            var options = { quality : 50,
+              destinationType : Camera.DestinationType.FILE_URI,
+              sourceType : Camera.PictureSourceType.CAMERA,
+              allowEdit : true,
+              encodingType: Camera.EncodingType.JPEG,
+              //targetWidth: 100,
+              //targetHeight: 100,
+              saveToPhotoAlbum: true }
+            navigator.camera.getPicture(this.cameraSuccess, this.cameraError, options)
+        }
+      } else {
+        alert('Camera API not supported');
+      }
+    },
+    cameraSuccess:function(data){
+      console.log('got picture '+data);
+      alert('Success: ' + data);
+      this.trigger('gotPicture');
+    },
+    cameraError:function(message){
+      alert('Failed because: ' + message);
+      this.trigger('failedPicture');
+    }
+});
 hls.Car = hls.Model.extend({
     initialize:function(){
         console.log('Creating Car:', this.attributes);
-        this.showUrl = hls.server+"/cars/"+this.attributes.id+".json"
+        this.showLink = "#cars/"+this.attributes.id
     },
     description:function(){
         var parts = [this.attributes.year, this.attributes.make, this.attributes.model];
         return parts.join(" ");
     }
+});
+hls.Image = hls.Model.extend({
+    initialize:function(){
+        console.log('Creating Image:', this.attributes);
+        this.showLink = "#images/"+this.attributes.id
+    },
 });
 hls.UserModel = hls.Model.extend({
      defaults:{
@@ -49,6 +87,7 @@ hls.UserModel = hls.Model.extend({
       first_name:null
      },
     initialize:function(){
+        this.curr_car = new hls.Car({id:0});
         this.cars = new hls.CarList();
         this.cars.user = this;
         this.bind('change:id',this._login_or_out, this);
@@ -63,7 +102,6 @@ hls.UserModel = hls.Model.extend({
         this.cars.fetch();
         this.trigger('login'); //redraw homepage
       }
-      //TODO: Put trigger reload here
     },
 });
 hls.UserSession = hls.Model.extend({
