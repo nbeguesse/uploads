@@ -8,12 +8,12 @@ hls.CarList = hls.Collection.extend({
   },
   model:hls.Car,
   update:function(){
-    _.each(this.models, function(car){
+    _.each(hls.user.cars.models, function(car){
       if(car.isNew()){
         car.save();
       }
     });
-    this.fetch({remove:false}); 
+    this.fetch({remove:false}); //TODO: Set remove to false
   },
 });
 hls.ImageList = hls.Collection.extend({

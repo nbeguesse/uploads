@@ -36,9 +36,7 @@ hls.Model = Backbone.Model.extend({
         
       });
     },
-    addAccessToken:function(data){
-      return _.extend(data,{single_access_token:hls.single_access_token});
-    },
+
 });
 hls.Camera = hls.Model.extend({
     initialize:function(){
@@ -92,8 +90,8 @@ hls.Car = hls.Model.extend({
       return response.car
     },
     toJSON: function() {
+      //add params[:car] before saving the car
       var out = hls.util.addAccessToken({ car: _.clone( this.attributes ) });
-      console.log('sending',out);
       return out;
     },
     description:function(){
