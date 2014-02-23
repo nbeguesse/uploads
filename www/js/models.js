@@ -1,4 +1,5 @@
 hls.CarList = null;
+hls.ImageList = null;
 
 hls.Model = Backbone.Model.extend({
     getUrl:function(url, options){
@@ -8,28 +9,35 @@ hls.Model = Backbone.Model.extend({
       options.data || (options.data = {});
       options.dataType || (options.dataType = "GET");
       var success = options.success;
-      var error = options.error || this.defaultError;
-      // if (ss.user && ss.user.mobile){
-      //   options.data = addAccessToken(options.data)
-      // }
-      this.set({isLoadingUrl:true});
-      $.mobile.loading('show');
+      //var error = options.error || this.defaultError;
+      if (hls.user.loggedIn()){
+        options.data = this.addAccessToken(options.data)
+      }
+      //this.set({isLoadingUrl:true});
+      $.mobile.loading('show'); //show jquery mobile spinner
       $.ajax({
-        type: options.dataType,
+        dataType: "json",
         url: url,
         data:options.data,
         success:function(data){
-          model.set({isLoadingUrl:false});
-          $.mobile.loading('hide');
+         // model.set({isLoadingUrl:false});
+          if(data.login_error){
+            console.log('Couldn\'t login.');
+          }
+          $.mobile.loading('hide'); //hide jquery mobile spinner
             if(success){ 
               success(data); 
             }
         },
-        dataType: "jsonp"
+        error:function(data){
+          alert('There was an error contacting the server. Please try again later.');
+          $.mobile.loading('hide');
+        }
+        
       });
     },
-    defaultError:function(){
-      alert('There was an error contacting the server. Please try again later.');
+    addAccessToken:function(data){
+      return _.extend(data,{single_access_token:hls.single_access_token});
     },
 });
 hls.Camera = hls.Model.extend({
@@ -38,69 +46,91 @@ hls.Camera = hls.Model.extend({
     },
     takePicture:function(){
       if(navigator.camera){
-        var api_type = "camera"
-        if(api_type == "camera"){
-            var options = { quality : 50,
-              destinationType : Camera.DestinationType.FILE_URI,
-              sourceType : Camera.PictureSourceType.CAMERA,
-              allowEdit : true,
-              encodingType: Camera.EncodingType.JPEG,
-              //targetWidth: 100,
-              //targetHeight: 100,
-              saveToPhotoAlbum: true }
-            navigator.camera.getPicture(this.cameraSuccess, this.cameraError, options)
-        }
+        var options = { quality : 50,
+          destinationType : Camera.DestinationType.FILE_URI,
+          sourceType : Camera.PictureSourceType.CAMERA,
+          allowEdit : true,
+          encodingType: Camera.EncodingType.JPEG,
+          //targetWidth: 640,
+          //targetHeight: 480,
+          saveToPhotoAlbum: true }
+        navigator.camera.getPicture(this.cameraSuccess, this.cameraError, options)
+    
       } else {
-        alert('Camera API not supported');
+        alert('Camera API not supported. Using sample picture.');
+        this.cameraSuccess("http://s3.amazonaws.com/highlinesale-beta-images/photos/67458/1104868/big.JPG?1393038514");
       }
     },
     cameraSuccess:function(data){
-      console.log('got picture '+data);
-      alert('Success: ' + data);
+      var image = new hls.Image({file_url:data});
+      hls.user.get_curr_car().images.add(image);
       this.trigger('gotPicture');
+
     },
     cameraError:function(message){
-      alert('Failed because: ' + message);
-      this.trigger('failedPicture');
+      //alert('Failed because: ' + message);
     }
 });
 hls.Car = hls.Model.extend({
+  defaults:{
+    year:1996,
+    make:'Nissan'
+  },
+    url: function(){
+      if(this.isNew()){
+        return hls.server+"/cars";
+      } else {
+        return hls.server+"/cars/"+this.get('id')+".json";
+      }
+    },
     initialize:function(){
-        console.log('Creating Car:', this.attributes);
-        this.showLink = "#cars/"+this.attributes.id
+        this.showLink = "#cars/"+this.get('id');
+        this.editLink = "#cars/"+this.get('id')+"/edit";
+        this.images = new hls.ImageList(this.get('image_files'));
+    },
+    parse: function(response){
+      return response.car
+    },
+    toJSON: function() {
+      var out = hls.util.addAccessToken({ car: _.clone( this.attributes ) });
+      console.log('sending',out);
+      return out;
     },
     description:function(){
-        var parts = [this.attributes.year, this.attributes.make, this.attributes.model];
-        return parts.join(" ");
+        var parts = [this.get('year'), this.get('make'), this.get('model')];
+        var out = parts.join(" ");
+        if(out=="  "){ out = "Your Car"}
+        return out;
     }
 });
 hls.Image = hls.Model.extend({
     initialize:function(){
         console.log('Creating Image:', this.attributes);
-        this.showLink = "#images/"+this.attributes.id
+        return this;
     },
 });
 hls.UserModel = hls.Model.extend({
-     defaults:{
-      id:null,
-      single_access_token:null,
-      first_name:null
-     },
     initialize:function(){
-        this.curr_car = new hls.Car({id:0});
-        this.cars = new hls.CarList();
+        this.cars = new hls.CarList(); 
         this.cars.user = this;
-        this.bind('change:id',this._login_or_out, this);
+        this.bind('change:id',this._loginOrOut, this);
         return this;
     },
-    logged_in:function(){
-      return this.attributes.id != null;
+    get_curr_car:function(){
+      if(!this.curr_car){
+        this.curr_car = new hls.Car(); //the current car to attach the images to
+        this.cars.add(this.curr_car);
+      }
+      return this.curr_car;
     },
-    _login_or_out:function(){
+    loggedIn:function(){
+      return !this.isNew();
+    },
+    _loginOrOut:function(){
       console.log('User: User changed');
-      if(this.logged_in()){ 
-        this.cars.fetch();
-        this.trigger('login'); //redraw homepage
+      if(this.loggedIn()){ 
+        this.cars.update();
+        this.trigger('login'); 
       }
     },
 });

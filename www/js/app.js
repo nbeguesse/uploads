@@ -1,5 +1,6 @@
 
 hls.View = Backbone.View.extend({
+    //The normal render function will not include the jQuery mobile styling 
     _render:function(){
          this.render(); //redraw HTML template
          $(this.el).trigger("create"); //trigger Jquery Mobile styling
@@ -15,7 +16,7 @@ hls.HomeView = Backbone.View.extend({
         return this;
     },
     render:function (eventName) {
-      if(hls.user.logged_in()){
+      if(hls.user.loggedIn()){
         var template = _.template($('#user').html(),{user:hls.user});
         $(this.el).html(template);
         var carlistView = new hls.CarlistView({model: hls.user.cars });
@@ -41,7 +42,7 @@ hls.HomeView = Backbone.View.extend({
 
 hls.CarlistView = hls.View.extend({
     initialize:function(){
-        this.model.bind('loaded', this._render, this);
+        this.model.bind('sync', this._render, this);
         return this;
     },
     render:function (eventName) {
@@ -75,7 +76,11 @@ hls.WelcomeView = hls.View.extend({
         return this;
     },
     _takePicture:function(){
+        hls.camera.bind('gotPicture', this._tookPicture, this);
         hls.camera.takePicture();
+    },
+    _tookPicture:function(){
+        app.navigate(hls.user.curr_car.showLink+"?image=successful", {trigger: true});
     }
 });
 
@@ -103,8 +108,8 @@ hls.AppRouter = Backbone.Router.extend({
 
     cars:function(id) {
         console.log('#cars');
-        if(!hls.user.logged_in()){ this.home(); return; }
-        var car = hls.user.cars.get(id);
+        var car = hls.user.cars.get(id); //find car in carlist
+        if(_.isUndefined(car)){ car = hls.user.get_curr_car();} //if it's not found, they need to login
         this.changePage(new hls.CarView({model:car}));
     },
     welcome:function () {
@@ -117,12 +122,15 @@ hls.AppRouter = Backbone.Router.extend({
         page.render();
         $('body').append($(page.el));
         $.mobile.changePage($(page.el), {changeHash:false});
+        if(currentPage){ currentPage.remove(); }
+        currentPage = page;
     }
 
 });
 
 $(document).ready(function () {
     console.log('document ready');
+    currentPage = null;
     app = new hls.AppRouter();
     Backbone.history.start();
 });
