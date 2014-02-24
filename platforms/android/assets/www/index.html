@@ -35,8 +35,8 @@
         </div>
         <div data-role="content">
             <h3>Want to Sell Your Car?</h3>
-            <button class="take-picture">Take a Picture of My Car</button>
-            <a href="#login" data-role="button">Manage My Cars</a>
+            <button class="take-picture">Take a Picture of Your Car</button>
+            <a href="#login" data-role="button">Manage Your Cars</a>
 
         </div>
     </script>
@@ -61,11 +61,12 @@
         </div>
         <div data-role="content">
             <h3>Log In</h3>
-            <form id="login-form">
+            <form id="login-form" action="<%=hls.server%>/user_sessions/create.json">
               <input type="email" name="user_session[email]" placeholder="Email">
               <input type="password" name="user_session[password]" placeholder="Password">
-              <button class="login">Go</button>
+              <a class="login" data-role="button">Go</a>
             </form>
+
         </div>
     </script>
 
@@ -89,7 +90,7 @@
           <% });%>
         </ul>
       <%} else {%>
-        <p>No vehicles yet.</p>
+        <p>No cars yet.</p>
       <%}%>
     </script>
 
@@ -100,12 +101,15 @@
         </div>
         <div data-role="content">
             <!-- Put Activate button here -->
-            <p>This is Page 1. It was created dynamically using an underscore.js template.</p>
-            <p>Navigate to:</p>
-            <ul data-role="listview" data-inset="true">
-                <li><a href="#">Home</a></li>
-                <li><a href="#page2">Page 2</a></li>
-            </ul>
+            <!-- Put take another picture button if params-image-success -->
+            <%if (car.images.length > 0){%>
+                <img src="<%=car.images.first().get('file_url')%>" style="width:200px">
+                <%if (car.images.length > 1){%>
+                    <p>(<%=car.images.length%> images)</p>
+                <% } %>
+            <%} else {%>
+                (No images yet.)
+            <%}%>
             <!-- Put Edit button here -->
         </div>
     </script>
@@ -128,10 +132,10 @@
     <script src="js/jqm-config.js"></script>
     <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>
     <script src="js/vendor/underscore-min.js"></script>
-    <script src="js/vendor/backbone.js"></script>
+    <script src="js/vendor/backbone-min.js"></script>
     <script>
       window.hls = {};
-      hls.server = "http://localhost:3000";
+      hls.server = "http://highlinesale.com"; //no trailing slash
 
     </script>
     <script src="js/utilities.js"></script>

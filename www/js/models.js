@@ -2,40 +2,7 @@ hls.CarList = null;
 hls.ImageList = null;
 
 hls.Model = Backbone.Model.extend({
-    getUrl:function(url, options){
-      var model = this;
-      var options = options;
-      options || (options = {});
-      options.data || (options.data = {});
-      options.dataType || (options.dataType = "GET");
-      var success = options.success;
-      //var error = options.error || this.defaultError;
-      if (hls.user.loggedIn()){
-        options.data = this.addAccessToken(options.data)
-      }
-      //this.set({isLoadingUrl:true});
-      $.mobile.loading('show'); //show jquery mobile spinner
-      $.ajax({
-        dataType: "json",
-        url: url,
-        data:options.data,
-        success:function(data){
-         // model.set({isLoadingUrl:false});
-          if(data.login_error){
-            console.log('Couldn\'t login.');
-          }
-          $.mobile.loading('hide'); //hide jquery mobile spinner
-            if(success){ 
-              success(data); 
-            }
-        },
-        error:function(data){
-          alert('There was an error contacting the server. Please try again later.');
-          $.mobile.loading('hide');
-        }
-        
-      });
-    },
+
 
 });
 hls.Camera = hls.Model.extend({
@@ -43,7 +10,8 @@ hls.Camera = hls.Model.extend({
         return this;
     },
     takePicture:function(){
-      if(navigator.camera){
+     // if(navigator.camera){
+      if(false){
         var options = { quality : 50,
           destinationType : Camera.DestinationType.FILE_URI,
           sourceType : Camera.PictureSourceType.CAMERA,
@@ -66,7 +34,7 @@ hls.Camera = hls.Model.extend({
 
     },
     cameraError:function(message){
-      //alert('Failed because: ' + message);
+      //fail silently!
     }
 });
 hls.Car = hls.Model.extend({
@@ -85,6 +53,8 @@ hls.Car = hls.Model.extend({
         this.showLink = "#cars/"+this.get('id');
         this.editLink = "#cars/"+this.get('id')+"/edit";
         this.images = new hls.ImageList(this.get('image_files'));
+        this.images.car = this;
+        this.bind('sync',this._syncImages, this);
     },
     parse: function(response){
       return response.car
@@ -99,13 +69,53 @@ hls.Car = hls.Model.extend({
         var out = parts.join(" ");
         if(out=="  "){ out = "Your Car"}
         return out;
-    }
+    },
+    _syncImages:function(){
+      console.log('in sync images');
+      _.each(this.images.models, function(image){
+        if(image.isNew()){
+          image.save();
+        }
+      });
+    },
 });
 hls.Image = hls.Model.extend({
+    url:function(){
+      return hls.server+"/cars/"+car.get('id')+"/upload_image.json"
+    },
     initialize:function(){
         console.log('Creating Image:', this.attributes);
         return this;
     },
+    save: function(){
+      console.log('in save');
+      if(FileTransfer){
+        var ft = new FileTransfer();
+        var imageURI = this.get('file_url');
+        var options = new FileUploadOptions();
+        options.fileKey="file";
+        options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+        options.mimeType="image/jpeg";
+
+        var params = {};
+        params.value1 = "single_access_token";
+        params.value2 = hls.user.get('single_access_token');
+
+        options.params = params;
+
+        ft.upload(imageURI, encodeURI(this.url), this.win, this.fail, options);
+      }
+    },
+    win:function(r){
+      console.log("Code = " + r.responseCode);
+      alert("Response = " + r.response);
+    },
+    fail:function(error){
+      alert("An error has occurred: Code = " + error.code);
+      console.log("upload error source " + error.source);
+      console.log("upload error target " + error.target);
+
+    }
 });
 hls.UserModel = hls.Model.extend({
     initialize:function(){
@@ -127,26 +137,8 @@ hls.UserModel = hls.Model.extend({
     _loginOrOut:function(){
       console.log('User: User changed');
       if(this.loggedIn()){ 
-        this.cars.update();
-        this.trigger('login'); 
+        this.cars.update(); 
       }
+      this.trigger('login');
     },
-});
-hls.UserSession = hls.Model.extend({
-  url: hls.server+"/user_sessions/create.json",
-  login:function(){
-    var data = $("#login-form").serialize();
-    this.getUrl(this.url,{
-        data:data,
-        success:function(data){
-          if(data.errors){
-            //tell them why they can't login
-            alert(data.errors[0]); 
-          } else {
-            //this will trigger login
-            hls.user.set(data.user);
-          }
-        }
-    });
-  },
 });

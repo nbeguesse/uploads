@@ -61,10 +61,10 @@
         </div>
         <div data-role="content">
             <h3>Log In</h3>
-            <form id="login-form">
+            <form id="login-form" action="<%=hls.server%>/user_sessions/create.json">
               <input type="email" name="user_session[email]" placeholder="Email">
               <input type="password" name="user_session[password]" placeholder="Password">
-              <button class="login">Go</button>
+              <a class="login" data-role="button">Go</a>
             </form>
 
         </div>
@@ -132,10 +132,10 @@
     <script src="js/jqm-config.js"></script>
     <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>
     <script src="js/vendor/underscore-min.js"></script>
-    <script src="js/vendor/backbone.js"></script>
+    <script src="js/vendor/backbone-min.js"></script>
     <script>
       window.hls = {};
-      hls.server = "http://localhost:3000";
+      hls.server = "http://highlinesale.com"; //no trailing slash
 
     </script>
     <script src="js/utilities.js"></script>

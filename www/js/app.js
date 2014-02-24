@@ -1,15 +1,56 @@
-
+$.support.cors = true;
 hls.View = Backbone.View.extend({
+    getUrl:function(url, options){
+      var options = options;
+      options || (options = {});
+      var success = options.success;
+      // if (hls.user.loggedIn()){
+      //   options.data = hls.util.addAccessToken(options.data)
+      // }
+      $.mobile.loading('show'); //show jquery mobile spinner
+      $.ajax({
+        dataType: "json",
+        url: url,
+        data:options.data,
+        success:function(data){
+          // if(data.login_error){
+          //   console.log('Couldn\'t login.');
+          // }
+          $.mobile.loading('hide'); //hide jquery mobile spinner
+            if(success){ 
+              success(data); 
+            }
+        },
+        
+      });
+    },
+    //generalized form submitting & validation method. 
+    //Define onFormSubmit for when it succeeds.
+    submitForm:function(form, onFormSubmit){
+      var data = form.serialize();
+      var success = onFormSubmit;
+      this.getUrl(form.attr('action'),{
+        data:data,
+        success:function(data){
+            if(data.errors){
+              alert(data.errors[0]); 
+            } else {
+              success(data);
+            }
+        }
+      });
+    },
     //The normal render function will not include the jQuery mobile styling 
+    //so use this specific callback instead of render()
     _render:function(){
          this.render(); //redraw HTML template
          $(this.el).trigger("create"); //trigger Jquery Mobile styling
     },
 });
 
-hls.HomeView = Backbone.View.extend({
+hls.HomeView = hls.View.extend({
     events: {
-      'click button.login': '_login'
+      'click a.login': '_login'
     },
     initialize:function(){
         this.model.bind('login', this._render, this);
@@ -17,11 +58,13 @@ hls.HomeView = Backbone.View.extend({
     },
     render:function (eventName) {
       if(hls.user.loggedIn()){
+        //logged-in view
         var template = _.template($('#user').html(),{user:hls.user});
         $(this.el).html(template);
         var carlistView = new hls.CarlistView({model: hls.user.cars });
         $('.carlist-holder', this.el).append(carlistView.render().el);
       } else {
+        //not-logged-in view
         var template = _.template($('#home').html());
         $(this.el).html(template);
       }
@@ -29,15 +72,13 @@ hls.HomeView = Backbone.View.extend({
     },
     _render:function(){
         //force entire page to reload on login and logout
-        this.remove();
         app.changePage(new hls.HomeView({model:hls.user})); 
     },
     _login:function(e){
-        e.preventDefault();
-        var session = new hls.UserSession();
-        session.login();
-        return;
-    }
+        this.submitForm($("#login-form"), function(data){
+             hls.user.set(data.user);
+        });
+    },
 });
 
 hls.CarlistView = hls.View.extend({
