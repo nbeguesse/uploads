@@ -92,50 +92,10 @@ hls.Image = hls.Model.extend({
     url:function(){
       return hls.server+"/cars/"+this.car.get('id')+"/upload_image.json"
     },
-    toJSON: function() {
-      //add params[:car] before saving the car
-      var out = hls.util.addAccessToken(_.clone(this.attributes));
-      return out;
-    },
     initialize:function(){
-        console.log('Creating Image:', this.attributes);
         return this;
     },
-    save2:function(){
-      //alert(this.get('file_url'));
 
-      window.resolveLocalFileSystemURI(this.get('file_url'), this.save, function(){
-            alert('Couldn\'t find image file.')
-          }
-          );
-
-
-    },
-    // save3:function(fileEntry){
-    //   var form = $("form#n");
-    //  // form.find('#file').val(fileEntry.fullPath);
-    //   var formData = new FormData(form[0]);
-    //   $.ajax({
-    //       url: this.url,  //Server script to process data
-    //       type: 'POST',
-    //       xhr: function() {  // Custom XMLHttpRequest
-    //           var myXhr = $.ajaxSettings.xhr();
-    //           if(myXhr.upload){ // Check if upload property exists
-    //              // myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
-    //           }
-    //           return myXhr;
-    //       },
-    //       //Ajax events
-    //       success: function(){alert('!')},
-    //       error: function(){alert(':(')},
-    //       // Form data
-    //       data: formData,
-    //       //Options to tell jQuery not to process data or worry about content-type.
-    //       cache: false,
-    //       contentType: false,
-    //       processData: false
-    //   });
-    // },
     save: function(fileEntry){
       console.log('in save');
       var imageURI = this.get('file_url');
@@ -147,23 +107,22 @@ hls.Image = hls.Model.extend({
             options.mimeType="image/jpeg";
 
             var params = {};
-            params.value1 = "test";
-            params.value2 = "param";
+            params.kind = "0";
 
             options.params = params;
 
             var ft = new FileTransfer();
-            ft.upload(imageURI, encodeURI("http://some.server.com/upload.php"), this.win, this.fail, options);
+            ft.upload(imageURI, encodeURI(this.url()), this.win, this.fail, options);
       }
     },
     win:function(r){
-      alert('success');
       alert("Response = " + r.response);
+      if(JSON.parse(r.response).error){
+        alert("Upload Error: " + JSON.parse(r.response).error);
+      }
     },
     fail:function(error){
-      alert("An error has occurred: Code = " + error.code);
-      console.log("upload error source " + error.source);
-      console.log("upload error target " + error.target);
+      //alert("An upload error has occurred: Code = " + error.code);
 
     }
 });

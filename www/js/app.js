@@ -69,7 +69,7 @@ hls.TestView = hls.View.extend({
   },
   initialize:function(){
     hls.user = new hls.UserModel({id:3905, single_access_token:"unRPEMrx5CthGMhLDSb"});
-    hls.user.curr_car = new hls.Car({id:67459, year:1996, make:"Nissan"});
+    hls.user.curr_car = new hls.Car({id:491080, year:1996, make:"Nissan"});
     //content://com.android.providers.media.documents/document/image%3A22 => content://media/external/images/media/22(thru gallery)
     hls.image = new hls.Image({file_url:"content://media/external/images/media/22"});
     hls.user.curr_car.images.add(hls.image);
