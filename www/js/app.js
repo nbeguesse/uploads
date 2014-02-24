@@ -1,3 +1,19 @@
+function checkIfFileExists(path){
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem){
+        fileSystem.root.getFile(path, { create: false }, fileExists, fileDoesNotExist);
+    }, getFSFail); //of requestFileSystem
+}
+function fileExists(fileEntry){
+    alert("File " + fileEntry.fullPath + " exists!");
+}
+function fileDoesNotExist(){
+    alert("file does not exist");
+}
+function getFSFail(evt) {
+    console.log(evt.target.error.code);
+}
+
+
 $.support.cors = true;
 hls.View = Backbone.View.extend({
     getUrl:function(url, options){
@@ -47,7 +63,24 @@ hls.View = Backbone.View.extend({
          $(this.el).trigger("create"); //trigger Jquery Mobile styling
     },
 });
-
+hls.TestView = hls.View.extend({
+  events: {
+    'click button':'_click'
+  },
+  initialize:function(){
+    hls.user = new hls.UserModel({id:3905, single_access_token:"unRPEMrx5CthGMhLDSb"});
+    hls.user.curr_car = new hls.Car({id:67459, year:1996, make:"Nissan"});
+    //content://com.android.providers.media.documents/document/image%3A22 => content://media/external/images/media/22(thru gallery)
+    hls.image = new hls.Image({file_url:"content://media/external/images/media/22"});
+    hls.user.curr_car.images.add(hls.image);
+  },
+  render:function(){
+    $(this.el).html('<form id="n"><input type="hidden" name="single_access_token" value="unRPEMrx5CthGMhLDSb"><input type="file" id="file" name="file" size="10" value=""/></form><button>Click here</button>')
+  },
+  _click:function(){
+    hls.image.save("m");
+  }
+});
 hls.HomeView = hls.View.extend({
     events: {
       'click a.login': '_login'
@@ -109,6 +142,7 @@ hls.WelcomeView = hls.View.extend({
       'click button.take-picture': '_takePicture'
     },
     initialize:function(){
+    //    hls.camera.bind('gotPicture', this._tookPicture, this); //this binding doesnt work in android emulator
         return this;
     },    
     render:function (eventName) {
@@ -117,17 +151,17 @@ hls.WelcomeView = hls.View.extend({
         return this;
     },
     _takePicture:function(){
-        hls.camera.bind('gotPicture', this._tookPicture, this);
+        
         hls.camera.takePicture();
     },
-    _tookPicture:function(){
-        app.navigate(hls.user.curr_car.showLink+"?image=successful", {trigger: true});
-    }
+    //_tookPicture:function(){
+    //    app.navigate(hls.user.curr_car.showLink+"?image=successful", {trigger: true});
+   // }
 });
 
 hls.AppRouter = Backbone.Router.extend({
     routes:{
-        "":"welcome",
+        "":"test",
         "login":"home",
         "cars/:id":"cars",
 
@@ -152,6 +186,11 @@ hls.AppRouter = Backbone.Router.extend({
         var car = hls.user.cars.get(id); //find car in carlist
         if(_.isUndefined(car)){ car = hls.user.get_curr_car();} //if it's not found, they need to login
         this.changePage(new hls.CarView({model:car}));
+    },
+    test:function () {
+        console.log('#welcome');
+        this.changePage(new hls.TestView({model:hls.user}));
+        
     },
     welcome:function () {
         console.log('#welcome');

@@ -19,6 +19,7 @@
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/icon.png \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/img \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/index.html \
+/Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/index_uploads.html \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/phonegap.js \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/plugins \
@@ -30,6 +31,7 @@
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/img/logo.png \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/app.js \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/collections.js \
+/Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/index.html \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/jqm-config.js \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/models.js \
 /Users/nicolebeguesse/Desktop/uploads/platforms/android/assets/www/js/utilities.js \

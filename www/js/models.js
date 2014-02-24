@@ -9,17 +9,18 @@ hls.Camera = hls.Model.extend({
     initialize:function(){
         return this;
     },
+    viewGallery:function(){
+
+    },
     takePicture:function(){
       if(navigator.camera){
-     // if(false){
+
         var options = { quality : 50,
           destinationType : Camera.DestinationType.FILE_URI,
-          sourceType : Camera.PictureSourceType.CAMERA,
+          sourceType : Camera.PictureSourceType.CAMERA, //CAMERA or PHOTOLIBRARY
           allowEdit : true,
           encodingType: Camera.EncodingType.JPEG,
-          //targetWidth: 640,
-          //targetHeight: 480,
-          saveToPhotoAlbum: true }
+          saveToPhotoAlbum: false }
         navigator.camera.getPicture(this.cameraSuccess, this.cameraError, options)
     
       } else {
@@ -28,9 +29,12 @@ hls.Camera = hls.Model.extend({
       }
     },
     cameraSuccess:function(data){
+      alert(data);
       var image = new hls.Image({file_url:data});
       hls.user.get_curr_car().images.add(image);
-      this.trigger('gotPicture');
+      //this.trigger('gotPicture'); //this binding doesn't work in android emulator
+      app.navigate(hls.user.curr_car.showLink+"?image=successful", {trigger: true});
+
 
     },
     cameraError:function(message){
@@ -50,8 +54,13 @@ hls.Car = hls.Model.extend({
       }
     },
     initialize:function(){
-        this.showLink = "#cars/"+this.get('id');
-        this.editLink = "#cars/"+this.get('id')+"/edit";
+      if(this.isNew()){
+        this.showLink = "#cars/0";
+        this.editLink = "#cars/0/edit";
+      } else {
+        this.showLink = "#cars/"+(this.get('id'));
+        this.editLink = "#cars/"+(this.get('id'))+"/edit";
+      }
         this.images = new hls.ImageList(this.get('image_files')); //TODO: put this in 2 steps
         this.images.car = this;
         this.bind('sync',this._syncImages, this);
@@ -81,33 +90,74 @@ hls.Car = hls.Model.extend({
 });
 hls.Image = hls.Model.extend({
     url:function(){
-      return hls.server+"/cars/"+car.get('id')+"/upload_image.json"
+      return hls.server+"/cars/"+this.car.get('id')+"/upload_image.json"
+    },
+    toJSON: function() {
+      //add params[:car] before saving the car
+      var out = hls.util.addAccessToken(_.clone(this.attributes));
+      return out;
     },
     initialize:function(){
         console.log('Creating Image:', this.attributes);
         return this;
     },
-    save: function(){
+    save2:function(){
+      //alert(this.get('file_url'));
+
+      window.resolveLocalFileSystemURI(this.get('file_url'), this.save, function(){
+            alert('Couldn\'t find image file.')
+          }
+          );
+
+
+    },
+    // save3:function(fileEntry){
+    //   var form = $("form#n");
+    //  // form.find('#file').val(fileEntry.fullPath);
+    //   var formData = new FormData(form[0]);
+    //   $.ajax({
+    //       url: this.url,  //Server script to process data
+    //       type: 'POST',
+    //       xhr: function() {  // Custom XMLHttpRequest
+    //           var myXhr = $.ajaxSettings.xhr();
+    //           if(myXhr.upload){ // Check if upload property exists
+    //              // myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+    //           }
+    //           return myXhr;
+    //       },
+    //       //Ajax events
+    //       success: function(){alert('!')},
+    //       error: function(){alert(':(')},
+    //       // Form data
+    //       data: formData,
+    //       //Options to tell jQuery not to process data or worry about content-type.
+    //       cache: false,
+    //       contentType: false,
+    //       processData: false
+    //   });
+    // },
+    save: function(fileEntry){
       console.log('in save');
-      if(FileTransfer){
-        var ft = new FileTransfer();
-        var imageURI = this.get('file_url');
-        var options = new FileUploadOptions();
-        options.fileKey="file";
-        options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-        options.mimeType="image/jpeg";
+      var imageURI = this.get('file_url');
+      if(navigator.camera){
+            alert(imageURI)
+            var options = new FileUploadOptions();
+            options.fileKey="file";
+            options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+            options.mimeType="image/jpeg";
 
-        var params = {};
-        params.value1 = "single_access_token";
-        params.value2 = hls.user.get('single_access_token');
+            var params = {};
+            params.value1 = "test";
+            params.value2 = "param";
 
-        options.params = params;
+            options.params = params;
 
-        ft.upload(imageURI, encodeURI(this.url), this.win, this.fail, options);
+            var ft = new FileTransfer();
+            ft.upload(imageURI, encodeURI("http://some.server.com/upload.php"), this.win, this.fail, options);
       }
     },
     win:function(r){
-      console.log("Code = " + r.responseCode);
+      alert('success');
       alert("Response = " + r.response);
     },
     fail:function(error){
