@@ -10,8 +10,8 @@ hls.Camera = hls.Model.extend({
         return this;
     },
     takePicture:function(){
-     // if(navigator.camera){
-      if(false){
+      if(navigator.camera){
+     // if(false){
         var options = { quality : 50,
           destinationType : Camera.DestinationType.FILE_URI,
           sourceType : Camera.PictureSourceType.CAMERA,
@@ -52,7 +52,7 @@ hls.Car = hls.Model.extend({
     initialize:function(){
         this.showLink = "#cars/"+this.get('id');
         this.editLink = "#cars/"+this.get('id')+"/edit";
-        this.images = new hls.ImageList(this.get('image_files'));
+        this.images = new hls.ImageList(this.get('image_files')); //TODO: put this in 2 steps
         this.images.car = this;
         this.bind('sync',this._syncImages, this);
     },
