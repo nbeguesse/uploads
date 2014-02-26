@@ -100,19 +100,19 @@ hls.Image = hls.Model.extend({
       console.log('in save');
       var imageURI = this.get('file_url');
       if(navigator.camera){
-            alert(imageURI)
-            var options = new FileUploadOptions();
-            options.fileKey="file";
-            options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-            options.mimeType="image/jpeg";
+        alert(imageURI)
+        var options = new FileUploadOptions();
+        options.fileKey="file";
+        options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+        options.mimeType="image/jpeg";
 
-            var params = {};
-            params.kind = "0";
+        var params = {};
+        params.kind = "0";
 
-            options.params = params;
+        options.params = params;
 
-            var ft = new FileTransfer();
-            ft.upload(imageURI, encodeURI(this.url()), this.win, this.fail, options);
+        var ft = new FileTransfer();
+        ft.upload(imageURI, encodeURI(this.url()), this.win, this.fail, options);
       }
     },
     win:function(r){

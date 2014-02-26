@@ -75,7 +75,7 @@ hls.TestView = hls.View.extend({
     hls.user.curr_car.images.add(hls.image);
   },
   render:function(){
-    $(this.el).html('<form id="n"><input type="hidden" name="single_access_token" value="unRPEMrx5CthGMhLDSb"><input type="file" id="file" name="file" size="10" value=""/></form><button>Click here</button>')
+    $(this.el).html('<button>Click here</button>')
   },
   _click:function(){
     hls.image.save("m");
@@ -161,7 +161,7 @@ hls.WelcomeView = hls.View.extend({
 
 hls.AppRouter = Backbone.Router.extend({
     routes:{
-        "":"test",
+        "":"welcome",
         "login":"home",
         "cars/:id":"cars",
 
