@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -18,137 +20,137 @@
     under the License.
 -->
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="format-detection" content="telephone=no" />
-    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-    <script type="text/javascript" src="phonegap.js"></script>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <script type="text/javascript" src="cordova.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
+        <title>Highlinesale.com Upload App</title>
 
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
-    <title>Highlinesale.com Upload App</title>
+        <script type="text/template" id="welcome">
+            <div data-role="header">
+                <h1>HighlineSale</h1>
+            </div>
+            <div data-role="content">
+                <h3>Want to Sell Your Car?</h3>
+                <button class="take-picture">Take a Picture of Your Car</button>
+                <a href="#login" data-role="button">Login</a>
 
-    <script type="text/template" id="welcome">
-        <div data-role="header">
-            <h1>HighlineSale</h1>
-        </div>
-        <div data-role="content">
-            <h3>Want to Sell Your Car?</h3>
-            <button class="take-picture">Take a Picture of Your Car</button>
-            <a href="#login" data-role="button">Manage Your Cars</a>
+            </div>
+        </script>
 
-        </div>
-    </script>
+        <script type="text/template" id="image-edit">
+            <div data-role="header">
+                <h1>HighlineSale</h1>
+            </div>
+            <div data-role="content">
+                <button>Take another Picture</button>
+                <button>Record a Video</button>
+                <button>Add a Picture from the Photo Gallery</button>
+                <button>Remove a Picture</button>
 
-    <script type="text/template" id="image-edit">
-        <div data-role="header">
-            <h1>HighlineSale</h1>
-        </div>
-        <div data-role="content">
-            <button>Take another Picture</button>
-            <button>Record a Video</button>
-            <button>Add a Picture from the Photo Gallery</button>
-            <button>Remove a Picture</button>
+            </div>
+        </script>
 
-        </div>
-    </script>
+        <script type="text/template" id="home">
+            <div data-role="header">
+                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
+                <h1>HighlineSale</h1>
+            </div>
+            <div data-role="content">
+                <h3>Log In</h3>
+                <form id="login-form" action="<%=hls.server%>/user_sessions/create.json">
+                  <input type="email" name="user_session[email]" placeholder="Email">
+                  <input type="password" name="user_session[password]" placeholder="Password">
+                  <a class="login" data-role="button">Go</a>
+                </form>
 
-    <script type="text/template" id="home">
-        <div data-role="header">
-            <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
-            <h1>HighlineSale</h1>
-        </div>
-        <div data-role="content">
-            <h3>Log In</h3>
-            <form id="login-form" action="<%=hls.server%>/user_sessions/create.json">
-              <input type="email" name="user_session[email]" placeholder="Email">
-              <input type="password" name="user_session[password]" placeholder="Password">
-              <a class="login" data-role="button">Go</a>
-            </form>
+            </div>
+        </script>
 
-        </div>
-    </script>
+        <script type="text/template" id="user">
+            <div data-role="header">
+                <h1>HighlineSale</h1>
+            </div>
+            <div data-role="content">
+                <h3>Welcome <%= user.get('first_name') %>!</h3>
+                <button>Add A Car (coming soon)</button>
+                <h3>My Inventory</h3>
+                <div class="carlist-holder"></div>
+            </div>
+        </script>
 
-    <script type="text/template" id="user">
-        <div data-role="header">
-            <h1>HighlineSale</h1>
-        </div>
-        <div data-role="content">
-            <h3>Welcome <%= user.get('first_name') %>!</h3>
-            <button>Add A Car (coming soon)</button>
-            <h3>My Inventory</h3>
-            <div class="carlist-holder"></div>
-        </div>
-    </script>
-
-    <script type="text/template" id="carlist">
-      <%if (cars.length > 0){%>
-        <ul data-role="listview" data-inset="true">
-          <% _.each(cars.models, function(car) { %>
-            <li><a href="<%=car.showLink%>"><%=car.description()%></a></li>
-          <% });%>
-        </ul>
-      <%} else {%>
-        <p>No cars yet.</p>
-      <%}%>
-    </script>
-
-    <script type="text/template" id="car">
-        <div data-role="header">
-            <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
-            <h1><%=car.description()%></h1>
-        </div>
-        <div data-role="content">
-            <!-- Put Activate button here -->
-            <!-- Put take another picture button if params-image-success -->
-            <%if (car.images.length > 0){%>
-                <img src="<%=car.images.first().get('file_url')%>" style="width:200px">
-                <%if (car.images.length > 1){%>
-                    <p>(<%=car.images.length%> images)</p>
-                <% } %>
-            <%} else {%>
-                (No images yet.)
-            <%}%>
-            <!-- Put Edit button here -->
-        </div>
-    </script>
-
-    <script type="text/template" id="page2">
-        <div data-role="header">
-            <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
-            <h1>Page 2</h1>
-        </div>
-        <div data-role="content">
-            <p>This is Page 2. It was created dynamically using an underscore.js template.</p>
-            <p>Navigate to:</p>
+        <script type="text/template" id="carlist">
+          <%if (cars.length > 0){%>
             <ul data-role="listview" data-inset="true">
-                <li><a href="#">Home</a></li>
-                <li><a href="#page1">Page 1</a></li>
+              <% _.each(cars.models, function(car) { %>
+                <li><a href="<%=car.showLink%>"><%=car.description()%></a></li>
+              <% });%>
             </ul>
-        </div>
-    </script>
-    <script src="js/vendor/jquery-1.7.1.min.js"></script>
-    <script src="js/jqm-config.js"></script>
-    <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>
-    <script src="js/vendor/underscore-min.js"></script>
-    <script src="js/vendor/backbone-min.js"></script>
-    <script>
-      window.hls = {};
-      hls.server = "http://highlinesale.com"; //no trailing slash
+          <%} else {%>
+            <p>No cars yet.</p>
+          <%}%>
+        </script>
 
-    </script>
-    <script src="js/utilities.js"></script>
-    <script src="js/models.js"></script>
-    <script src="js/collections.js"></script>
-    
-    <script>
-      hls.user = new hls.UserModel();
-      hls.camera = new hls.Camera();
-    </script>
-    <script src="js/app.js"></script>
-  </head>
-  <body>
-   
-  </body>
+        <script type="text/template" id="car">
+            <div data-role="header">
+                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
+                <h1><%=car.description()%></h1>
+            </div>
+            <div data-role="content">
+                <!-- Put Activate button here -->
+                <!-- Put take another picture button if params-image-success -->
+                <%if (car.images.length > 0){%>
+                    <img src="<%=car.images.first().get('file_url')%>" style="width:200px">
+                    <%if (car.images.length > 1){%>
+                        <p>(<%=car.images.length%> images)</p>
+                    <% } %>
+                <%} else {%>
+                    (No images yet.)
+                <%}%>
+                <!-- Put Edit button here -->
+            </div>
+        </script>
+
+        <script type="text/template" id="page2">
+            <div data-role="header">
+                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
+                <h1>Page 2</h1>
+            </div>
+            <div data-role="content">
+                <p>This is Page 2. It was created dynamically using an underscore.js template.</p>
+                <p>Navigate to:</p>
+                <ul data-role="listview" data-inset="true">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#page1">Page 1</a></li>
+                </ul>
+            </div>
+        </script>
+        <script src="js/vendor/jquery-1.7.1.min.js"></script>
+        <script src="js/jqm-config.js"></script>
+        <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>
+        <script src="js/vendor/underscore-min.js"></script>
+        <script src="js/vendor/backbone-min.js"></script>
+        <script>
+          window.hls = {};
+          hls.server = "http://highlinesale.com"; //no trailing slash
+
+        </script>
+        <script src="js/utilities.js"></script>
+        <script src="js/models.js"></script>
+        <script src="js/collections.js"></script>
+        
+        <script>
+          hls.user = new hls.UserModel();
+          hls.camera = new hls.Camera();
+        </script>
+        <script src="js/app.js"></script>
+    </head>
+    <body>
+
+    </body>
 </html>
