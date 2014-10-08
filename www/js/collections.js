@@ -13,7 +13,7 @@ hls.CarList = hls.Collection.extend({
         car.save();
       }
     });
-    this.fetch({remove:false});
+    //this.fetch({remove:false});
   },
 });
 hls.ImageList = hls.Collection.extend({

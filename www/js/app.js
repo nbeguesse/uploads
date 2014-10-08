@@ -1,21 +1,7 @@
-function checkIfFileExists(path){
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem){
-        fileSystem.root.getFile(path, { create: false }, fileExists, fileDoesNotExist);
-    }, getFSFail); //of requestFileSystem
-}
-function fileExists(fileEntry){
-    alert("File " + fileEntry.fullPath + " exists!");
-}
-function fileDoesNotExist(){
-    alert("file does not exist");
-}
-function getFSFail(evt) {
-    console.log(evt.target.error.code);
-}
-
 
 $.support.cors = true;
 hls.View = Backbone.View.extend({
+
     getUrl:function(url, options){
       var options = options;
       options || (options = {});
@@ -23,24 +9,26 @@ hls.View = Backbone.View.extend({
       // if (hls.user.loggedIn()){
       //   options.data = hls.util.addAccessToken(options.data)
       // }
-      $.mobile.loading('show'); //show jquery mobile spinner
+      $.mobile.loading( 'show', {text: '', textVisible: true, theme: 'z', html: ""}); //show jquery mobile spinner
       $.ajax({
-        dataType: "json",
+        dataType: "jsonp",
         url: url,
         data:options.data,
+        type:options.type || "POST",
         success:function(data){
-          // if(data.login_error){
-          //   console.log('Couldn\'t login.');
-          // }
           $.mobile.loading('hide'); //hide jquery mobile spinner
-            if(success){ 
-              success(data); 
-            }
+          console.log("Got data:",data);
+          if(data.car){
+            hls.user.cars.set([data.car], {remove:false});
+          }
+          if(success){ 
+            success(data); 
+          }
         },
         
       });
     },
-    //generalized form submitting & validation method. 
+    //generalized form submitting & validation method.
     //Define onFormSubmit for when it succeeds.
     submitForm:function(form, onFormSubmit){
       var data = form.serialize();
@@ -49,13 +37,21 @@ hls.View = Backbone.View.extend({
         data:data,
         success:function(data){
             if(data.errors){
-              alert(data.errors[0]); 
+              alert(data.errors);
             } else {
               success(data);
             }
         }
       });
     },
+    // //call back for background form submission. Will throw away any results
+    // _submit:function(e){
+    //   var form = $(e.currentTarget);
+    //    this.submitForm(form, function(data){
+    //      console.log('Got data:',data); //success function
+    //    });
+    //   return false;
+    // },
     //The normal render function will not include the jQuery mobile styling 
     //so use this specific callback instead of render()
     _render:function(){
@@ -63,86 +59,102 @@ hls.View = Backbone.View.extend({
          $(this.el).trigger("create"); //trigger Jquery Mobile styling
     },
 });
-hls.TestView = hls.View.extend({
-  events: {
-    'click button':'_click'
-  },
-  initialize:function(){
-    hls.user = new hls.UserModel({id:3905, single_access_token:"unRPEMrx5CthGMhLDSb"});
-    hls.user.curr_car = new hls.Car({id:491080, year:1996, make:"Nissan"});
-    //content://com.android.providers.media.documents/document/image%3A22 => content://media/external/images/media/22(thru gallery)
-    hls.image = new hls.Image({file_url:"content://media/external/images/media/22"});
-    hls.user.curr_car.images.add(hls.image);
-  },
-  render:function(){
-    $(this.el).html('<button>Click here</button>')
-  },
-  _click:function(){
-    hls.image.save("m");
-  }
+
+hls.CarView = hls.View.extend({
+    render:function (eventName) {
+        //logged-in view
+        console.log('in carview render')
+      var template = _.template($('#car').html(),{car:this.model});
+      $(this.el).html(template);
+      //Cloudprint stuff
+      var gadget = new cloudprint.Gadget();
+      gadget.setPrintButton($(this.el).find("#print_button_container")[0]); // div id to contain the button
+      gadget.setPrintDocument("url", "Window Sticker", "https://www.google.com/landing/cloudprint/testpage.pdf");
+      return this;
+    },
 });
+
 hls.HomeView = hls.View.extend({
-    events: {
-      'click a.login': '_login'
-    },
-    initialize:function(){
-        this.model.bind('login', this._render, this);
-        return this;
-    },
     render:function (eventName) {
       if(hls.user.loggedIn()){
         //logged-in view
         var template = _.template($('#user').html(),{user:hls.user});
         $(this.el).html(template);
-        var carlistView = new hls.CarlistView({model: hls.user.cars });
-        $('.carlist-holder', this.el).append(carlistView.render().el);
-      } else {
-        //not-logged-in view
-        var template = _.template($('#home').html());
-        $(this.el).html(template);
       }
       return this;
     },
-    _render:function(){
-        //force entire page to reload on login and logout
-        app.changePage(new hls.HomeView({model:hls.user})); 
-    },
-    _login:function(e){
-        this.submitForm($("#login-form"), function(data){
-             hls.user.set(data.user);
-        });
-    },
 });
 
-hls.CarlistView = hls.View.extend({
+hls.SelectView = hls.View.extend({
+
     initialize:function(){
-        this.model.bind('sync', this._render, this);
-        return this;
-    },
-    render:function (eventName) {
-      var template = _.template($('#carlist').html(),{cars:this.model});
-      $(this.el).html(template);
+      var car = this.model
+      this.array = [];
+      if (_.isNull(car.get('year'))) {
+        this.array = [["1994","1994"],["1995","1995"],["1996","1996"]];
+      } 
+      this.url = "#select/year/"
+      if(!_.isNull(car.get('year'))) {this.url = this.url +car.get("year") + "/make/"}
+      if(!_.isNull(car.get('make'))) {this.url = this.url +car.get("make") + "/model/"}
+      if(!_.isNull(car.get('model'))) {this.url = this.url +car.get("model") + "/style/"}
       return this;
     },
+    render:function (eventName) {
+        var template = _.template($('#selector').html(), {array: this.array, url : this.url});
+        $(this.el).html(template);
+        if(_.isEmpty(this.array)){
+          console.log('emptyArray');
+          var selectView = this;
+          this.getUrl(hls.server+"/cars/chrome_select",{
+            data:{
+              year:this.model.get('year'),
+              make_id:this.model.get('make') || "",
+              model_id:this.model.get('model') || ""
+            },
+            success:function(data){
+                if(data.errors){
+                  alert(data.errors);
+                } else {
+                  selectView.array = data;
+                  selectView._render(); //redraw HTML template
+                }
+            }
+          });
+      }
+        return this;
+    },
+
 });
 
-hls.CarView = Backbone.View.extend({
-    initialize:function(){
-        return this;
-    },    
+hls.VinView = hls.View.extend({
+    events: {
+      'submit form': '_createCar',      
+    },  
     render:function (eventName) {
-        var template = _.template($('#car').html(), {car:this.model})
+        var template = _.template($('#vin').html())
         $(this.el).html(template);
         return this;
-    }
+    },
+    _createCar:function(e){
+      var form = $(e.currentTarget);
+       this.submitForm(form, function(data){
+         if(data && data.car){
+         //car data is automatically synced in getURL 
+          app.navigate(hls.user.cars.get(data.car.id).showLink, true);
+          //redirect to car page!!
+         }
+       });
+       return false;
+    },
 });
+
 
 hls.WelcomeView = hls.View.extend({
     events: {
-      'click button.take-picture': '_takePicture'
+      'submit form': '_login',
+      'click .scan-vin': '_scan',
     },
     initialize:function(){
-    //    hls.camera.bind('gotPicture', this._tookPicture, this); //this binding doesnt work in android emulator
         return this;
     },    
     render:function (eventName) {
@@ -150,51 +162,79 @@ hls.WelcomeView = hls.View.extend({
         $(this.el).html(template);
         return this;
     },
-    _takePicture:function(){
-        
-        hls.camera.takePicture();
+    _scan:function(){
+      hls.camera.scanVin({success:function(vin){ 
+        //on successful vin scan...
+        app.navigate("#vin",{trigger:true}); //go to manual vin entry page
+        $("#car_vin").val(vin); //fill in the vin
+        $("#vin-form").submit();
+      } });
     },
-    //_tookPicture:function(){
-    //    app.navigate(hls.user.curr_car.showLink+"?image=successful", {trigger: true});
-   // }
+    _login:function(e){
+        this.submitForm($(e.currentTarget), function(data){
+            hls.user.set(data.user);
+            hls.user.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary cars
+            //we don't need to upload temp cars since that happens as they're created
+            app.changePage(new hls.HomeView({model:hls.user})); 
+        });
+        return false;
+    },
 });
 
 hls.AppRouter = Backbone.Router.extend({
     routes:{
         "":"welcome",
-        "login":"home",
-        "cars/:id":"cars",
+        "login":"welcome",
+        "vin":"vin",
+         "cars/:id":"cars",
+         "select":"selectYear",
+         "select/year/:year":"selectMake",
+         "select/year/:year/make/:make":"selectModel",
+         "select/year/:year/make/:make/model/:model":"selectStyle",
 
     },
     initialize:function () {
-        // Handle back button throughout the application
+        // Handle back button img throughout the application
         $('.back').live('click', function(event) {
             window.history.back();
             return false;
         });
         this.firstPage = true;
+        this.currentPage = null;
     },
 
-    home:function () {
-        console.log('#home');
-        this.changePage(new hls.HomeView({model:hls.user}));
+    login:function () {
+      this.changePage(new hls.HomeView({model:hls.user}));
         
     },
 
+
     cars:function(id) {
-        console.log('#cars');
+        
         var car = hls.user.cars.get(id); //find car in carlist
+        console.log('#cars', car);
         if(_.isUndefined(car)){ car = hls.user.get_curr_car();} //if it's not found, they need to login
         this.changePage(new hls.CarView({model:car}));
     },
-    test:function () {
-        console.log('#welcome');
-        this.changePage(new hls.TestView({model:hls.user}));
-        
+
+    selectYear:function(){
+      this.changePage(new hls.SelectView({model:new hls.Car()}));
+    },
+    selectMake:function(year){
+      this.changePage(new hls.SelectView({model:new hls.Car({year:year})}));
+    },
+    selectModel:function(year, make){
+      this.changePage(new hls.SelectView({model:new hls.Car({year:year, make:make})}));
+    },
+    selectStyle:function(year, make, model){
+      this.changePage(new hls.SelectView({model:new hls.Car({year:year, make:make, model:model})}));
+    },
+    vin:function(){
+      this.changePage(new hls.VinView({}));
     },
     welcome:function () {
         console.log('#welcome');
-        this.changePage(new hls.WelcomeView({model:hls.user.curr_car}));
+        this.changePage(new hls.WelcomeView());
         
     },
     changePage:function (page) {
@@ -202,15 +242,19 @@ hls.AppRouter = Backbone.Router.extend({
         page.render();
         $('body').append($(page.el));
         $.mobile.changePage($(page.el), {changeHash:false});
-        if(currentPage){ currentPage.remove(); }
-        currentPage = page;
+        if(this.currentPage){ this.currentPage.remove(); }
+        this.currentPage = page;
     }
 
 });
 
 $(document).ready(function () {
-    console.log('document ready');
-    currentPage = null;
+    hls.user = new hls.UserModel();
+    hls.camera = new hls.Camera();
     app = new hls.AppRouter();
     Backbone.history.start();
+    //set the phone's backbutton so it always goes to the previous page
+    document.addEventListener( "backbutton", function(){ window.history.back(); }, false );
+    document.addEventListener("menubutton", function(){ console.log('menu clicked'); }, false);
 });
+
