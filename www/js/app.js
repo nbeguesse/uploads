@@ -6,7 +6,7 @@ hls.View = Backbone.View.extend({
       var options = options;
       options || (options = {});
       var success = options.success;
-      // if (hls.user.loggedIn()){
+      // if (hls.user.loggedIn()){ //TODO test adding cars after you're logged in
       //   options.data = hls.util.addAccessToken(options.data)
       // }
       $.mobile.loading( 'show', {text: '', textVisible: true, theme: 'z', html: ""}); //show jquery mobile spinner
@@ -14,7 +14,7 @@ hls.View = Backbone.View.extend({
         dataType: "jsonp",
         url: url,
         data:options.data,
-        //type:options.type || "POST", //JSONP always GET!
+        //type:options.type, //JSONP always GET!
         success:function(data){
           $.mobile.loading('hide'); //hide jquery mobile spinner
           console.log("Got data:",data);
@@ -50,12 +50,13 @@ hls.View = Backbone.View.extend({
          this.render(); //redraw HTML template
          $(this.el).trigger("create"); //trigger Jquery Mobile styling
     },
+    onRemove:function(){
+    },
 });
 
 hls.CarView = hls.View.extend({
     render:function (eventName) {
         //logged-in view
-        console.log('in carview render')
       var template = _.template($('#car').html(),{car:this.model});
       $(this.el).html(template);
       //Cloudprint stuff
@@ -66,14 +67,50 @@ hls.CarView = hls.View.extend({
     },
 });
 
-hls.HomeView = hls.View.extend({
+hls.CarListView = hls.View.extend({
+    events: {
+      'click .split-view-button':'_showCar',
+    },
+    initialize:function(){
+      this.splitView = null;
+      $(window).bind('orientationchange', this._orientationHandler);
+      $(window).bind('throttledresize', this._orientationHandler);
+      return this;
+    },
+    showCar:function(carId){
+      var car = hls.user.cars.get(carId);
+      var page = new hls.CarView({model:car});
+      page.render();
+      $(this.el).find(".ui-block-b").html("").append($(page.el).find("#content").html());
+      $(this.el).trigger("create"); 
+    },
+    onRemove:function(){
+      $(window).unbind('throttledresize');
+      $(window).unbind('orientationchange');
+    },
     render:function (eventName) {
+      var splitView = hls.util.shouldSplitView({}); //returns true if split-screen
+      //TODO: Put not logged in view in router instead of here
       if(hls.user.loggedIn()){
-        //logged-in view
-        var template = _.template($('#user').html(),{user:hls.user});
+        var template = _.template($('#carlist').html(),{user:hls.user, splitView:splitView});
+        $(this.el).html(template);
+      } else {
+        var template = _.template($('#not-logged-in').html(),{});
         $(this.el).html(template);
       }
+      this.splitView = splitView; //save it so we know when to rerender
       return this;
+    },
+    _orientationHandler:function(event){
+       var page = app.currentPage;
+      if (hls.util.shouldSplitView(event) != page.splitView){
+        page._render(); //change splitview dynamically
+      }
+
+    },
+    _showCar:function(e){
+      var carId = $(e.target).attr("data-car-id");
+      this.showCar(carId);
     },
 });
 
@@ -81,9 +118,8 @@ hls.LoginView = hls.View.extend({
     events: {
       'submit form': '_login',
     },
-  
     render:function (eventName) {
-        var template = _.template($('#login').html())
+        var template = _.template($('#login').html());
         $(this.el).html(template);
         return this;
     },
@@ -215,25 +251,35 @@ hls.AppRouter = Backbone.Router.extend({
             window.history.back();
             return false;
         });
-        this.firstPage = true;
+        //TODO See if you can move menu button up here.
         this.currentPage = null;
     },
 
     login:function () {
-      this.changePage(new hls.LoginView({model:hls.user}));
+      this.changePage(new hls.LoginView());
         
     },
     carsList:function(){
-      this.changePage(new hls.HomeView({model:hls.user}));
+      this.changePage(new hls.CarListView({model:hls.user}));
     },
 
 
     cars:function(id) {
-        
         var car = hls.user.cars.get(id); //find car in carlist
-        console.log('#cars', car);
-        if(_.isUndefined(car)){ car = hls.user.get_curr_car();} //if it's not found, they need to login
+
+        //if it's not found, they need to login
+        if(_.isUndefined(car)){ 
+          this.changePage(new hls.LoginView());
+          return;
+        } 
+
         this.changePage(new hls.CarView({model:car}));
+        //TODO
+        //if hls.util.shouldsplitview
+        //var page = new hls.CarListView()
+        //this.changePage(page)
+        //page.showCar(id)
+        //also highlight the selected car
     },
 
     selectYear:function(){
@@ -267,16 +313,26 @@ hls.AppRouter = Backbone.Router.extend({
         var menuTemplate = _.template($("#menu").html());
         $(page.el).find("div[data-role=header]").prepend(menuTemplate);
         $(page.el).find(".menubutton").click(function(){
-          $(".slicknav_hidden").toggle();
+          $(".slicknav_hidden").toggle(); //show/hide the menu
         });
         //append to page and finish up
         $('body').append($(page.el));
         $.mobile.changePage($(page.el), {changeHash:false});
-        if(this.currentPage){ this.currentPage.remove(); }
+        if(this.currentPage){ 
+          this.currentPage.onRemove();
+          this.currentPage.remove(); 
+        }
         this.currentPage = page;
+    },
+    checkLoggedIn:function(){
+      if(hls.user.loggedIn()){ return true; }
+      this.changePage(new hls.LoginView());
+      return false;
     }
 
 });
+
+
 
 $(document).ready(function () {
     hls.user = new hls.UserModel();
@@ -285,7 +341,9 @@ $(document).ready(function () {
     Backbone.history.start();
     //set the phone's backbutton so it always goes to the previous page
     document.addEventListener( "backbutton", function(){ window.history.back(); }, false );
+    //make the menu button open the menu
     document.addEventListener("menubutton", function(){ $(".slicknav_hidden").toggle(); }, false);
+
 });
 
 

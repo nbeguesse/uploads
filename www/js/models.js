@@ -84,7 +84,7 @@ hls.Car = hls.Model.extend({
         this.editLink = "#cars/"+(this.get('id'))+"/edit";
         this.printLink = hls.server+"/cars/"+this.get('id')+"/window_sticker.pdf"
       }
-        // this.images = new hls.ImageList(this.get('image_files')); //TODO: put this in 2 steps
+        // this.images = new hls.ImageList(this.get('image_files')); 
         // this.images.car = this;
         // this.bind('sync',this._syncImages, this);
     },

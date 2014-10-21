@@ -39,11 +39,14 @@
                 <a class="menubutton ui-btn-right ui-link ui-btn ui-icon-gear ui-btn-icon-right ui-shadow ui-corner-all" data-icon="gear" href="javascript:void(0)" data-role="button" role="button" style="position:relative; float:right">Menu</a>
 
                 <ul class="slicknav_nav slicknav_hidden" style="display: none;" aria-hidden="true" role="menu">
+                <li><a href="#" class="scroll" role="menuitem" tabindex="-1">Add A Car</a></li>
                 <% if(!hls.user.loggedIn()){ %>
                   <li><a href="#login" class="scroll" role="menuitem" tabindex="-1">Login</a></li>
                 <% } else { %>
+                  <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
                 <% } %>
+                
                 </ul>
               </div>
 
@@ -107,15 +110,31 @@
             </div>
         </script>
 
-        <script type="text/template" id="user">
+        <script type="text/template" id="carlist">
             <div data-role="header">
-                <h1>QRVIN</h1>
+                <h1>MY CARS</h1>
             </div>
             <div data-role="content">
-                <h3>Welcome <%= user.get('first_name') %>!</h3>
-                <%_.each(user.cars.models, function(car){ %>
-                  <a href="<%=car.showLink%>" data-role="button"><%=car.description()%></a>
-                <% }); %>
+              <%if(splitView){%> 
+                <div class="ui-grid-a">
+                <div class="ui-block-a" style="width:25%; min-width:250px; padding-top:10px;">
+                  <ul data-role="listview">
+                  <%_.each(user.cars.models, function(car){ %>
+                    <li data-icon="arrow-r"><a href="javascript:void(0)" data-role="button" class="split-view-button" data-car-id="<%=car.id%>"><%=car.description()%></a></li>
+                  <% }); %>
+                  </ul>
+                  </div>
+                  <div class="ui-block-b" style="margin-left:25px;"></div>
+                </div>
+
+              <% } else { %>
+
+                  <ul data-role="listview">
+                  <%_.each(user.cars.models, function(car){ %>
+                    <li data-icon="arrow-r"><a href="<%=car.showLink%>" data-role="button"><%=car.description()%></a></li>
+                  <% }); %>
+                </ul>
+              <% } %>
             </div>
         </script>
 
@@ -124,7 +143,7 @@
                 <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1><%= car.description() %></h1>
             </div>
-            <div data-role="content">
+            <div data-role="content" id="content">
             <% if(!hls.user.loggedIn()){ %>
               <a href="#login" data-mini="true" data-role="button">Log In to Save</a>
             <% } %>
@@ -158,7 +177,7 @@
                       <% //show installed options list
                       var u = $("<ul>");
                       _.each(car.get('options'), function(i){
-                        if(i.installed){   
+                        if(i.installed && i.invoice){   
                           u.append("<li>"+i.invoice.highValue+" "+i.value+"</li>"); 
                         }                    
                       });
@@ -170,6 +189,17 @@
               </table>
             </div>
         </script> 
+
+        <script type="text/template" id="not-logged-in">
+            <div data-role="header">
+                <h1>QRVIN</h1>
+            </div>
+            <div data-role="content">
+                <p>You must be logged in to view this.</p>
+                <p><a href="#login">Log In</a></p>
+            </div>
+        </script>
+
         <script src="js/vendor/jquery-1.7.1.min.js"></script>
         <script src="js/jqm-config.js"></script>
         <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>

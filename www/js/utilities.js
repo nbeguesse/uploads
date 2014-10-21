@@ -12,7 +12,24 @@
     addAccessToken:function(data){
       return _.extend(data,this.accessToken());
     },
-
+    shouldSplitView : function(event){
+      if(event.orientation){
+        if(event.orientation == 'portrait'){
+          console.log('popover');
+          return false;
+        }
+        else if(event.orientation == 'landscape') {
+          console.log('splitview');
+          return true;
+        }
+      }
+      else if($(window).width() > 768){
+        console.log('splitview');
+        return true;
+      }
+      console.log('popover');
+      return false; 
+    },
   //   unwrap:function(array, str){ 
   //     //for removing objectname from JSON result
   //     return _.map(array, function(obj){return obj[str]; });
