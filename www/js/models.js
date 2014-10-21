@@ -65,7 +65,8 @@ hls.Car = hls.Model.extend({
      make_id:null,
      model:null,
      model_id:null,
-     style:null
+     style:null,
+     style_id:null
    },
     url: function(){
       if(this.isNew()){
@@ -101,6 +102,16 @@ hls.Car = hls.Model.extend({
         if(out=="  "){ out = "Your Car"}
         return out;
     },
+    toParam:function(){
+      return {
+              year:this.get('year'),
+              make:this.get('make') || "",
+              make_id:this.get('make_id') || "",
+              model:this.get('model') || "",
+              model_id:this.get('model_id') || "",
+              chrome_style_id:this.get('style_id') || ""              
+            }
+    }
     // _syncImages:function(){
     //   console.log('in sync images');
     //   _.each(this.images.models, function(image){

@@ -33,17 +33,25 @@
         
         <title>QRVIN.com Upload App</title>
 
+        <script type="text/template" id="menu">
+            <div class="slicknav_menu" style="position:absolute; z-index:500; right:0;">
+
+                <a class="menubutton ui-btn-right ui-link ui-btn ui-icon-gear ui-btn-icon-right ui-shadow ui-corner-all" data-icon="gear" href="javascript:void(0)" data-role="button" role="button" style="position:relative; float:right">Menu</a>
+
+                <ul class="slicknav_nav slicknav_hidden" style="display: none;" aria-hidden="true" role="menu">
+                  <li><a href="#features" class="scroll" role="menuitem" tabindex="-1">Features</a></li>
+                  <li><a href="#usage" class="scroll" role="menuitem" tabindex="-1">Usage</a></li>
+                  <li><a href="#examples" class="scroll" role="menuitem" tabindex="-1">Examples</a></li>
+                  <li><a href="#requirements" class="scroll" role="menuitem" tabindex="-1">Requirements</a></li>
+                  <li><a href="https://github.com/ComputerWolf/SlickNav" target="_blank" role="menuitem" tabindex="-1">View on Github</a></li>
+                </ul>
+              </div>
+
+        </script>
+
         <script type="text/template" id="welcome">
 
             <div data-role="header">
-<div class="slicknav_menu" style="position:absolute; z-index:500"><a class="slicknav_btn slicknav_collapsed" tabindex="0" aria-haspopup="true" href="#" style="outline: medium none;"><span class="slicknav_menutxt">MENU</span><span class="slicknav_icon"><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span></span></a><ul class="slicknav_nav slicknav_hidden" style="display: none;" aria-hidden="true" role="menu">
-    <li><a href="#features" class="scroll" role="menuitem" tabindex="-1">Features</a></li>
-    <li><a href="#usage" class="scroll" role="menuitem" tabindex="-1">Usage</a></li>
-    <li><a href="#examples" class="scroll" role="menuitem" tabindex="-1">Examples</a></li>
-    <li><a href="#requirements" class="scroll" role="menuitem" tabindex="-1">Requirements</a></li>
-    <li><a href="https://github.com/ComputerWolf/SlickNav" target="_blank" role="menuitem" tabindex="-1">View on Github</a></li>
-  </ul></div>
-
             <h1>QRVIN</h1>
             </div>
             <div data-role="content">
@@ -73,7 +81,7 @@
               <%} else {%>
                 <ul data-role="listview">
                 <%for(var i=0; i<array.length; i++) { %>
-                  <li><a href="<%=url%><%=array[i][0]%>"><%=array[i][1]%></a></li>
+                  <li><a href="<%=url%><%=array[i][0]%>/<%=array[i][1]%>"><%=array[i][1] || array[i][0]%></a></li>
                 <% } %>
                 </ul>
               <% } %>
@@ -108,6 +116,7 @@
 
         <script type="text/template" id="car">
             <div data-role="header">
+                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1><%= car.description() %></h1>
             </div>
             <div data-role="content">
