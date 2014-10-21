@@ -39,11 +39,11 @@
                 <a class="menubutton ui-btn-right ui-link ui-btn ui-icon-gear ui-btn-icon-right ui-shadow ui-corner-all" data-icon="gear" href="javascript:void(0)" data-role="button" role="button" style="position:relative; float:right">Menu</a>
 
                 <ul class="slicknav_nav slicknav_hidden" style="display: none;" aria-hidden="true" role="menu">
-                  <li><a href="#features" class="scroll" role="menuitem" tabindex="-1">Features</a></li>
-                  <li><a href="#usage" class="scroll" role="menuitem" tabindex="-1">Usage</a></li>
-                  <li><a href="#examples" class="scroll" role="menuitem" tabindex="-1">Examples</a></li>
-                  <li><a href="#requirements" class="scroll" role="menuitem" tabindex="-1">Requirements</a></li>
-                  <li><a href="https://github.com/ComputerWolf/SlickNav" target="_blank" role="menuitem" tabindex="-1">View on Github</a></li>
+                <% if(!hls.user.loggedIn()){ %>
+                  <li><a href="#login" class="scroll" role="menuitem" tabindex="-1">Login</a></li>
+                <% } else { %>
+                  <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
+                <% } %>
                 </ul>
               </div>
 
@@ -56,19 +56,24 @@
             </div>
             <div data-role="content">
 
-
-
                 <button class="scan-vin">SCAN YOUR VIN NUMBER</button>
                 <a href="#vin" data-mini="true" data-role="button">TYPE VIN</a>
-                <a href="#select" data-mini="true" data-role="button">Select a Year</a>
-                <h4>or</h4>
-                <form action="<%=hls.server%>/user_sessions/create.json">
-                  <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
-                  <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
-                  <button data-mini="true">LOGIN</button>
-                </form>
+                <a href="#select" data-mini="true" data-role="button">Select A Year</a>
+                
             </div>
         </script>
+
+        <script type="text/template" id="login">  
+            <div data-role="header">
+                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
+                <h1>LOGIN</h1>
+            </div>
+          <form action="<%=hls.server%>/user_sessions/create.json">
+            <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
+            <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
+            <button data-mini="true">SUBMIT</button>
+          </form>
+        </script>      
 
         <script type="text/template" id="selector">
             <div data-role="header">

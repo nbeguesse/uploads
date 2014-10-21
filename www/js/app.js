@@ -77,6 +77,27 @@ hls.HomeView = hls.View.extend({
     },
 });
 
+hls.LoginView = hls.View.extend({
+    events: {
+      'submit form': '_login',
+    },
+  
+    render:function (eventName) {
+        var template = _.template($('#login').html())
+        $(this.el).html(template);
+        return this;
+    },
+    _login:function(e){
+        this.submitForm($(e.currentTarget), function(data){
+            hls.user.set(data.user);
+            hls.user.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary cars
+            //we don't need to upload temp cars since that happens as they're created
+             app.navigate("cars/list", true); 
+        });
+        return false;
+    },
+});
+
 hls.SelectView = hls.View.extend({
 
     initialize:function(){
@@ -155,12 +176,9 @@ hls.VinView = hls.View.extend({
 
 hls.WelcomeView = hls.View.extend({
     events: {
-      'submit form': '_login',
       'click .scan-vin': '_scan',
     },
-    initialize:function(){
-        return this;
-    },    
+   
     render:function (eventName) {
         var template = _.template($('#welcome').html())
         $(this.el).html(template);
@@ -174,22 +192,15 @@ hls.WelcomeView = hls.View.extend({
         $("#vin-form").submit();
       } });
     },
-    _login:function(e){
-        this.submitForm($(e.currentTarget), function(data){
-            hls.user.set(data.user);
-            hls.user.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary cars
-            //we don't need to upload temp cars since that happens as they're created
-            app.changePage(new hls.HomeView({model:hls.user})); 
-        });
-        return false;
-    },
+
 });
 
 hls.AppRouter = Backbone.Router.extend({
     routes:{
         "":"welcome",
-        "login":"welcome",
+        "login":"login",
         "vin":"vin",
+        "cars/list":"carsList",
          "cars/:id":"cars",
          "select":"selectYear",
          "select/:year/":"selectMake",
@@ -209,8 +220,11 @@ hls.AppRouter = Backbone.Router.extend({
     },
 
     login:function () {
-      this.changePage(new hls.HomeView({model:hls.user}));
+      this.changePage(new hls.LoginView({model:hls.user}));
         
+    },
+    carsList:function(){
+      this.changePage(new hls.HomeView({model:hls.user}));
     },
 
 
@@ -242,7 +256,6 @@ hls.AppRouter = Backbone.Router.extend({
       this.changePage(new hls.VinView({}));
     },
     welcome:function () {
-        console.log('#welcome');
         this.changePage(new hls.WelcomeView());
         
     },
@@ -272,7 +285,7 @@ $(document).ready(function () {
     Backbone.history.start();
     //set the phone's backbutton so it always goes to the previous page
     document.addEventListener( "backbutton", function(){ window.history.back(); }, false );
-    document.addEventListener("menubutton", function(){ console.log('menu clicked'); }, false);
+    document.addEventListener("menubutton", function(){ $(".slicknav_hidden").toggle(); }, false);
 });
 
 
