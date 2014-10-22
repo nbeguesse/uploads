@@ -46,7 +46,7 @@
                   <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
                 <% } %>
-                
+                  <li><a href="#exit" class="scroll" role="menuitem" tabindex="-1">Exit</a></li>
                 </ul>
               </div>
 
@@ -190,26 +190,16 @@
             </div>
         </script> 
 
-        <script type="text/template" id="not-logged-in">
-            <div data-role="header">
-                <h1>QRVIN</h1>
-            </div>
-            <div data-role="content">
-                <p>You must be logged in to view this.</p>
-                <p><a href="#login">Log In</a></p>
-            </div>
-        </script>
-
         <script src="js/vendor/jquery-1.7.1.min.js"></script>
         <script src="js/jqm-config.js"></script>
         <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>
         <script src="js/vendor/underscore-min.js"></script>
         <script src="js/vendor/backbone-min.js"></script>
-         <!-- <script src="js/vendor/jquery.slicknav.min.js"></script> --> 
+        <script src="js/vendor/json2.js"></script> 
         <script src="https://www.google.com/cloudprint/client/cpgadget.js" defer></script>
         <script>
           window.hls = {};
-          hls.server = "http://localhost:3000"; //no trailing slash. Note that you can't google-print from local server
+          hls.server = "http://qrvin.com"; //no trailing slash. Note that you can't google-print from local server
           //set hls.emulated to true to skip VIN scanning
           hls.emulated = false; //default value
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){

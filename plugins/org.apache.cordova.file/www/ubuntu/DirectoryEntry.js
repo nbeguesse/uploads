@@ -19,15 +19,8 @@
  *
 */
 
-/* 
- * setMetadata
- * 
- * BB10 OS does not support setting file metadata via HTML5 File System 
- */
-
-module.exports = function (success, fail, args) {
-    console.error("setMetadata not supported on BB10", arguments);
-    if (typeof(fail) === 'function') {
-        fail();
+module.exports = {
+    createReader: function() {
+        return new DirectoryReader(this.fullPath);
     }
 };

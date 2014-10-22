@@ -19,6 +19,8 @@
  *
 */
 
+var fileUtils = require('./BB10Utils');
+
 /**
  * Constructor.
  * name {DOMString} name of the file, without path information
@@ -28,9 +30,9 @@
  * size {Number} size of the file in bytes
  */
 
-var File = function(name, localURL, type, lastModifiedDate, size){
+var File = function(name, fullPath, type, lastModifiedDate, size){
     this.name = name || '';
-    this.localURL = localURL || null;
+    this.fullPath = fullPath || null;
     this.type = type || null;
     this.lastModifiedDate = lastModifiedDate || null;
     this.size = size || 0;
@@ -41,36 +43,13 @@ var File = function(name, localURL, type, lastModifiedDate, size){
 };
 
 /**
- * Returns a "slice" of the file. Since Cordova Files don't contain the actual
- * content, this really returns a File with adjusted start and end.
+ * Returns a "slice" of the file.
  * Slices of slices are supported.
  * start {Number} The index at which to start the slice (inclusive).
  * end {Number} The index at which to end the slice (exclusive).
  */
 File.prototype.slice = function(start, end) {
-    var size = this.end - this.start;
-    var newStart = 0;
-    var newEnd = size;
-    if (arguments.length) {
-        if (start < 0) {
-            newStart = Math.max(size + start, 0);
-        } else {
-            newStart = Math.min(size, start);
-        }
-    }
-
-    if (arguments.length >= 2) {
-        if (end < 0) {
-            newEnd = Math.max(size + end, 0);
-        } else {
-            newEnd = Math.min(end, size);
-        }
-    }
-
-    var newFile = new File(this.name, this.localURL, this.type, this.lastModifiedData, this.size);
-    newFile.start = this.start + newStart;
-    newFile.end = this.start + newEnd;
-    return newFile;
+    return fileUtils.createFile(this.nativeFile.slice(start, end));
 };
 
 

@@ -159,11 +159,37 @@ hls.Car = hls.Model.extend({
 
 //     }
 // });
+hls.File = hls.Model.extend({
+
+  gotFSRead:function(fileSystem){
+    fileSystem.root.getFile("user.txt", null, hls.util.gotFileReadEntry, hls.util.fail);
+  },
+  gotFSWrite:function(fileSystem){
+    fileSystem.root.getFile("user.txt",  {create: true, exclusive: false}, hls.util.gotFileWriteEntry, hls.util.fail);
+  },
+  saveUser:function(){
+    if(hls.emulated){
+      console.log('skipping save to file system.');
+    } else {
+     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this.gotFSWrite, hls.util.fail);
+   }
+  },
+  loadUser:function(){
+    if(hls.emulated){
+      console.log('skipping load from file system.');
+    } else {
+     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this.gotFSRead, hls.util.fail);
+
+   }
+  },
+});
 hls.UserModel = hls.Model.extend({
     initialize:function(){
         this.cars = new hls.CarList(); 
         this.cars.user = this;
-        this.bind('change:id',this.cars.update, this.cars);
+        this.file = new hls.File();
+        this.file.user = this;
+        this.bind('change:id',this.cars.update, this.cars); //save temp cars on login
         return this;
     },
     //get the current car(may or may not be blank)

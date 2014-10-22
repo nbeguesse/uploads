@@ -90,14 +90,8 @@ hls.CarListView = hls.View.extend({
     },
     render:function (eventName) {
       var splitView = hls.util.shouldSplitView({}); //returns true if split-screen
-      //TODO: Put not logged in view in router instead of here
-      if(hls.user.loggedIn()){
-        var template = _.template($('#carlist').html(),{user:hls.user, splitView:splitView});
-        $(this.el).html(template);
-      } else {
-        var template = _.template($('#not-logged-in').html(),{});
-        $(this.el).html(template);
-      }
+      var template = _.template($('#carlist').html(),{user:hls.user, splitView:splitView});
+      $(this.el).html(template);
       this.splitView = splitView; //save it so we know when to rerender
       return this;
     },
@@ -128,6 +122,7 @@ hls.LoginView = hls.View.extend({
             hls.user.set(data.user);
             hls.user.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary cars
             //we don't need to upload temp cars since that happens as they're created
+            hls.user.file.saveUser();
              app.navigate("cars/list", true); 
         });
         return false;
@@ -140,7 +135,9 @@ hls.SelectView = hls.View.extend({
       var car = this.model;
       this.array = []; //this will hold the list of options to choose from
       if (_.isNull(car.get('year'))) {
-        this.array = [["1994",""],["1995",""],["1996",""]]; //TODO: Put some real years
+        for(var i=new Date().getFullYear(); i > 1980; i--){
+          this.array.push([i+"",""])
+        }
       } 
       this.url = "#select/"
       if(car.get('year')) {this.url = this.url +car.get("year") + "/"}
@@ -242,16 +239,23 @@ hls.AppRouter = Backbone.Router.extend({
          "select/:year/":"selectMake",
          "select/:year/:make_id/:make":"selectModel",
          "select/:year/:make_id/:make/:model_id/:model":"selectStyle",
-         "select/:year/:make_id/:make/:model_id/:model/:style_id/:style":"selectCar"
+         "select/:year/:make_id/:make/:model_id/:model/:style_id/:style":"selectCar",
+         "exit":"exit",
 
     },
     initialize:function () {
         // Handle back button img throughout the application
         $('.back').live('click', function(event) {
-            window.history.back();
+            if(window.history.length > 1){
+              window.history.back();
+            } else {
+              navigator.app.exitApp();
+            }
             return false;
         });
-        //TODO See if you can move menu button up here.
+        $(".menubutton").live('click',function(e){
+          $(".slicknav_hidden").toggle(); //show/hide the menu
+        });
         this.currentPage = null;
     },
 
@@ -260,7 +264,9 @@ hls.AppRouter = Backbone.Router.extend({
         
     },
     carsList:function(){
-      this.changePage(new hls.CarListView({model:hls.user}));
+      if(this.checkLoggedIn()){
+        this.changePage(new hls.CarListView());
+      }
     },
 
 
@@ -272,14 +278,19 @@ hls.AppRouter = Backbone.Router.extend({
           this.changePage(new hls.LoginView());
           return;
         } 
+        //TODO test this!
+        if(hls.util.shouldSplitView()){
+          //tablet view
+          this.changePage(new hls.CarListView());
+          this.currentPage.showCar(id);
 
-        this.changePage(new hls.CarView({model:car}));
-        //TODO
-        //if hls.util.shouldsplitview
-        //var page = new hls.CarListView()
-        //this.changePage(page)
-        //page.showCar(id)
-        //also highlight the selected car
+        } else {
+          //phone view
+          this.changePage(new hls.CarView({model:car}));
+        }
+    },
+    exit:function(){
+      navigator.app.exitApp();
     },
 
     selectYear:function(){
@@ -312,9 +323,6 @@ hls.AppRouter = Backbone.Router.extend({
         //copy menu button template
         var menuTemplate = _.template($("#menu").html());
         $(page.el).find("div[data-role=header]").prepend(menuTemplate);
-        $(page.el).find(".menubutton").click(function(){
-          $(".slicknav_hidden").toggle(); //show/hide the menu
-        });
         //append to page and finish up
         $('body').append($(page.el));
         $.mobile.changePage($(page.el), {changeHash:false});
@@ -332,10 +340,9 @@ hls.AppRouter = Backbone.Router.extend({
 
 });
 
-
-
 $(document).ready(function () {
     hls.user = new hls.UserModel();
+    hls.user.file.loadUser();
     hls.camera = new hls.Camera();
     app = new hls.AppRouter();
     Backbone.history.start();
