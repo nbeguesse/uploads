@@ -246,11 +246,7 @@ hls.AppRouter = Backbone.Router.extend({
     initialize:function () {
         // Handle back button img throughout the application
         $('.back').live('click', function(event) {
-            if(window.history.length > 1){
-              window.history.back();
-            } else {
-              navigator.app.exitApp();
-            }
+            app.goBack();
             return false;
         });
         $(".menubutton").live('click',function(e){
@@ -336,17 +332,17 @@ hls.AppRouter = Backbone.Router.extend({
       if(hls.user.loggedIn()){ return true; }
       this.changePage(new hls.LoginView());
       return false;
-    }
+    },
+    goBack:function(){
+      if(window.location.hash != ""){
+         window.history.back();
+      } else {
+        navigator.app.exitApp();
+      }
+    },
 
 });
 
-function tmp(){
-    try{
-    hls.user.file.loadUser();
-  } catch(err) {
-    alert(err);
-  }
-}
 
 $(document).ready(function () {
     hls.user = new hls.UserModel();
@@ -355,11 +351,11 @@ $(document).ready(function () {
     app = new hls.AppRouter();
     Backbone.history.start();
     //set the phone's backbutton so it always goes to the previous page
-    document.addEventListener( "backbutton", function(){ window.history.back(); }, false );
+    document.addEventListener( "backbutton", function(){ app.goBack(); }, false );
     //make the menu button open the menu
     document.addEventListener("menubutton", function(){ $(".slicknav_hidden").toggle(); }, false);
-    document.addEventListener('deviceready', window.tmp , false);
+
 
 });
-
+document.addEventListener('deviceready', function(){ hls.user.file.loadUser(); } , false);
 
