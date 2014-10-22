@@ -116,3 +116,10 @@ h1 {
 div[data-role=content] {
   text-align:center;
 }
+/* Fallback */
+.ui-nosvg div .ui-icon-back:after {
+  background-image: url(../img/back-white.png);
+}
+.ui-nosvg div .ui-icon-bars:after {
+    background-image: url(../img/bars-white.png);
+}

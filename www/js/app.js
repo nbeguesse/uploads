@@ -20,6 +20,7 @@ hls.View = Backbone.View.extend({
           console.log("Got data:",data);
           if(data.car){
             hls.user.cars.set([data.car], {remove:false});
+            hls.user.file.saveUser();
           }
           if(success){ 
             success(data); 
@@ -108,6 +109,17 @@ hls.CarListView = hls.View.extend({
     },
 });
 
+hls.DmsView = hls.View.extend({
+
+   
+    render:function (eventName) {
+        var template = _.template($('#dms').html())
+        $(this.el).html(template);
+        return this;
+    },
+
+});
+
 hls.LoginView = hls.View.extend({
     events: {
       'submit form': '_login',
@@ -123,7 +135,7 @@ hls.LoginView = hls.View.extend({
             hls.user.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary cars
             //we don't need to upload temp cars since that happens as they're created
             hls.user.file.saveUser();
-             app.navigate("cars/list", true); 
+            app.navigate("cars/list", true); 
         });
         return false;
     },
@@ -236,6 +248,7 @@ hls.AppRouter = Backbone.Router.extend({
         "vin":"vin",
         "cars/list":"carsList",
          "cars/:id":"cars",
+         "dms":"dms",
          "select":"selectYear",
          "select/:year/":"selectMake",
          "select/:year/:make_id/:make":"selectModel",
@@ -246,22 +259,24 @@ hls.AppRouter = Backbone.Router.extend({
     },
     initialize:function () {
         // Handle back button img throughout the application
-        $('.back').live('click', function(event) {
+        $('a.back').live('click', function(event) {
             app.goBack();
             return false;
         });
-        $(".menubutton").live('click',function(e){
+        $("a.menubutton").live('click',function(e){
           $(".slicknav_hidden").toggle(); //show/hide the menu
         });
         this.currentPage = null;
     },
 
+    dms:function () {
+      this.changePage(new hls.DmsView());
+    },
     login:function () {
       this.changePage(new hls.LoginView());
     },
     logout:function(){
       hls.user.file.logoutUser();
-      this.welcome();
     },
     carsList:function(){
       if(this.checkLoggedIn()){
@@ -316,6 +331,7 @@ hls.AppRouter = Backbone.Router.extend({
         this.changePage(new hls.WelcomeView());
         
     },
+    //helper methods
     changePage:function (page) {
         //render the page
         $(page.el).attr('data-role', 'page');

@@ -36,7 +36,7 @@
         <script type="text/template" id="menu">
             <div class="slicknav_menu" style="position:absolute; z-index:500; right:0;">
 
-                <a class="menubutton ui-btn-right ui-link ui-btn ui-icon-gear ui-btn-icon-right ui-shadow ui-corner-all" data-icon="gear" href="javascript:void(0)" data-role="button" role="button" style="position:relative; float:right">Menu</a>
+                <a class="menubutton ui-btn-right ui-link ui-btn ui-icon-bars ui-btn-icon-right ui-shadow ui-corner-all" data-icon="bars" href="javascript:void(0)" data-role="button" role="button" style="position:relative; float:right; margin-bottom:0.7em">Menu</a>
 
                 <ul class="slicknav_nav slicknav_hidden" style="display: none;" aria-hidden="true" role="menu">
                 <li><a href="#" class="scroll" role="menuitem" tabindex="-1">Add A Car</a></li>
@@ -49,12 +49,13 @@
                   <li><a href="#exit" class="scroll" role="menuitem" tabindex="-1">Exit</a></li>
                 </ul>
               </div>
+              <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
 
         </script>
 
         <script type="text/template" id="welcome">
 
-            <div data-role="header">
+            <div data-role="header" class="no-back-button">
             <h1>QRVIN</h1>
             </div>
             <div data-role="content">
@@ -62,13 +63,26 @@
                 <button class="scan-vin">SCAN YOUR VIN NUMBER</button>
                 <a href="#vin" data-mini="true" data-role="button">TYPE VIN</a>
                 <a href="#select" data-mini="true" data-role="button">Select A Year</a>
+                <a href="#dms" data-mini="true" data-role="button">Send Cars to DMS</a>
+                
+            </div>
+        </script>
+
+        <script type="text/template" id="dms">
+
+            <div data-role="header">
+
+            <h1>DMS</h1>
+            </div>
+            <div data-role="content">
+
+                <p>Coming Soon...</p>
                 
             </div>
         </script>
 
         <script type="text/template" id="login">  
             <div data-role="header">
-                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1>LOGIN</h1>
             </div>
           <form action="<%=hls.server%>/user_sessions/create.json">
@@ -80,7 +94,6 @@
 
         <script type="text/template" id="selector">
             <div data-role="header">
-                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1>Select A Car</h1>
             </div>
             <div data-role="content">
@@ -99,7 +112,6 @@
 
         <script type="text/template" id="vin">
             <div data-role="header">
-                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1>Enter VIN</h1>
             </div>
             <div data-role="content">
@@ -140,7 +152,6 @@
 
         <script type="text/template" id="car">
             <div data-role="header">
-                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1><%= car.description() %></h1>
             </div>
             <div data-role="content" id="content">
