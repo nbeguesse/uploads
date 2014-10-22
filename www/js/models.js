@@ -159,28 +159,54 @@ hls.Car = hls.Model.extend({
 
 //     }
 // });
-hls.File = hls.Model.extend({
 
-  gotFSRead:function(fileSystem){
-    fileSystem.root.getFile("user.txt", null, hls.util.gotFileReadEntry, hls.util.fail);
-  },
-  gotFSWrite:function(fileSystem){
-    fileSystem.root.getFile("user.txt",  {create: true, exclusive: false}, hls.util.gotFileWriteEntry, hls.util.fail);
-  },
+//Note: These functions only work on the device. It doesn't work on emulators.
+//Use try/catch block and alert statements for debugging.
+hls.File = hls.Model.extend({
   saveUser:function(){
     if(hls.emulated){
       console.log('skipping save to file system.');
     } else {
-     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this.gotFSWrite, hls.util.fail);
+      try{
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this._gotFSWrite, hls.util._fail);
+      } catch (err){
+        alert(err);
+      }
    }
   },
   loadUser:function(){
     if(hls.emulated){
       console.log('skipping load from file system.');
     } else {
-     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this.gotFSRead, hls.util.fail);
+      try{
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this._gotFSRead, hls.util._fail);
+      } catch (err){
+        alert(err);
+      }
 
    }
+  },
+  logoutUser:function(){
+    if(hls.emulated){
+      console.log('skipping erasal from file system.');
+    } else {
+      try{
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this._gotFSRemove, hls.util._fail);
+      } catch (err){
+        alert(err);
+      }
+   }
+   hls.user = new hls.UserModel();
+
+  },
+  _gotFSRead:function(fileSystem){
+    fileSystem.root.getFile("user.txt", null, hls.util._gotFileReadEntry, hls.util._fail);
+  },
+  _gotFSWrite:function(fileSystem){
+    fileSystem.root.getFile("user.txt",  {create: true, exclusive: false}, hls.util._gotFileWriteEntry, hls.util._fail);
+  },
+  _gotFSRemove:function(fileSystem){
+    fileSystem.root.getFile("user.txt", {create: false, exclusive: false}, hls.util._gotFileRemoveEntry, hls.util._fail);
   },
 });
 hls.UserModel = hls.Model.extend({

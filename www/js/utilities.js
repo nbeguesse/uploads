@@ -13,7 +13,7 @@
       return _.extend(data,this.accessToken());
     },
     shouldSplitView : function(event){
-      if(event.orientation){
+      if(event && event.orientation){
         if(event.orientation == 'portrait'){
           console.log('popover');
           return false;
@@ -30,26 +30,29 @@
       console.log('popover');
       return false; 
     },
-    fail:function(error){
+    _fail:function(error){
        //fail silently
        //this might happen on fresh install
     },
-    gotFileWriteEntry:function(fileEntry){
-      fileEntry.createWriter(hls.util.gotFileWriter, hls.util.fail);
+    _gotFileWriteEntry:function(fileEntry){
+      fileEntry.createWriter(hls.util._gotFileWriter, hls.util._fail);
 
     },
-    gotFileReadEntry:function(fileEntry){
-      fileEntry.file(hls.util.gotFileRead, hls.util.fail);
+    _gotFileReadEntry:function(fileEntry){
+      fileEntry.file(hls.util._gotFileRead, hls.util._fail);
 
     },
-    gotFileWriter:function(writer) {
+    _gotFileRemoveEntry:function(fileEntry){
+      fileEntry.remove(hls.util._gotFileRemoved, hls.util._fail);
+    },
+    _gotFileWriter:function(writer) {
            writer.onwrite = function(evt) {
           };
           var attributes = {user:hls.user.attributes};
           attributes.user.cars = _.map(hls.user.cars.models, function(car){ return car.attributes; });
           writer.write(JSON.stringify(attributes));
     },
-    gotFileRead:function(file){
+    _gotFileRead:function(file){
         var reader = new FileReader();
         reader.onloadend = function(evt) {
             //alert('data read');
@@ -59,7 +62,9 @@
             app.changePage(new hls.WelcomeView());
         };
         reader.readAsText(file);
-
+    },
+    _gotFileRemoved:function(entry){
+      alert('Logged Out.');
     }
 
   //   unwrap:function(array, str){ 

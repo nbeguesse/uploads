@@ -232,6 +232,7 @@ hls.AppRouter = Backbone.Router.extend({
     routes:{
         "":"welcome",
         "login":"login",
+        "logout":"logout",
         "vin":"vin",
         "cars/list":"carsList",
          "cars/:id":"cars",
@@ -257,7 +258,10 @@ hls.AppRouter = Backbone.Router.extend({
 
     login:function () {
       this.changePage(new hls.LoginView());
-        
+    },
+    logout:function(){
+      hls.user.file.logoutUser();
+      this.welcome();
     },
     carsList:function(){
       if(this.checkLoggedIn()){
@@ -271,10 +275,10 @@ hls.AppRouter = Backbone.Router.extend({
 
         //if it's not found, they need to login
         if(_.isUndefined(car)){ 
-          this.changePage(new hls.LoginView());
+          this.login();
           return;
         } 
-        //TODO test this!
+
         if(hls.util.shouldSplitView()){
           //tablet view
           this.changePage(new hls.CarListView());
@@ -330,14 +334,14 @@ hls.AppRouter = Backbone.Router.extend({
     },
     checkLoggedIn:function(){
       if(hls.user.loggedIn()){ return true; }
-      this.changePage(new hls.LoginView());
+      this.login();
       return false;
     },
     goBack:function(){
       if(window.location.hash != ""){
          window.history.back();
       } else {
-        navigator.app.exitApp();
+        this.exit();
       }
     },
 

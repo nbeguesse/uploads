@@ -117,7 +117,7 @@
             <div data-role="content">
               <%if(splitView){%> 
                 <div class="ui-grid-a">
-                <div class="ui-block-a" style="width:25%; min-width:250px; padding-top:10px;">
+                <div class="ui-block-a" style="width:25%; padding-top:10px;">
                   <ul data-role="listview">
                   <%_.each(user.cars.models, function(car){ %>
                     <li data-icon="arrow-r"><a href="javascript:void(0)" data-role="button" class="split-view-button" data-car-id="<%=car.id%>"><%=car.description()%></a></li>
