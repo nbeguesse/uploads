@@ -340,9 +340,17 @@ hls.AppRouter = Backbone.Router.extend({
 
 });
 
+function tmp(){
+    try{
+    hls.user.file.loadUser();
+  } catch(err) {
+    alert(err);
+  }
+}
+
 $(document).ready(function () {
     hls.user = new hls.UserModel();
-    hls.user.file.loadUser();
+
     hls.camera = new hls.Camera();
     app = new hls.AppRouter();
     Backbone.history.start();
@@ -350,6 +358,7 @@ $(document).ready(function () {
     document.addEventListener( "backbutton", function(){ window.history.back(); }, false );
     //make the menu button open the menu
     document.addEventListener("menubutton", function(){ $(".slicknav_hidden").toggle(); }, false);
+    document.addEventListener('deviceready', window.tmp , false);
 
 });
 

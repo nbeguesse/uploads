@@ -52,11 +52,11 @@
     gotFileRead:function(file){
         var reader = new FileReader();
         reader.onloadend = function(evt) {
-            alert('data read');
+            //alert('data read');
             data = JSON.parse(evt.target.result);
             hls.user.set(data.user);
             hls.user.cars.set(data.user.cars, {remove:false});
-            //app.changePage(new hls.WelcomeView());
+            app.changePage(new hls.WelcomeView());
         };
         reader.readAsText(file);
 
