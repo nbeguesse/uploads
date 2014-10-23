@@ -6,9 +6,9 @@ hls.View = Backbone.View.extend({
       var options = options;
       options || (options = {});
       var success = options.success;
-      // if (hls.user.loggedIn()){ //TODO test adding cars after you're logged in
-      //   options.data = hls.util.addAccessToken(options.data)
-      // }
+      if (hls.user.loggedIn()){ //TODO test adding cars after you're logged in
+        options.data = hls.util.addAccessToken(options.data)
+      }
       $.mobile.loading( 'show', {text: '', textVisible: true, theme: 'z', html: ""}); //show jquery mobile spinner
       $.ajax({
         dataType: "jsonp",
@@ -63,7 +63,7 @@ hls.CarView = hls.View.extend({
       //Cloudprint stuff
       var gadget = new cloudprint.Gadget();
       gadget.setPrintButton($(this.el).find("#print_button_container")[0]); // div id to contain the button
-      gadget.setPrintDocument("url", "Window Sticker", "https://www.google.com/landing/cloudprint/testpage.pdf");
+      gadget.setPrintDocument("url", "Window Sticker", car.printLink);
       return this;
     },
 });
@@ -290,7 +290,7 @@ hls.AppRouter = Backbone.Router.extend({
 
         //if it's not found, they need to login
         if(_.isUndefined(car)){ 
-          this.login();
+          app.navigate("login", true);
           return;
         } 
 
@@ -350,7 +350,7 @@ hls.AppRouter = Backbone.Router.extend({
     },
     checkLoggedIn:function(){
       if(hls.user.loggedIn()){ return true; }
-      this.login();
+      app.navigate("login", true);
       return false;
     },
     goBack:function(){

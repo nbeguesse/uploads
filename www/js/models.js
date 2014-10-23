@@ -111,7 +111,24 @@ hls.Car = hls.Model.extend({
               model_id:this.get('model_id') || "",
               chrome_style_id:this.get('style_id') || ""              
             }
-    }
+    },
+    getInstalledOptions:function(){
+       return _.filter(this.get('options'), function(i){ return i.installed; }                    
+           );
+    },
+    getWasNewPrice:function(){
+      var out = null;
+      var msrp = this.get('msrp_price');
+      if(msrp && msrp > 0){
+        out = msrp;
+        _.each(this.getInstalledOptions(), function(o){
+          if(o.msrp){
+            out += parseInt(o.msrp.highValue);
+          }
+        });
+      }
+      return out
+    },
     // _syncImages:function(){
     //   console.log('in sync images');
     //   _.each(this.images.models, function(image){

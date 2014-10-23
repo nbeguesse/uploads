@@ -158,7 +158,7 @@
             <% if(!hls.user.loggedIn()){ %>
               <a href="#login" data-mini="true" data-role="button">Log In to Save</a>
             <% } %>
-            <a data-mini="true" data-role="button" id="print_button_container">Print Window Sticker</a>
+            <a data-mini="true" data-role="button" id="print_button_container">CloudPrint Window Sticker</a>
               <table data-role="table" id="my-table" data-mode="reflow">
                 <thead>
                   <tr>
@@ -166,8 +166,10 @@
                     <th>Engine</th>
                     <th>Transmission</th>
                     <th>MSRP</th>
-                    <th>Standard Options</th>
-                    <th>Installed Options</th>
+                    <%if(car.getWasNewPrice()){%>
+                      <th>WAS NEW</th>
+                    <%}%>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -175,29 +177,47 @@
                     <td><%=car.get('exterior_color') || ""%> / <%=car.get('interior_color') || ""%></td>
                     <td><%=car.get('engine')%></td>
                     <td><%=car.get('transmission')%></td>
-                    <td><%=car.get('msrp_price')%></td>
-                    <td>
-                      <% //show standard options list
-                      var u = $("<ul>");
+                    <td><%=car.get('msrp_price').formatMoney()%></td>
+                    <%if(car.getWasNewPrice()){%>
+                      <td><%=car.getWasNewPrice().formatMoney()%></td>
+                    <%}%>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p></p>
+              <ul data-role="listview" class="ui-listview-outer">
+                <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false">
+                  <h2>Standard Options</h2>
+                  <% //show standard options list
+                      var u = $("<ul data-role='listview' data-shadow='false' data-corners='false'>");
                       _.each(car.get('standard_options'), function(i){
                         u.append("<li>"+i.value+"</li>");
                       });
                       %>
                       <%= u.get(0).outerHTML%>
-                    </td><td>
-                      <% //show installed options list
-                      var u = $("<ul>");
-                      _.each(car.get('options'), function(i){
-                        if(i.installed && i.invoice){   
-                          u.append("<li>"+i.invoice.highValue+" "+i.value+"</li>"); 
-                        }                    
+                </li>
+                <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false">
+                  <h2>Installed Options (<%=car.getInstalledOptions().length%>)</h2>
+                  <% //show installed options list
+                      var u = $("<ul data-role='listview' data-shadow='false'  data-corners='false'>");
+                      _.each(car.getInstalledOptions(), function(i){
+                       
+                          var price = i.msrp ? i.msrp.highValue : 0;
+                          price = (price == 0) ? "" : parseInt(price).formatMoney(0, '.', ',');
+                          u.append("<li><span class='price'>"+price+"</span><span class='package'>"+i.value+"</span></li>"); 
+                                           
                       });
                       %>
                       <%= u.get(0).outerHTML%>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                </li>
+              </ul>
+
+                      
+ 
+                
+                      
+
             </div>
         </script> 
 
@@ -207,7 +227,7 @@
         <script src="js/vendor/underscore-min.js"></script>
         <script src="js/vendor/backbone-min.js"></script>
         <script src="js/vendor/json2.js"></script> 
-        <script src="https://www.google.com/cloudprint/client/cpgadget.js" defer></script>
+        <script src="js/vendor/cloudprintgadget.js"></script>
         <script>
           window.hls = {};
           hls.server = "http://qrvin.com"; //no trailing slash. Note that you can't google-print from local server
