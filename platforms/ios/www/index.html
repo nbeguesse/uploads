@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <script type="text/javascript" src="cordova.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
+        <link rel="stylesheet" href="css/slicknav.css" />
+        
+        <title>QRVIN.com Upload App</title>
+
+        <script type="text/template" id="menu">
+            <div class="slicknav_menu" style="position:absolute; z-index:500; right:0;">
+
+                <a class="menubutton ui-btn-right ui-link ui-btn ui-icon-bars ui-btn-icon-right ui-shadow ui-corner-all" data-icon="bars" href="javascript:void(0)" data-role="button" role="button" style="position:relative; float:right; margin-bottom:0.7em">Menu</a>
+
+                <ul class="slicknav_nav slicknav_hidden" style="display: none;" aria-hidden="true" role="menu">
+                <li><a href="#" class="scroll" role="menuitem" tabindex="-1">Add A Car</a></li>
+                <% if(!hls.user.loggedIn()){ %>
+                  <li><a href="#login" class="scroll" role="menuitem" tabindex="-1">Login</a></li>
+                <% } else { %>
+                  <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
+                  <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
+                <% } %>
+                  <li><a href="#exit" class="scroll" role="menuitem" tabindex="-1">Exit</a></li>
+                </ul>
+              </div>
+              <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
+
+        </script>
+
+        <script type="text/template" id="welcome">
+
+            <div data-role="header" class="no-back-button">
+            <h1>QRVIN</h1>
+            </div>
+            <div data-role="content">
+
+                <button class="scan-vin">SCAN YOUR VIN NUMBER</button>
+                <a href="#vin" data-mini="true" data-role="button">TYPE VIN</a>
+                <a href="#select" data-mini="true" data-role="button">Select A Year</a>
+                <a href="#dms" data-mini="true" data-role="button">Send Cars to DMS</a>
+                
+            </div>
+        </script>
+
+        <script type="text/template" id="dms">
+
+            <div data-role="header">
+
+            <h1>DMS</h1>
+            </div>
+            <div data-role="content">
+
+                <p>Coming Soon...</p>
+                
+            </div>
+        </script>
+
+        <script type="text/template" id="login">  
+            <div data-role="header">
+                <h1>LOGIN</h1>
+            </div>
+          <form action="<%=hls.server%>/user_sessions/create.json">
+            <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
+            <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
+            <button data-mini="true">SUBMIT</button>
+          </form>
+        </script>      
+
+        <script type="text/template" id="selector">
+            <div data-role="header">
+                <h1>Select A Car</h1>
+            </div>
+            <div data-role="content">
+              <%if(_.isEmpty(array)){%>
+                Loading!
+              <%} else {%>
+                <ul data-role="listview">
+                <%for(var i=0; i<array.length; i++) { %>
+                  <li><a href="<%=url%><%=array[i][0]%>/<%=array[i][1]%>"><%=array[i][1] || array[i][0]%></a></li>
+                <% } %>
+                </ul>
+              <% } %>
+            </div>
+        </script>
+
+
+        <script type="text/template" id="vin">
+            <div data-role="header">
+                <h1>Enter VIN</h1>
+            </div>
+            <div data-role="content">
+            <form id="vin-form" action="<%=hls.server%>/cars/vin">
+                <input type="text" id="car_vin" name="car[vin]" placeholder="VIN Number">
+                <button>GO</button>
+            </form>
+            </div>
+        </script>
+
+        <script type="text/template" id="carlist">
+            <div data-role="header">
+                <h1>MY CARS</h1>
+            </div>
+            <div data-role="content">
+              <%if(splitView){%> 
+                <div class="ui-grid-a">
+                <div class="ui-block-a" style="width:25%; padding-top:10px;">
+                  <ul data-role="listview">
+                  <%_.each(user.cars.models, function(car){ %>
+                    <li data-icon="arrow-r"><a href="javascript:void(0)" data-role="button" class="split-view-button" data-car-id="<%=car.id%>"><%=car.description()%></a></li>
+                  <% }); %>
+                  </ul>
+                  </div>
+                  <div class="ui-block-b" style="margin-left:25px;"></div>
+                </div>
+
+              <% } else { %>
+
+                  <ul data-role="listview">
+                  <%_.each(user.cars.models, function(car){ %>
+                    <li data-icon="arrow-r"><a href="<%=car.showLink%>" data-role="button"><%=car.description()%></a></li>
+                  <% }); %>
+                </ul>
+              <% } %>
+            </div>
+        </script>
+
+        <script type="text/template" id="car">
+            <div data-role="header">
+                <h1><%= car.description() %></h1>
+            </div>
+            <div data-role="content" id="content">
+            <% if(!hls.user.loggedIn()){ %>
+              <a href="#login" data-mini="true" data-role="button">Log In to Save</a>
+            <% } %>
+            <a data-mini="true" data-role="button" id="print_button_container">CloudPrint Window Sticker</a>
+              <table data-role="table" id="my-table" data-mode="reflow">
+                <thead>
+                  <tr>
+                    <th>Colors</th>
+                    <th>Engine</th>
+                    <th>Transmission</th>
+                    <th>MSRP</th>
+                    <%if(car.getWasNewPrice()){%>
+                      <th>WAS NEW</th>
+                    <%}%>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><%=car.get('exterior_color') || ""%> / <%=car.get('interior_color') || ""%></td>
+                    <td><%=car.get('engine')%></td>
+                    <td><%=car.get('transmission')%></td>
+                    <td><%=car.get('msrp_price').formatMoney()%></td>
+                    <%if(car.getWasNewPrice()){%>
+                      <td><%=car.getWasNewPrice().formatMoney()%></td>
+                    <%}%>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p></p>
+              <ul data-role="listview" class="ui-listview-outer">
+                <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false">
+                  <h2>Standard Options</h2>
+                  <% //show standard options list
+                      var u = $("<ul data-role='listview' data-shadow='false' data-corners='false'>");
+                      _.each(car.get('standard_options'), function(i){
+                        u.append("<li>"+i.value+"</li>");
+                      });
+                      %>
+                      <%= u.get(0).outerHTML%>
+                </li>
+                <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false">
+                  <h2>Installed Options (<%=car.getInstalledOptions().length%>)</h2>
+                  <% //show installed options list
+                      var u = $("<ul data-role='listview' data-shadow='false'  data-corners='false'>");
+                      _.each(car.getInstalledOptions(), function(i){
+                       
+                          var price = i.msrp ? i.msrp.highValue : 0;
+                          price = (price == 0) ? "" : parseInt(price).formatMoney(0, '.', ',');
+                          u.append("<li><span class='price'>"+price+"</span><span class='package'>"+i.value+"</span></li>"); 
+                                           
+                      });
+                      %>
+                      <%= u.get(0).outerHTML%>
+                </li>
+              </ul>
+
+                      
+ 
+                
+                      
+
+            </div>
+        </script> 
+
+        <script src="js/vendor/jquery-1.7.1.min.js"></script>
+        <script src="js/jqm-config.js"></script>
+        <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>
+        <script src="js/vendor/underscore-min.js"></script>
+        <script src="js/vendor/backbone-min.js"></script>
+        <script src="js/vendor/json2.js"></script> 
+        <script src="js/vendor/cloudprintgadget.js"></script>
+        <script>
+          window.hls = {};
+          hls.server = "http://qrvin.com"; //no trailing slash. Note that you can't google-print from local server
+          //set hls.emulated to true to skip VIN scanning
+          hls.emulated = false; //default value
+          if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){
+            hls.emulated = true;
+          }
+
+        </script>
+        <script src="js/utilities.js"></script>
+        <script src="js/models.js"></script>
+        <script src="js/collections.js"></script>
+        <script src="js/app.js"></script>
+    </head>
+    <body>
+
+    </body>
+</html>
