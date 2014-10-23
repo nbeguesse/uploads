@@ -57,13 +57,12 @@ hls.View = Backbone.View.extend({
 
 hls.CarView = hls.View.extend({
     render:function (eventName) {
-        //logged-in view
       var template = _.template($('#car').html(),{car:this.model});
       $(this.el).html(template);
       //Cloudprint stuff
       var gadget = new cloudprint.Gadget();
       gadget.setPrintButton($(this.el).find("#print_button_container")[0]); // div id to contain the button
-      gadget.setPrintDocument("url", "Window Sticker", car.printLink);
+      gadget.setPrintDocument("url", "Window Sticker", this.model.printLink);
       return this;
     },
 });
@@ -81,9 +80,14 @@ hls.CarListView = hls.View.extend({
     showCar:function(carId){
       var car = hls.user.cars.get(carId);
       var page = new hls.CarView({model:car});
+      //render the carpage in memory before appending it
       page.render();
       $(this.el).find(".ui-block-b").html("").append($(page.el).find("#content").html());
-      $(this.el).trigger("create"); 
+      
+      //highlight the car in the list
+      $('.ui-block-a a').css("background-color", "none");
+      $('a[data-car-id='+carId+']').css("background-color","white"); 
+      $(this.el).trigger("create");
     },
     onRemove:function(){
       $(window).unbind('throttledresize');
@@ -104,6 +108,7 @@ hls.CarListView = hls.View.extend({
 
     },
     _showCar:function(e){
+      //only used in splitView. Find the car we clicked on and show it
       var carId = $(e.target).attr("data-car-id");
       this.showCar(carId);
     },
