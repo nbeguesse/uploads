@@ -235,6 +235,9 @@ hls.UserModel = hls.Model.extend({
         this.bind('change:id',this.cars.update, this.cars); //save temp cars on login
         return this;
     },
+    getFileKey:function(){
+      return "user";
+    },
     //get the current car(may or may not be blank)
     get_curr_car:function(){
       if(!this.curr_car){
@@ -251,8 +254,34 @@ hls.UserModel = hls.Model.extend({
       this.cars.add(temp);
       return temp;
     },
+    loadFromFile:function(){
+      console.log('in load from file');
+      var value = window.localStorage.getItem(this.getFileKey());
+      if(!_.isString(value)){
+        console.log('no data yet');
+        return;
+      }
+      var data = JSON.parse(value);
+      this.set(data.user);
+      this.cars.set(data.user.cars, {remove:false});
+      //reload the homepage using changePage instead of app.navigate since we are already on the homepage
+      app.changePage(new hls.WelcomeView());
+      console.log('got from file')
+    },
     loggedIn:function(){
       return !this.isNew();
+    },
+    logout:function(){
+      window.localStorage.clear();
+      hls.user = new hls.UserModel();
+      app.changePage(new hls.WelcomeView());
+    },
+    saveToFile:function(){
+      var attributes = {user:this.attributes};
+      //rewrite the car attribute to make sure it's the latest
+      attributes.user.cars = _.map(this.cars.models, function(car){ return car.attributes; });
+      window.localStorage.setItem(this.getFileKey(), JSON.stringify(attributes));
+      console.log('wrote to file');
     },
 
     // _loginOrOut:function(){

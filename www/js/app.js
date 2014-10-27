@@ -20,7 +20,7 @@ hls.View = Backbone.View.extend({
           console.log("Got data:",data);
           if(data.car){
             hls.user.cars.set([data.car], {remove:false});
-            hls.user.file.saveUser();
+            hls.user.saveToFile();
           }
           if(success){ 
             success(data); 
@@ -139,7 +139,7 @@ hls.LoginView = hls.View.extend({
             hls.user.set(data.user);
             hls.user.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary cars
             //we don't need to upload temp cars since that happens as they're created
-            hls.user.file.saveUser();
+            hls.user.saveToFile();
             app.navigate("cars/list", true); 
         });
         return false;
@@ -281,7 +281,7 @@ hls.AppRouter = Backbone.Router.extend({
       this.changePage(new hls.LoginView());
     },
     logout:function(){
-      hls.user.file.logoutUser();
+      hls.user.logout();
     },
     carsList:function(){
       if(this.checkLoggedIn()){
@@ -382,5 +382,5 @@ $(document).ready(function () {
 
 
 });
-document.addEventListener('deviceready', function(){ hls.user.file.loadUser(); } , false);
+document.addEventListener('deviceready', function(){ hls.user.loadFromFile(); } , false);
 

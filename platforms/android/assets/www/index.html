@@ -49,12 +49,13 @@
                   <li><a href="#exit" class="scroll" role="menuitem" tabindex="-1">Exit</a></li>
                 </ul>
               </div>
+              <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
 
         </script>
 
         <script type="text/template" id="welcome">
 
-            <div data-role="header">
+            <div data-role="header" class="no-back-button">
             <h1>QRVIN</h1>
             </div>
             <div data-role="content">
@@ -62,13 +63,26 @@
                 <button class="scan-vin">SCAN YOUR VIN NUMBER</button>
                 <a href="#vin" data-mini="true" data-role="button">TYPE VIN</a>
                 <a href="#select" data-mini="true" data-role="button">Select A Year</a>
+                <a href="#dms" data-mini="true" data-role="button">Send Cars to DMS</a>
+                
+            </div>
+        </script>
+
+        <script type="text/template" id="dms">
+
+            <div data-role="header">
+
+            <h1>DMS</h1>
+            </div>
+            <div data-role="content">
+
+                <p>Coming Soon...</p>
                 
             </div>
         </script>
 
         <script type="text/template" id="login">  
             <div data-role="header">
-                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1>LOGIN</h1>
             </div>
           <form action="<%=hls.server%>/user_sessions/create.json">
@@ -80,7 +94,6 @@
 
         <script type="text/template" id="selector">
             <div data-role="header">
-                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1>Select A Car</h1>
             </div>
             <div data-role="content">
@@ -99,7 +112,6 @@
 
         <script type="text/template" id="vin">
             <div data-role="header">
-                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1>Enter VIN</h1>
             </div>
             <div data-role="content">
@@ -140,14 +152,13 @@
 
         <script type="text/template" id="car">
             <div data-role="header">
-                <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
                 <h1><%= car.description() %></h1>
             </div>
             <div data-role="content" id="content">
             <% if(!hls.user.loggedIn()){ %>
               <a href="#login" data-mini="true" data-role="button">Log In to Save</a>
             <% } %>
-            <a data-mini="true" data-role="button" id="print_button_container">Print Window Sticker</a>
+            <a data-mini="true" data-role="button" id="print_button_container">CloudPrint Window Sticker</a>
               <table data-role="table" id="my-table" data-mode="reflow">
                 <thead>
                   <tr>
@@ -155,8 +166,10 @@
                     <th>Engine</th>
                     <th>Transmission</th>
                     <th>MSRP</th>
-                    <th>Standard Options</th>
-                    <th>Installed Options</th>
+                    <%if(car.getWasNewPrice()){%>
+                      <th>WAS NEW</th>
+                    <%}%>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -164,29 +177,47 @@
                     <td><%=car.get('exterior_color') || ""%> / <%=car.get('interior_color') || ""%></td>
                     <td><%=car.get('engine')%></td>
                     <td><%=car.get('transmission')%></td>
-                    <td><%=car.get('msrp_price')%></td>
-                    <td>
-                      <% //show standard options list
-                      var u = $("<ul>");
+                    <td><%=car.get('msrp_price').formatMoney()%></td>
+                    <%if(car.getWasNewPrice()){%>
+                      <td><%=car.getWasNewPrice().formatMoney()%></td>
+                    <%}%>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p></p>
+              <ul data-role="listview" class="ui-listview-outer">
+                <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false">
+                  <h2>Standard Options</h2>
+                  <% //show standard options list
+                      var u = $("<ul data-role='listview' data-shadow='false' data-corners='false'>");
                       _.each(car.get('standard_options'), function(i){
                         u.append("<li>"+i.value+"</li>");
                       });
                       %>
                       <%= u.get(0).outerHTML%>
-                    </td><td>
-                      <% //show installed options list
-                      var u = $("<ul>");
-                      _.each(car.get('options'), function(i){
-                        if(i.installed && i.invoice){   
-                          u.append("<li>"+i.invoice.highValue+" "+i.value+"</li>"); 
-                        }                    
+                </li>
+                <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false">
+                  <h2>Installed Options (<%=car.getInstalledOptions().length%>)</h2>
+                  <% //show installed options list
+                      var u = $("<ul data-role='listview' data-shadow='false'  data-corners='false'>");
+                      _.each(car.getInstalledOptions(), function(i){
+                       
+                          var price = i.msrp ? i.msrp.highValue : 0;
+                          price = (price == 0) ? "" : parseInt(price).formatMoney(0, '.', ',');
+                          u.append("<li><span class='price'>"+price+"</span><span class='package'>"+i.value+"</span></li>"); 
+                                           
                       });
                       %>
                       <%= u.get(0).outerHTML%>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                </li>
+              </ul>
+
+                      
+ 
+                
+                      
+
             </div>
         </script> 
 
@@ -196,7 +227,7 @@
         <script src="js/vendor/underscore-min.js"></script>
         <script src="js/vendor/backbone-min.js"></script>
         <script src="js/vendor/json2.js"></script> 
-        <script src="https://www.google.com/cloudprint/client/cpgadget.js" defer></script>
+        <script src="js/vendor/cloudprintgadget.js"></script>
         <script>
           window.hls = {};
           hls.server = "http://qrvin.com"; //no trailing slash. Note that you can't google-print from local server
