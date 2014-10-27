@@ -242,6 +242,11 @@ hls.WelcomeView = hls.View.extend({
         $("#vin-form").submit();
       } });
     },
+    scanSuccess:function(vin){
+        app.navigate("#vin",{trigger:true}); //go to manual vin entry page
+        $("#car_vin").val(vin); //fill in the vin
+        $("#vin-form").submit();
+    },
 
 });
 

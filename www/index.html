@@ -98,7 +98,7 @@
             </div>
             <div data-role="content">
               <%if(_.isEmpty(array)){%>
-                Loading!
+                <img src="css/images/ajax-loader.gif">
               <%} else {%>
                 <ul data-role="listview">
                 <%for(var i=0; i<array.length; i++) { %>
@@ -162,7 +162,9 @@
               <table data-role="table" id="my-table" data-mode="reflow">
                 <thead>
                   <tr>
+                    <%if (car.get('exterior_color')){%>
                     <th>Colors</th>
+                    <% } %>
                     <th>Engine</th>
                     <th>Transmission</th>
                     <th>MSRP</th>
@@ -174,7 +176,9 @@
                 </thead>
                 <tbody>
                   <tr>
+                    <%if (car.get('exterior_color')){%>
                     <td><%=car.get('exterior_color') || ""%> / <%=car.get('interior_color') || ""%></td>
+                    <% } %>
                     <td><%=car.get('engine')%></td>
                     <td><%=car.get('transmission')%></td>
                     <td><%=car.get('msrp_price').formatMoney()%></td>

@@ -30,47 +30,6 @@
       console.log('popover');
       return false; 
     },
-    _fail:function(error){
-       //fail silently
-       //this might happen on fresh install
-    },
-    _gotFileWriteEntry:function(fileEntry){
-      fileEntry.createWriter(hls.util._gotFileWriter, hls.util._fail);
-
-    },
-    _gotFileReadEntry:function(fileEntry){
-      fileEntry.file(hls.util._gotFileRead, hls.util._fail);
-
-    },
-    _gotFileRemoveEntry:function(fileEntry){
-      fileEntry.remove(hls.util._gotFileRemoved, hls.util._fail);
-    },
-    _gotFileWriter:function(writer) {
-           writer.onwrite = function(evt) {
-          };
-          //setup the JSON to look exactly like the API
-          var attributes = {user:hls.user.attributes};
-          //rewrite the car attribute to make sure it's the latest
-          attributes.user.cars = _.map(hls.user.cars.models, function(car){ return car.attributes; });
-          writer.write(JSON.stringify(attributes));
-    },
-    _gotFileRead:function(file){
-        var reader = new FileReader();
-        reader.onloadend = function(evt) {
-            //alert('data read');
-            data = JSON.parse(evt.target.result);
-            hls.user.set(data.user);
-            hls.user.cars.set(data.user.cars, {remove:false});
-            //reload the homepage using changePage instead of app.navigate since we are already on the homepage
-            app.changePage(new hls.WelcomeView());
-        };
-        reader.readAsText(file);
-    },
-    _gotFileRemoved:function(entry){
-      alert('Logged Out.');
-      //reload the homepage using changePage instead of app.navigate since we might already be on the homepage
-      app.changePage(new hls.WelcomeView());
-    }
 
   //   unwrap:function(array, str){ 
   //     //for removing objectname from JSON result
