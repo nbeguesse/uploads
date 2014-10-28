@@ -83,7 +83,7 @@ hls.Car = hls.Model.extend({
       } else {
         this.showLink = "#cars/"+(this.get('id'));
         this.editLink = "#cars/"+(this.get('id'))+"/edit";
-        this.printLink = hls.server+"/cars/"+this.get('id')+"/window_sticker.pdf"
+        this.pdfLink = hls.server+"/cars/"+this.get('id')+"/cloudprint"
       }
         // this.images = new hls.ImageList(this.get('image_files')); 
         // this.images.car = this;

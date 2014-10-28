@@ -92,9 +92,22 @@
           </form>
         </script>      
 
+        <script type="text/template" id="register">  
+            <div data-role="header">
+                <h1>REGISTER NEW USER</h1>
+            </div>
+          <form action="<%=hls.server%>/users/create.json">
+            <input type="text" name="user_session[first_name]" placeholder="First Name" data-mini="true">
+            <input type="text" name="user_session[last_name]" placeholder="Last Name" data-mini="true">
+            <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
+            <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
+            <button data-mini="true">SUBMIT</button>
+          </form>
+        </script> 
+
         <script type="text/template" id="selector">
             <div data-role="header">
-                <h1>Select A Car</h1>
+                <h1><%=car.description()%></h1>
             </div>
             <div data-role="content">
               <%if(_.isEmpty(array)){%>
@@ -150,11 +163,16 @@
             </div>
         </script>
 
-        <script type="text/template" id="car">
+        <script type="text/template" id="car-holder">
             <div data-role="header">
                 <h1><%= car.description() %></h1>
             </div>
             <div data-role="content" id="content">
+            </div>        
+        </script>
+
+        <script type="text/template" id="car">
+
             <% if(!hls.user.loggedIn()){ %>
               <a href="#login" data-mini="true" data-role="button">Log In to Save</a>
             <% } %>
@@ -217,12 +235,6 @@
                 </li>
               </ul>
 
-                      
- 
-                
-                      
-
-            </div>
         </script> 
 
         <script src="js/vendor/jquery-1.7.1.min.js"></script>
