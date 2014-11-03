@@ -51,7 +51,8 @@ hls.Camera = hls.Model.extend({
          // if(this.success){ this.success(result.text); }// doesn't work
           app.currentPage.scanSuccess(result.text);
         } else {
-          alert("The VIN was only partially scanned. Please be sure to fit the entire barcode inside the window, and use a high pixel-density camera.");
+          alert("Got data: "+result.text)
+          //alert("The VIN was only partially scanned. Please be sure to fit the entire barcode inside the window, and use a high pixel-density camera.");
         }
       }
     },
