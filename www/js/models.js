@@ -50,8 +50,11 @@ hls.Camera = hls.Model.extend({
           console.log('we got a vin!');
          // if(this.success){ this.success(result.text); }// doesn't work
           app.currentPage.scanSuccess(result.text);
+        } else if(result.text.indexOf("http://v.ford.com") == 0){
+          var vin = hls.util.gup("v",result.text);
+           app.currentPage.scanSuccess(vin);
         } else {
-          alert("Got data: "+result.text)
+          //fail silently; alert box causes program freeze in ios
           //alert("The VIN was only partially scanned. Please be sure to fit the entire barcode inside the window, and use a high pixel-density camera.");
         }
       }

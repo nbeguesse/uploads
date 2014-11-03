@@ -1,3 +1,4 @@
+if(!hls.emulated){
 //cordova.define("com.phonegap.plugins.barcodescanner.BarcodeScanner", function(require, exports, module) {
 /**
  * cordova is available under *either* the terms of the modified BSD license *or* the
@@ -123,4 +124,4 @@
 
 
 //});
-
+}

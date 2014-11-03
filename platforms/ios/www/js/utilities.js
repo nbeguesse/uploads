@@ -80,16 +80,17 @@
   //     }
   //     return line;
   //   },
-  //   gup:function ( name ){ //gup = Get URL Parameters e.g. search query
-  //     name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-  //     var regexS = "[\\?&]"+name+"=([^&#]*)";
-  //     var regex = new RegExp( regexS );
-  //     var results = regex.exec( window.location.href );
-  //     if( results == null )
-  //       return "";
-  //     else
-  //       return results[1];
-  //   },
+    gup:function ( name , url){ //gup = Get URL Parameters e.g. search query
+      url = url || window.location.href
+      name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+      var regexS = "[\\?&]"+name+"=([^&#]*)";
+      var regex = new RegExp( regexS );
+      var results = regex.exec( url );
+      if( results == null )
+        return "";
+      else
+        return results[1];
+    },
    } //end Utilities
 
 Number.prototype.formatMoney = function(c, d, t){
