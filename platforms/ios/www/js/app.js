@@ -20,7 +20,7 @@ hls.View = Backbone.View.extend({
           console.log("Got data:",data);
           if(data.car){
             hls.user.cars.set([data.car], {remove:false});
-            hls.user.file.saveUser();
+            hls.user.saveToFile();
           }
           if(success){ 
             success(data); 
@@ -49,21 +49,37 @@ hls.View = Backbone.View.extend({
     //so use this specific callback instead of render()
     _render:function(){
          this.render(); //redraw HTML template
+         var menuTemplate = _.template($("#menu").html());
+         $(this.el).find("div[data-role=header]").prepend(menuTemplate);
          $(this.el).trigger("create"); //trigger Jquery Mobile styling
     },
     onRemove:function(){
     },
 });
+hls.SingleCarView = hls.View.extend({
+  render:function(e){
+    var template = _.template($('#car-holder').html(),{car:this.model});
+    $(this.el).html(template);
+    var carView = new hls.CarView({model:this.model});
+    carView.render();
+    $(this.el).find("#content").append($(carView.el));
+
+  },
+});
 
 hls.CarView = hls.View.extend({
+    events: {
+      'click #print_button_container':'_print',
+    },
     render:function (eventName) {
       var template = _.template($('#car').html(),{car:this.model});
       $(this.el).html(template);
-      //Cloudprint stuff
-      var gadget = new cloudprint.Gadget();
-      gadget.setPrintButton($(this.el).find("#print_button_container")[0]); // div id to contain the button
-      gadget.setPrintDocument("url", "Window Sticker", this.model.printLink);
       return this;
+    },
+    _print:function(e){
+      console.log('in print');
+      window.open(this.model.pdfLink, '_system', 'location=yes');
+
     },
 });
 
@@ -82,7 +98,7 @@ hls.CarListView = hls.View.extend({
       var page = new hls.CarView({model:car});
       //render the carpage in memory before appending it
       page.render();
-      $(this.el).find(".ui-block-b").html("").append($(page.el).find("#content").html());
+      $(this.el).find(".ui-block-b").html("").append($(page.el));
       
       //highlight the car in the list
       $('.ui-block-a a').css("background-color", "none");
@@ -139,7 +155,7 @@ hls.LoginView = hls.View.extend({
             hls.user.set(data.user);
             hls.user.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary cars
             //we don't need to upload temp cars since that happens as they're created
-            hls.user.file.saveUser();
+            hls.user.saveToFile();
             app.navigate("cars/list", true); 
         });
         return false;
@@ -163,7 +179,7 @@ hls.SelectView = hls.View.extend({
       return this;
     },
     render:function (eventName) {
-        var template = _.template($('#selector').html(), {array: this.array, url : this.url});
+        var template = _.template($('#selector').html(), {array: this.array, url : this.url, car:this.model});
         $(this.el).html(template);
 
         
@@ -242,6 +258,11 @@ hls.WelcomeView = hls.View.extend({
         $("#vin-form").submit();
       } });
     },
+    scanSuccess:function(vin){
+        app.navigate("#vin",{trigger:true}); //go to manual vin entry page
+        $("#car_vin").val(vin); //fill in the vin
+        $("#vin-form").submit();
+    },
 
 });
 
@@ -281,7 +302,7 @@ hls.AppRouter = Backbone.Router.extend({
       this.changePage(new hls.LoginView());
     },
     logout:function(){
-      hls.user.file.logoutUser();
+      hls.user.logout();
     },
     carsList:function(){
       if(this.checkLoggedIn()){
@@ -306,7 +327,7 @@ hls.AppRouter = Backbone.Router.extend({
 
         } else {
           //phone view
-          this.changePage(new hls.CarView({model:car}));
+          this.changePage(new hls.SingleCarView({model:car}));
         }
     },
     exit:function(){
@@ -340,10 +361,10 @@ hls.AppRouter = Backbone.Router.extend({
     changePage:function (page) {
         //render the page
         $(page.el).attr('data-role', 'page');
-        page.render();
+        page._render();
         //copy menu button template
-        var menuTemplate = _.template($("#menu").html());
-        $(page.el).find("div[data-role=header]").prepend(menuTemplate);
+        // var menuTemplate = _.template($("#menu").html());
+        // $(page.el).find("div[data-role=header]").prepend(menuTemplate);
         //append to page and finish up
         $('body').append($(page.el));
         $.mobile.changePage($(page.el), {changeHash:false});
@@ -382,5 +403,5 @@ $(document).ready(function () {
 
 
 });
-document.addEventListener('deviceready', function(){ hls.user.file.loadUser(); } , false);
+document.addEventListener('deviceready', function(){ hls.user.loadFromFile(); } , false);
 

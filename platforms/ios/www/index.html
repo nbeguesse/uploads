@@ -92,13 +92,26 @@
           </form>
         </script>      
 
+        <script type="text/template" id="register">  
+            <div data-role="header">
+                <h1>REGISTER NEW USER</h1>
+            </div>
+          <form action="<%=hls.server%>/users/create.json">
+            <input type="text" name="user_session[first_name]" placeholder="First Name" data-mini="true">
+            <input type="text" name="user_session[last_name]" placeholder="Last Name" data-mini="true">
+            <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
+            <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
+            <button data-mini="true">SUBMIT</button>
+          </form>
+        </script> 
+
         <script type="text/template" id="selector">
             <div data-role="header">
-                <h1>Select A Car</h1>
+                <h1><%=car.description()%></h1>
             </div>
             <div data-role="content">
               <%if(_.isEmpty(array)){%>
-                Loading!
+                <img src="css/images/ajax-loader.gif">
               <%} else {%>
                 <ul data-role="listview">
                 <%for(var i=0; i<array.length; i++) { %>
@@ -150,19 +163,26 @@
             </div>
         </script>
 
-        <script type="text/template" id="car">
+        <script type="text/template" id="car-holder">
             <div data-role="header">
                 <h1><%= car.description() %></h1>
             </div>
             <div data-role="content" id="content">
+            </div>        
+        </script>
+
+        <script type="text/template" id="car">
+
             <% if(!hls.user.loggedIn()){ %>
               <a href="#login" data-mini="true" data-role="button">Log In to Save</a>
             <% } %>
-            <a data-mini="true" data-role="button" id="print_button_container">CloudPrint Window Sticker</a>
+            <a data-mini="true" data-role="button" id="print_button_container">See Window Sticker</a>
               <table data-role="table" id="my-table" data-mode="reflow">
                 <thead>
                   <tr>
+                    <%if (car.get('exterior_color')){%>
                     <th>Colors</th>
+                    <% } %>
                     <th>Engine</th>
                     <th>Transmission</th>
                     <th>MSRP</th>
@@ -174,7 +194,9 @@
                 </thead>
                 <tbody>
                   <tr>
+                    <%if (car.get('exterior_color')){%>
                     <td><%=car.get('exterior_color') || ""%> / <%=car.get('interior_color') || ""%></td>
+                    <% } %>
                     <td><%=car.get('engine')%></td>
                     <td><%=car.get('transmission')%></td>
                     <td><%=car.get('msrp_price').formatMoney()%></td>
@@ -213,12 +235,6 @@
                 </li>
               </ul>
 
-                      
- 
-                
-                      
-
-            </div>
         </script> 
 
         <script src="js/vendor/jquery-1.7.1.min.js"></script>
@@ -228,6 +244,7 @@
         <script src="js/vendor/backbone-min.js"></script>
         <script src="js/vendor/json2.js"></script> 
         <script src="js/vendor/cloudprintgadget.js"></script>
+        <script src="js/vendor/barcodescanner.js"></script>
         <script>
           window.hls = {};
           hls.server = "http://qrvin.com"; //no trailing slash. Note that you can't google-print from local server

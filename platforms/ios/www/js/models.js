@@ -19,23 +19,23 @@ hls.Camera = hls.Model.extend({
         this.scanSuccess({text:"1C6RR6LT1DS560200", format:"Code_39", cancelled:false});
       }
     },
-    takePicture:function(options){
-      this.success = options.success; 
-      if(navigator.camera){
+    // takePicture:function(options){
+    //   this.success = options.success; 
+    //   if(navigator.camera){
 
-        var options = { quality : 50,
-          destinationType : Camera.DestinationType.FILE_URI,
-          sourceType : Camera.PictureSourceType.CAMERA, //CAMERA or PHOTOLIBRARY
-          allowEdit : true,
-          encodingType: Camera.EncodingType.JPEG,
-          saveToPhotoAlbum: false }
-        navigator.camera.getPicture(this.cameraSuccess, this.cameraError, options)
+    //     var options = { quality : 50,
+    //       destinationType : Camera.DestinationType.FILE_URI,
+    //       sourceType : Camera.PictureSourceType.CAMERA, //CAMERA or PHOTOLIBRARY
+    //       allowEdit : true,
+    //       encodingType: Camera.EncodingType.JPEG,
+    //       saveToPhotoAlbum: false }
+    //     navigator.camera.getPicture(this.cameraSuccess, this.cameraError, options)
     
-      } else {
-        alert('Camera API not supported. Using sample picture.');
-        this.cameraSuccess("http://s3.amazonaws.com/highlinesale-beta-images/photos/67458/1104868/big.JPG?1393038514");
-      }
-    },
+    //   } else {
+    //     alert('Camera API not supported. Using sample picture.');
+    //     this.cameraSuccess("http://s3.amazonaws.com/highlinesale-beta-images/photos/67458/1104868/big.JPG?1393038514");
+    //   }
+    // },
     cameraSuccess:function(data){
       var image = new hls.Image({file_url:data});
       hls.user.get_curr_car().images.add(image);
@@ -46,9 +46,10 @@ hls.Camera = hls.Model.extend({
     },
     scanSuccess:function(result){
       if(!result.cancelled){
-        if(result.format=="Code_39" && result.text.length == 17) {
+        if(result.text.length == 17) {
           console.log('we got a vin!');
-          if(this.success){ this.success(result.text); }
+         // if(this.success){ this.success(result.text); }// doesn't work
+          app.currentPage.scanSuccess(result.text);
         } else {
           alert("The VIN was only partially scanned. Please be sure to fit the entire barcode inside the window, and use a high pixel-density camera.");
         }
@@ -82,7 +83,7 @@ hls.Car = hls.Model.extend({
       } else {
         this.showLink = "#cars/"+(this.get('id'));
         this.editLink = "#cars/"+(this.get('id'))+"/edit";
-        this.printLink = hls.server+"/cars/"+this.get('id')+"/window_sticker.pdf"
+        this.pdfLink = hls.server+"/cars/"+this.get('id')+"/cloudprint"
       }
         // this.images = new hls.ImageList(this.get('image_files')); 
         // this.images.car = this;
@@ -177,63 +178,16 @@ hls.Car = hls.Model.extend({
 //     }
 // });
 
-//Note: These functions only work on the device. It doesn't work on emulators.
-//Use try/catch block and alert statements for debugging.
-hls.File = hls.Model.extend({
-  saveUser:function(){
-    if(hls.emulated){
-      console.log('skipping save to file system.');
-    } else {
-      try{
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this._gotFSWrite, hls.util._fail);
-      } catch (err){
-        alert(err);
-      }
-   }
-  },
-  loadUser:function(){
-    if(hls.emulated){
-      console.log('skipping load from file system.');
-    } else {
-      try{
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this._gotFSRead, hls.util._fail);
-      } catch (err){
-        alert(err);
-      }
-
-   }
-  },
-  logoutUser:function(){
-    if(hls.emulated){
-      console.log('skipping erasal from file system.');
-    } else {
-      try{
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, this._gotFSRemove, hls.util._fail);
-      } catch (err){
-        alert(err);
-      }
-   }
-   hls.user = new hls.UserModel();
-
-  },
-  _gotFSRead:function(fileSystem){
-    fileSystem.root.getFile("user.txt", null, hls.util._gotFileReadEntry, hls.util._fail);
-  },
-  _gotFSWrite:function(fileSystem){
-    fileSystem.root.getFile("user.txt",  {create: true, exclusive: false}, hls.util._gotFileWriteEntry, hls.util._fail);
-  },
-  _gotFSRemove:function(fileSystem){
-    fileSystem.root.getFile("user.txt", {create: false, exclusive: false}, hls.util._gotFileRemoveEntry, hls.util._fail);
-  },
-});
 hls.UserModel = hls.Model.extend({
     initialize:function(){
         this.cars = new hls.CarList(); 
         this.cars.user = this;
-        this.file = new hls.File();
-        this.file.user = this;
+   
         this.bind('change:id',this.cars.update, this.cars); //save temp cars on login
         return this;
+    },
+    getFileKey:function(){
+      return "user";
     },
     //get the current car(may or may not be blank)
     get_curr_car:function(){
@@ -251,15 +205,34 @@ hls.UserModel = hls.Model.extend({
       this.cars.add(temp);
       return temp;
     },
+    loadFromFile:function(){
+      console.log('in load from file');
+      var value = window.localStorage.getItem(this.getFileKey());
+      if(!_.isString(value)){
+        console.log('no data yet');
+        return;
+      }
+      var data = JSON.parse(value);
+      this.set(data.user);
+      this.cars.set(data.user.cars, {remove:false});
+      //reload the homepage using changePage instead of app.navigate since we are already on the homepage
+      app.changePage(new hls.WelcomeView());
+      console.log('got from file')
+    },
     loggedIn:function(){
       return !this.isNew();
     },
+    logout:function(){
+      window.localStorage.clear();
+      hls.user = new hls.UserModel();
+      app.changePage(new hls.WelcomeView());
+    },
+    saveToFile:function(){
+      var attributes = {user:this.attributes};
+      //rewrite the car attribute to make sure it's the latest
+      attributes.user.cars = _.map(this.cars.models, function(car){ return car.attributes; });
+      window.localStorage.setItem(this.getFileKey(), JSON.stringify(attributes));
+      console.log('wrote to file');
+    },
 
-    // _loginOrOut:function(){
-    //   console.log('User: User changed');
-    //   if(this.loggedIn()){ 
-    //     this.cars.update(); 
-    //   }
-    //   this.trigger('login');
-    // },
 });
