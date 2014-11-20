@@ -42,6 +42,7 @@
                 <li><a href="#" class="scroll" role="menuitem" tabindex="-1">Add A Car</a></li>
                 <% if(!hls.user.loggedIn()){ %>
                   <li><a href="#login" class="scroll" role="menuitem" tabindex="-1">Login</a></li>
+                  <li><a href="#signup" class="scroll" role="menuitem" tabindex="-1">Sign Up</a></li>
                 <% } else { %>
                   <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
@@ -92,7 +93,7 @@
           </form>
         </script>      
 
-        <script type="text/template" id="register">  
+        <script type="text/template" id="signup">  
             <div data-role="header">
                 <h1>REGISTER NEW USER</h1>
             </div>

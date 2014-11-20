@@ -217,6 +217,25 @@ hls.SelectView = hls.View.extend({
 
 });
 
+hls.SignupView = hls.View.extend({
+    events: {
+      'submit form': '_signup',
+    },
+    render:function (eventName) {
+        var template = _.template($('#signup').html());
+        $(this.el).html(template);
+        return this;
+    },
+    _signup:function(e){
+        this.submitForm($(e.currentTarget), function(data){
+            hls.user.set(data.user);
+            hls.user.saveToFile();
+            app.navigate("cars/list", true); 
+        });
+        return false;
+    },
+});
+
 hls.VinView = hls.View.extend({
     events: {
       'submit form': '_createCar',      
@@ -281,6 +300,7 @@ hls.AppRouter = Backbone.Router.extend({
          "select/:year/:make_id/:make/:model_id/:model":"selectStyle",
          "select/:year/:make_id/:make/:model_id/:model/:style_id/:style":"selectCar",
          "exit":"exit",
+         "signup":"signup",
 
     },
     initialize:function () {
@@ -350,6 +370,9 @@ hls.AppRouter = Backbone.Router.extend({
       //we don't need make-id and model-id to create a car
       this.changePage(new hls.SelectView({model:new hls.Car({year:year, make:make, model:model, style_id:style_id})}));     
     },
+    signup:function () {
+      this.changePage(new hls.SignupView());
+    },
     vin:function(){
       this.changePage(new hls.VinView({}));
     },
@@ -362,9 +385,6 @@ hls.AppRouter = Backbone.Router.extend({
         //render the page
         $(page.el).attr('data-role', 'page');
         page._render();
-        //copy menu button template
-        // var menuTemplate = _.template($("#menu").html());
-        // $(page.el).find("div[data-role=header]").prepend(menuTemplate);
         //append to page and finish up
         $('body').append($(page.el));
         $.mobile.changePage($(page.el), {changeHash:false});

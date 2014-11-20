@@ -233,7 +233,7 @@ hls.UserModel = hls.Model.extend({
     },
     saveToFile:function(){
       var attributes = {user:this.attributes};
-      //rewrite the car attribute to make sure it's the latest
+      //rewrite the user's car attribute to make sure it's the latest
       attributes.user.cars = _.map(this.cars.models, function(car){ return car.attributes; });
       window.localStorage.setItem(this.getFileKey(), JSON.stringify(attributes));
       console.log('wrote to file');
