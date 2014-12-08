@@ -561,6 +561,9 @@
         },
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "com.collectme.zbarScanner": {
+            "PACKAGE_NAME": "com.hls.qrvin"
         }
     },
     "dependent_plugins": {}

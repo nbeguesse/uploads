@@ -31,6 +31,9 @@
     <feature name="Device">
         <param name="ios-package" value="CDVDevice" />
     </feature>
+    <feature name="ZBarScanner">
+        <param name="ios-package" value="ZBarScanner" />
+    </feature>
     <name>QRVin</name>
     <description>
         QRVin is the fastest way to get your vehicle's description, original price, and option packages.

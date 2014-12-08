@@ -9,10 +9,17 @@ hls.Camera = hls.Model.extend({
     initialize:function(){
         return this;
     },
-    scanVin:function(options){ //see https://github.com/wildabeast/BarcodeScanner 
+    scanVin:function(options){ 
       this.success = options.success;     
       if(!hls.emulated){
-        cordova.plugins.barcodeScanner.scan( this.scanSuccess, this.scanError );
+
+        //if (cordova.plugins.zbarScanner && navigator.userAgent.match(/iPhone|iPad|iPod/i)) { // We must make sure it's triggered ONLY for iOS
+
+                cordova.plugins.zbarScanner.scan( this.scanSuccess, this.scanError ); //Zbar for ios only
+
+        //} else {
+        //  cordova.plugins.barcodeScanner.scan( this.scanSuccess, this.scanError ); //ZXING Scanner for Android and ioS
+        //}
       } else {
         
         alert('Barcode API not supported. Using sample data.');
@@ -77,7 +84,7 @@ hls.Car = hls.Model.extend({
       if(this.isNew()){
         return hls.server+"/cars";
       } else {
-        return hls.server+"/cars/"+this.get('id')+".json";
+        return hls.server+"/cars/"+this.get('id')+"/update.js"; //Model.save doesn't work cross-domain!
       }
     },
     initialize:function(){
@@ -88,6 +95,7 @@ hls.Car = hls.Model.extend({
         this.showLink = "#cars/"+(this.get('id'));
         this.editLink = "#cars/"+(this.get('id'))+"/edit";
         this.pdfLink = hls.server+"/cars/"+this.get('id')+"/cloudprint"
+        this.editOptionLink = hls.server+"/cars/"+(this.get('id'))+"/update_option";
       }
         // this.images = new hls.ImageList(this.get('image_files')); 
         // this.images.car = this;
@@ -96,9 +104,9 @@ hls.Car = hls.Model.extend({
     // parse: function(response){
     //   return response.car
     // },
-    toJSON: function() {
-      //add params[:car] before saving the car
-      var out = hls.util.addAccessToken({ car: _.clone( this.attributes ) });
+    toJSON: function() { //never used! //Model.save doesn't work cross-domain!
+      var temp = _.clone(this.attributes);
+      var out = hls.util.addAccessToken({ car:temp }); //add params[:car] before saving the car
       return out;
     },
     description:function(){
@@ -232,11 +240,13 @@ hls.UserModel = hls.Model.extend({
       app.changePage(new hls.WelcomeView());
     },
     saveToFile:function(){
-      var attributes = {user:this.attributes};
-      //rewrite the user's car attribute to make sure it's the latest
-      attributes.user.cars = _.map(this.cars.models, function(car){ return car.attributes; });
-      window.localStorage.setItem(this.getFileKey(), JSON.stringify(attributes));
-      console.log('wrote to file');
+      if(this.loggedIn()){
+        var attributes = {user:this.attributes};
+        //rewrite the user's car attribute to make sure it's the latest
+        attributes.user.cars = _.map(this.cars.models, function(car){ return car.attributes; });
+        window.localStorage.setItem(this.getFileKey(), JSON.stringify(attributes));
+        console.log('wrote to file');
+      }
     },
 
 });

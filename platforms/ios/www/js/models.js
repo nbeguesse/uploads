@@ -9,10 +9,18 @@ hls.Camera = hls.Model.extend({
     initialize:function(){
         return this;
     },
-    scanVin:function(options){ //see https://github.com/wildabeast/BarcodeScanner 
+    scanVin:function(options){ 
       this.success = options.success;     
       if(!hls.emulated){
-        cordova.plugins.barcodeScanner.scan( this.scanSuccess, this.scanError );
+
+        //if (cordova.plugins.zbarScanner && navigator.userAgent.match(/iPhone|iPad|iPod/i)) { // We must make sure it's triggered ONLY for iOS
+            //scanner = {};
+            //scanner.scan = function (callback) {
+                cordova.plugins.zbarScanner.scan( this.scanSuccess, this.scanError ); //Zbar for ios only
+           // }
+        //} else {
+        //  cordova.plugins.barcodeScanner.scan( this.scanSuccess, this.scanError ); //ZXING Scanner for Android
+        //}
       } else {
         
         alert('Barcode API not supported. Using sample data.');
@@ -233,7 +241,7 @@ hls.UserModel = hls.Model.extend({
     },
     saveToFile:function(){
       var attributes = {user:this.attributes};
-      //rewrite the car attribute to make sure it's the latest
+      //rewrite the user's car attribute to make sure it's the latest
       attributes.user.cars = _.map(this.cars.models, function(car){ return car.attributes; });
       window.localStorage.setItem(this.getFileKey(), JSON.stringify(attributes));
       console.log('wrote to file');

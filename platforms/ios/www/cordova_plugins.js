@@ -48,6 +48,13 @@ module.exports = [
         "clobbers": [
             "device"
         ]
+    },
+    {
+        "file": "plugins/com.collectme.zbarScanner/www/zbarscanner.js",
+        "id": "com.collectme.zbarScanner.ZBarScanner",
+        "clobbers": [
+            "cordova.plugins.zbarScanner"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -56,7 +63,8 @@ module.exports.metadata =
     "org.apache.cordova.camera": "0.3.1",
     "com.phonegap.plugins.barcodescanner": "2.0.0",
     "org.apache.cordova.inappbrowser": "0.5.3",
-    "org.apache.cordova.device": "0.2.13-dev"
+    "org.apache.cordova.device": "0.2.13-dev",
+    "com.collectme.zbarScanner": "0.0.1"
 }
 // BOTTOM OF METADATA
 });

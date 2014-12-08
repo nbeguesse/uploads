@@ -139,3 +139,13 @@ span.package {
     display:inline-block;
     white-space:normal;
 }
+.custom-centercollheader {
+    list-style:none !important;
+}
+.custom-centercollheader a{
+    text-align: center !important;
+    padding-right: 2.5em !important;
+}
+/*ul.edit-options .ui-checkbox input{
+    position:relative;
+}*/

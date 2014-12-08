@@ -40,22 +40,28 @@
                     "libiconv.dylib": [
                         {
                             "xml": "false",
-                            "count": 1
+                            "count": 2
                         }
                     ],
                     "AVFoundation.framework": [
                         {
                             "xml": "false",
-                            "count": 1
+                            "count": 2
                         }
                     ],
                     "CoreVideo.framework": [
                         {
                             "xml": "false",
-                            "count": 1
+                            "count": 2
                         }
                     ],
                     "QuartzCore.framework": [
+                        {
+                            "xml": "false",
+                            "count": 2
+                        }
+                    ],
+                    "CoreMedia.framework": [
                         {
                             "xml": "false",
                             "count": 1
@@ -81,6 +87,10 @@
                         {
                             "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ZBarScanner\"><param name=\"ios-package\" value=\"ZBarScanner\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -98,6 +108,9 @@
             "PACKAGE_NAME": "com.hls.qrvin"
         },
         "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "com.collectme.zbarScanner": {
             "PACKAGE_NAME": "com.hls.qrvin"
         }
     },
