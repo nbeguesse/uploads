@@ -27,6 +27,7 @@ hls.ImageList = hls.Collection.extend({
   },
   _add:function(image){
     image.car = this.car;
+    image.save();
   }
 
 });

@@ -47,7 +47,7 @@
                   <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
                 <% } %>
-                  <li><a href="#exit" class="scroll" role="menuitem" tabindex="-1">Exit</a></li>
+                  
                 </ul>
               </div>
               <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
@@ -201,6 +201,16 @@
             </div>        
         </script>
 
+        <script type="text/template" id="edit-car">
+            <div data-role="header">
+                <h1>Edit <%= car.description() %></h1>
+            </div>
+            <div data-role="content" id="content">
+              <a href="#cars/<%=car.id%>/edit/options" data-role="button" data-icon="edit" data-iconpos="right">Edit Installed Options</a>
+              <button data-icon="edit" data-iconpos="right" id="take-picture">TAKE A PICTURE</button>
+            </div>        
+        </script>
+
         <script type="text/template" id="car">
 
             <% if(!hls.user.loggedIn()){ %>
@@ -251,7 +261,7 @@
                       _.each(car.getInstalledOptions(), function(i){
                        
                           var price = i.msrp ? i.msrp.highValue : 0;
-                          total += price;
+                          total += parseInt(price);
                           price = (price == 0) ? "" : parseInt(price).formatMoney(0, '.', ',');
                           u.append("<li><span class='price'>"+price+"</span><span class='package'>"+i.value+"</span></li>"); 
                                            
@@ -263,7 +273,8 @@
                   <h2>See Installed Options (<%=Math.round(total).formatMoney(0, '.', ',')%>)</h2>
                   <%= u.get(0).outerHTML%>
                 </li>
-                <a href="#cars/<%=car.id%>/edit/options" data-role="button" data-icon="edit" data-iconpos="right">Edit Installed Options</a>
+                <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="edit" data-iconpos="right">Edit Car</a>
+                
               
 
         </script> 
@@ -278,7 +289,9 @@
         
         <script>
           window.hls = {};
-          hls.server = "http://localhost:3002"; //no trailing slash. Note that you can't google-print from local server
+          hls.server = "http://qrvin.com"; //no trailing slash. 
+          //Note that you can't google-print from local server.
+          //Note that you can't do post requests from local server
           //set hls.emulated to true to skip VIN scanning
           hls.emulated = false; //default value
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){
