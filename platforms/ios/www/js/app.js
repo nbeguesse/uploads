@@ -1,12 +1,27 @@
 
 $.support.cors = true;
 hls.View = Backbone.View.extend({
-
+    // postUrl:function(url, options){
+    //   var options = options;
+    //   options || (options = {});
+    //   var success = options.success;
+    //   if (hls.user.loggedIn()){ 
+    //     options.data = hls.util.addAccessToken(options.data)
+    //   }
+     
+    //   $.ajax({
+    //     dataType: "json",
+    //     url: url,
+    //     data:options.data,
+    //     type:"POST",
+        
+    //   });
+    // },
     getUrl:function(url, options){
       var options = options;
       options || (options = {});
       var success = options.success;
-      if (hls.user.loggedIn()){ //TODO test adding cars after you're logged in
+      if (hls.user.loggedIn()){ 
         options.data = hls.util.addAccessToken(options.data)
       }
       $.mobile.loading( 'show', {text: '', textVisible: true, theme: 'z', html: ""}); //show jquery mobile spinner
@@ -26,8 +41,16 @@ hls.View = Backbone.View.extend({
             success(data); 
           }
         },
+        error:function(error){
+          console.log('error');
+        },
         
       });
+    },
+    render:function (eventName) { //default render uses default template
+        var template = _.template($(this.template).html());
+        $(this.el).html(template);
+        return this;
     },
     //generalized form submitting & validation method.
     //Define onFormSubmit for when it succeeds.
@@ -56,32 +79,7 @@ hls.View = Backbone.View.extend({
     onRemove:function(){
     },
 });
-hls.SingleCarView = hls.View.extend({
-  render:function(e){
-    var template = _.template($('#car-holder').html(),{car:this.model});
-    $(this.el).html(template);
-    var carView = new hls.CarView({model:this.model});
-    carView.render();
-    $(this.el).find("#content").append($(carView.el));
 
-  },
-});
-
-hls.CarView = hls.View.extend({
-    events: {
-      'click #print_button_container':'_print',
-    },
-    render:function (eventName) {
-      var template = _.template($('#car').html(),{car:this.model});
-      $(this.el).html(template);
-      return this;
-    },
-    _print:function(e){
-      console.log('in print');
-      window.open(this.model.pdfLink, '_system', 'location=yes');
-
-    },
-});
 
 hls.CarListView = hls.View.extend({
     events: {
@@ -130,25 +128,76 @@ hls.CarListView = hls.View.extend({
     },
 });
 
-hls.DmsView = hls.View.extend({
-
-   
+hls.CarView = hls.View.extend({
+    events: {
+      'click #print_button_container':'_print',
+    },
     render:function (eventName) {
-        var template = _.template($('#dms').html())
+      var template = _.template($('#car').html(),{car:this.model});
+      $(this.el).html(template);
+      return this;
+    },
+    _print:function(e){
+      console.log('in print');
+      window.open(this.model.pdfLink, '_system', 'location=yes');
+
+    },
+});
+
+hls.DmsView = hls.View.extend({
+    template:"#dms",
+});
+
+hls.EditCarView = hls.View.extend({
+    template:"#edit-car",
+    events: {
+      'click #take-picture': '_takePicture',
+    },
+    render:function (eventName) { 
+        var template = _.template($(this.template).html(), {car:this.model});
         $(this.el).html(template);
         return this;
     },
+    _takePicture:function(){
+      hls.camera.takePicture({success:function(image){
+          app.currentPage.model.images.add(image);
+          console.log('done!');
+        }
+      });
+    },
+});
+
+hls.EditOptionsView = hls.View.extend({
+    template:"#edit-options",
+    events: {
+      'click label': '_save',
+    },
+    render:function (eventName) {
+      var template = _.template($(this.template).html(),{car:this.model});
+      $(this.el).html(template);
+      $(".option").click(function(e){
+          var optionId = $(e.currentTarget).closest("li").attr('data-option');
+          console.log(optionId);
+      });
+      return this;
+    },
+    _save:function(e){
+      var label = $(e.currentTarget);
+      var optionId = label.closest("li").attr('data-option');
+      var temp = this.model.get('options'); //i.e. let's rewrite the entire options attribute
+      temp[optionId].installed = !label.closest("div").find("input").is(':checked'); //This is reversed; probably because of Jquery Mobile clicking delays
+      
+      this.model.set({options:temp});
+      this.model.trigger('change:options'); //see http://stackoverflow.com/questions/9909799/backbone-js-change-not-firing-on-model-change
+    },
+
 
 });
 
 hls.LoginView = hls.View.extend({
+    template:"#login",
     events: {
       'submit form': '_login',
-    },
-    render:function (eventName) {
-        var template = _.template($('#login').html());
-        $(this.el).html(template);
-        return this;
     },
     _login:function(e){
         this.submitForm($(e.currentTarget), function(data){
@@ -218,13 +267,9 @@ hls.SelectView = hls.View.extend({
 });
 
 hls.SignupView = hls.View.extend({
+    template:"#signup",
     events: {
       'submit form': '_signup',
-    },
-    render:function (eventName) {
-        var template = _.template($('#signup').html());
-        $(this.el).html(template);
-        return this;
     },
     _signup:function(e){
         this.submitForm($(e.currentTarget), function(data){
@@ -236,15 +281,22 @@ hls.SignupView = hls.View.extend({
     },
 });
 
+hls.SingleCarView = hls.View.extend({
+  render:function(e){
+    var template = _.template($('#car-holder').html(),{car:this.model});
+    $(this.el).html(template);
+    var carView = new hls.CarView({model:this.model});
+    carView.render();
+    $(this.el).find("#content").append($(carView.el));
+
+  },
+});
+
 hls.VinView = hls.View.extend({
+    template:"#vin",
     events: {
       'submit form': '_createCar',      
     },  
-    render:function (eventName) {
-        var template = _.template($('#vin').html())
-        $(this.el).html(template);
-        return this;
-    },
     _createCar:function(e){
       var form = $(e.currentTarget);
        this.submitForm(form, function(data){
@@ -260,14 +312,9 @@ hls.VinView = hls.View.extend({
 
 
 hls.WelcomeView = hls.View.extend({
+    template:"#welcome",
     events: {
       'click .scan-vin': '_scan',
-    },
-   
-    render:function (eventName) {
-        var template = _.template($('#welcome').html())
-        $(this.el).html(template);
-        return this;
     },
     _scan:function(){
       hls.camera.scanVin({success:function(vin){ 
@@ -293,14 +340,15 @@ hls.AppRouter = Backbone.Router.extend({
         "vin":"vin",
         "cars/list":"carsList",
          "cars/:id":"cars",
+         "cars/:id/edit":"editCar",
          "dms":"dms",
          "select":"selectYear",
          "select/:year/":"selectMake",
          "select/:year/:make_id/:make":"selectModel",
          "select/:year/:make_id/:make/:model_id/:model":"selectStyle",
          "select/:year/:make_id/:make/:model_id/:model/:style_id/:style":"selectCar",
-         "exit":"exit",
          "signup":"signup",
+         "cars/:id/edit/options":"editOptions",
 
     },
     initialize:function () {
@@ -332,13 +380,8 @@ hls.AppRouter = Backbone.Router.extend({
 
 
     cars:function(id) {
+      if(this.carExists(id)){
         var car = hls.user.cars.get(id); //find car in carlist
-
-        //if it's not found, they need to login
-        if(_.isUndefined(car)){ 
-          app.navigate("login", true);
-          return;
-        } 
 
         if(hls.util.shouldSplitView()){
           //tablet view
@@ -349,10 +392,21 @@ hls.AppRouter = Backbone.Router.extend({
           //phone view
           this.changePage(new hls.SingleCarView({model:car}));
         }
+      }
     },
-    exit:function(){
-      navigator.app.exitApp();
+    editCar:function(id){
+        if(this.carExists(id)){
+          var car = hls.user.cars.get(id);
+          this.changePage(new hls.EditCarView({model:car}));
+        }
+    },    
+    editOptions:function(id){
+      if(this.carExists(id)){
+        var car = hls.user.cars.get(id);
+        this.changePage(new hls.EditOptionsView({model:car}));
+      }
     },
+
 
     selectYear:function(){
       this.changePage(new hls.SelectView({model:new hls.Car()}));
@@ -394,6 +448,15 @@ hls.AppRouter = Backbone.Router.extend({
         }
         this.currentPage = page;
     },
+    carExists:function(id){
+        var car = hls.user.cars.get(id); //find car in carlist
+        //if it's not found, they need to login
+        if(_.isUndefined(car)){ 
+          app.navigate("login", true);
+          return false;
+        } 
+      return true;
+    },    
     checkLoggedIn:function(){
       if(hls.user.loggedIn()){ return true; }
       app.navigate("login", true);
