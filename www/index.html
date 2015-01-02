@@ -27,10 +27,12 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <script type="text/javascript" src="cordova.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
-        <link rel="stylesheet" href="css/slicknav.css" />
         
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
+        
+
+        <link rel="stylesheet" href="css/slicknav.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>QRVIN.com Upload App</title>
 
         <script type="text/template" id="menu">
@@ -57,16 +59,19 @@
         <script type="text/template" id="welcome">
 
             <div data-role="header" class="no-back-button">
-            <h1>QRVIN</h1>
+              <h1 class="qrvin-title"><img src="img/qrvin.png"></h1>
             </div>
             <div data-role="content">
 
-                <button class="scan-vin">SCAN YOUR VIN NUMBER</button>
-                <a href="#vin" data-mini="true" data-role="button">TYPE VIN</a>
-                <a href="#select" data-mini="true" data-role="button">Select A Year</a>
-                <a href="#dms" data-mini="true" data-role="button">Send Cars to DMS</a>
-                
+                <button class="scan-vin" data-icon="carat-r" data-iconpos="right">SCAN THE VIN BARCODE <div><img src="img/button0.gif"></div></button>
+                <a href="#vin"  data-role="button" data-icon="carat-r" data-iconpos="right">TYPE VIN MANUALLY<div><img src="img/button1.gif"></div></a>
+                <a href="#select" data-role="button" data-icon="carat-r" data-iconpos="right">Select A Year, Make, & Model <div><img src="img/button2.gif"></div></a>
+                <a href="#dms" data-role="button" data-icon="carat-r" data-iconpos="right">Upload Cars to DMS</a>
+                <!--<button id="check-brightness"> Check Brightness</button>-->
+                <button id="brightness-up" data-icon="arrow-u"> Brightness Up</button>
+                <button id="brightness-down" data-icon="arrow-d" data-iconpos="right"> Brightness Down</button>
             </div>
+
         </script>
 
         <script type="text/template" id="dms">
@@ -118,7 +123,10 @@
           <form action="<%=hls.server%>/user_sessions/create.json">
             <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
             <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
-            <button data-mini="true">SUBMIT</button>
+            <%_.each(hls.user.cars.models, function(car){ %>
+              <input type="hidden" name="user_session[cars][]" value="<%=car.id%>">
+            <%});%>
+            <button>SUBMIT</button>
           </form>
         </script>      
 
@@ -206,17 +214,17 @@
                 <h1>Edit <%= car.description() %></h1>
             </div>
             <div data-role="content" id="content">
-              <a href="#cars/<%=car.id%>/edit/options" data-role="button" data-icon="edit" data-iconpos="right">Edit Installed Options</a>
-              <button data-icon="edit" data-iconpos="right" id="take-picture">TAKE A PICTURE</button>
+              <a href="#cars/<%=car.id%>/edit/options" data-role="button" data-icon="carat-r" data-iconpos="right">Edit Installed Options</a>
+              <button data-icon="carat-r" data-iconpos="right" id="take-picture">TAKE A PICTURE</button>
             </div>        
         </script>
 
         <script type="text/template" id="car">
 
             <% if(!hls.user.loggedIn()){ %>
-              <a href="#login" data-mini="true" data-role="button">Log In to Save</a>
+              <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button">Log In to Save</a>
             <% } %>
-            <a data-mini="true" data-role="button" id="print_button_container">See Window Sticker</a>
+            <a data-role="button" id="print_button_container">See Window Sticker</a>
               <table data-role="table" id="my-table" data-mode="reflow">
                 <thead>
                   <tr>
@@ -273,7 +281,7 @@
                   <h2>See Installed Options (<%=Math.round(total).formatMoney(0, '.', ',')%>)</h2>
                   <%= u.get(0).outerHTML%>
                 </li>
-                <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="edit" data-iconpos="right">Edit Car</a>
+                <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="carat-r" data-iconpos="right">Edit Car</a>
                 
               
 
@@ -289,9 +297,9 @@
         
         <script>
           window.hls = {};
-          hls.server = "http://qrvin.com"; //no trailing slash. 
+          hls.server = "http://localhost:3000"; //no trailing slash. 
           //Note that you can't google-print from local server.
-          //Note that you can't do post requests from local server
+          //Note that you can't do CORS requests from local server
           //set hls.emulated to true to skip VIN scanning
           hls.emulated = false; //default value
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){

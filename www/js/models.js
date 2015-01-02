@@ -13,13 +13,13 @@ hls.Camera = hls.Model.extend({
       this.success = options.success;     
       if(!hls.emulated){
 
-        //if (cordova.plugins.zbarScanner && navigator.userAgent.match(/iPhone|iPad|iPod/i)) { // We must make sure it's triggered ONLY for iOS
+        if (cordova.plugins.zbarScanner && navigator.userAgent.match(/iPhone|iPad|iPod/i)) { // We must make sure it's triggered ONLY for iOS
 
                 cordova.plugins.zbarScanner.scan( this.scanSuccess, this.scanError ); //Zbar for ios only
 
-        //} else {
-        //  cordova.plugins.barcodeScanner.scan( this.scanSuccess, this.scanError ); //ZXING Scanner for Android and ioS
-        //}
+        } else {
+          cordova.plugins.barcodeScanner.scan( this.scanSuccess, this.scanError ); //ZXING Scanner for Android and ioS
+        }
       } else {
         
         alert('Barcode API not supported. Using sample data.');
@@ -45,10 +45,11 @@ hls.Camera = hls.Model.extend({
     },
     cameraSuccess:function(data){
       var image = new hls.Image({file_url:data});
-      if(this.success){ this.success(image); }
+      app.currentPage.model.images.add(image);
     },
     cameraError:function(message){
       //fail silently!
+      console.log('camera error',message);
     },
     scanSuccess:function(result){
       if(!result.cancelled){
@@ -84,7 +85,7 @@ hls.Car = hls.Model.extend({
       if(this.isNew()){
         return hls.server+"/cars";
       } else {
-        return hls.server+"/cars/"+this.get('id')+"/update_from_mobile.js"; 
+        return hls.server+"/cars/"+this.get('id'); //not used yet
       }
     },
     initialize:function(){
@@ -99,30 +100,42 @@ hls.Car = hls.Model.extend({
       }
       this.images = new hls.ImageList(this.get('image_files')); 
       this.images.car = this;
-      this.bind('change:options',this.push, this);
+
       
       return this;
     },
-
-    toJSON: function() { 
-      
-      var temp = {};
-      temp.options = JSON.stringify(this.get('options')); //send options as string instead of JSON object
-      
-      return temp;
-    },
-    push:function(){ //use this instead of Backbone.sync which doesn't work cross-domain
-     console.log('in push');
-     hls.user.saveToFile();
+    installOption:function(optionId, installed){
+      var temp = this.get('options'); 
+      temp[optionId].installed = installed;
+      this.set({options:temp});
+      //sync with server
       $.ajax({
-        dataType: "json",
-        url: this.url(),
-        data:hls.util.addAccessToken({car: this.toJSON()}),
-        type:"POST",
-        
+        dataType: "jsonp",
+        url: hls.server+"/cars/"+this.get('id')+"/update_option",
+        data:{installed:installed, option_id:optionId}
       });
-
     },
+
+    // toJSON: function() { 
+      
+    //   var temp = {};
+    //   temp.options = JSON.stringify(this.get('options')); //send options as string instead of JSON object
+      
+    //   return temp;
+    // },
+    // Enable CORS on the server before doing this
+    // push:function(){ //use this instead of Backbone.sync
+    //  console.log('in push');
+    //  hls.user.saveToFile();
+    //   $.ajax({
+    //     dataType: "json",
+    //     url: this.url(),
+    //     data:hls.util.addAccessToken({car: this.toJSON()}),
+    //     type:"POST",
+        
+    //   });
+
+    // },
     description:function(){
         var parts = [this.get('year'), this.get('make'), this.get('model')];
         var out = parts.join(" ");
@@ -175,9 +188,9 @@ hls.Image = hls.Model.extend({
     },
 
     save: function(fileEntry){
-      console.log('in save');
+      console.log('in image save');
       var imageURI = this.get('file_url');
-      if(!hls.emulated){
+      if(navigator.camera){
         var options = new FileUploadOptions();
         options.fileKey="file";
         options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
@@ -193,13 +206,13 @@ hls.Image = hls.Model.extend({
       }
     },
     win:function(r){
-      alert("Response = " + r.response);
+      alert("Image Uploaded.");
       if(JSON.parse(r.response).error){
         alert("Upload Error: " + JSON.parse(r.response).error);
       }
     },
     fail:function(error){
-      //alert("An upload error has occurred: Code = " + error.code);
+      alert("An upload error has occurred: Code = " + error.code);
 
     }
 });
@@ -213,7 +226,8 @@ hls.UserModel = hls.Model.extend({
         return this;
     },
     getFileKey:function(){
-      return "user";
+      var dateString = (new Date()).yyyymmdd();
+      return "user"+dateString;
     },
     //get the current car(may or may not be blank)
     get_curr_car:function(){

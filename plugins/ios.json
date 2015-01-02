@@ -66,6 +66,12 @@
                             "xml": "false",
                             "count": 1
                         }
+                    ],
+                    "UIKit.framework": [
+                        {
+                            "xml": "true",
+                            "count": 1
+                        }
                     ]
                 }
             },
@@ -103,6 +109,10 @@
                         {
                             "xml": "<preference name=\"CameraUsesGeolocation\" value=\"false\" />",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Brightness\"><param name=\"ios-package\" value=\"Brightness\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -136,6 +146,9 @@
             "PACKAGE_NAME": "com.hls.qrvin"
         },
         "org.apache.cordova.camera": {
+            "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "cordova.plugin.Brightness": {
             "PACKAGE_NAME": "com.hls.qrvin"
         }
     },

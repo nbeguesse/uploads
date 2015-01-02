@@ -159,11 +159,8 @@ hls.EditCarView = hls.View.extend({
         return this;
     },
     _takePicture:function(){
-      hls.camera.takePicture({success:function(image){
-          app.currentPage.model.images.add(image);
-          console.log('done!');
-        }
-      });
+      hls.camera.takePicture({});
+      //Note: passing "success" option doesn't work on device
     },
 });
 
@@ -171,24 +168,20 @@ hls.EditOptionsView = hls.View.extend({
     template:"#edit-options",
     events: {
       'click label': '_save',
+      'touchstart label': '_save',
     },
     render:function (eventName) {
       var template = _.template($(this.template).html(),{car:this.model});
       $(this.el).html(template);
-      $(".option").click(function(e){
-          var optionId = $(e.currentTarget).closest("li").attr('data-option');
-          console.log(optionId);
-      });
       return this;
     },
     _save:function(e){
+
       var label = $(e.currentTarget);
       var optionId = label.closest("li").attr('data-option');
-      var temp = this.model.get('options'); //i.e. let's rewrite the entire options attribute
-      temp[optionId].installed = !label.closest("div").find("input").is(':checked'); //This is reversed; probably because of Jquery Mobile clicking delays
-      
-      this.model.set({options:temp});
-      this.model.trigger('change:options'); //see http://stackoverflow.com/questions/9909799/backbone-js-change-not-firing-on-model-change
+      var installed = !label.closest("div").find("input").is(':checked'); //This is reversed; probably because of Jquery Mobile clicking delays
+      this.model.installOption(optionId, installed);
+
     },
 
 
@@ -203,7 +196,7 @@ hls.LoginView = hls.View.extend({
         this.submitForm($(e.currentTarget), function(data){
             hls.user.set(data.user);
             hls.user.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary cars
-            //we don't need to upload temp cars since that happens as they're created
+            //TODO: upload temp cars in memory
             hls.user.saveToFile();
             app.navigate("cars/list", true); 
         });
@@ -315,6 +308,9 @@ hls.WelcomeView = hls.View.extend({
     template:"#welcome",
     events: {
       'click .scan-vin': '_scan',
+      'click #brightness-up': '_brightnessUp',
+      'click #brightness-down': '_brightnessDown',
+      'click #check-brightness':'_brightnessCheck',
     },
     _scan:function(){
       hls.camera.scanVin({success:function(vin){ 
@@ -328,6 +324,32 @@ hls.WelcomeView = hls.View.extend({
         app.navigate("#vin",{trigger:true}); //go to manual vin entry page
         $("#car_vin").val(vin); //fill in the vin
         $("#vin-form").submit();
+    },
+    /* Brightness Change only works when the phone's brightness is set to Auto!*/
+    _brightnessCheck:function(){
+      console.log('in brightness check');
+      if(!hls.emulated){
+        window.brightness = cordova.require("cordova.plugin.Brightness.Brightness");
+        brightness.getBrightness( function(i){ alert('Brightness: ' + i);}, this.dummy);
+        
+      }
+    },
+    _brightnessUp:function(){
+      console.log('in brightness up');
+      if(!hls.emulated){
+        window.brightness = cordova.require("cordova.plugin.Brightness.Brightness");
+        brightness.setBrightness(100, this.dummy, this.dummy);
+        
+      }
+    },
+    _brightnessDown:function(){
+      console.log('in brightness down');
+      if(!hls.emulated){
+        window.brightness = cordova.require("cordova.plugin.Brightness.Brightness");
+        brightness.setBrightness(0, this.dummy, this.dummy);
+      }
+    },
+    dummy:function(status){
     },
 
 });

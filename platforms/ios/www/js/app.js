@@ -159,11 +159,8 @@ hls.EditCarView = hls.View.extend({
         return this;
     },
     _takePicture:function(){
-      hls.camera.takePicture({success:function(image){
-          app.currentPage.model.images.add(image);
-          console.log('done!');
-        }
-      });
+      hls.camera.takePicture({});
+      //Note: passing "success" option doesn't work on device
     },
 });
 
@@ -171,24 +168,36 @@ hls.EditOptionsView = hls.View.extend({
     template:"#edit-options",
     events: {
       'click label': '_save',
+      'touchstart label': '_save',
     },
     render:function (eventName) {
       var template = _.template($(this.template).html(),{car:this.model});
       $(this.el).html(template);
-      $(".option").click(function(e){
-          var optionId = $(e.currentTarget).closest("li").attr('data-option');
-          console.log(optionId);
-      });
       return this;
     },
     _save:function(e){
+
       var label = $(e.currentTarget);
       var optionId = label.closest("li").attr('data-option');
-      var temp = this.model.get('options'); //i.e. let's rewrite the entire options attribute
-      temp[optionId].installed = !label.closest("div").find("input").is(':checked'); //This is reversed; probably because of Jquery Mobile clicking delays
-      
-      this.model.set({options:temp});
-      this.model.trigger('change:options'); //see http://stackoverflow.com/questions/9909799/backbone-js-change-not-firing-on-model-change
+      //var temp = this.model.get('options'); //i.e. let's rewrite the entire options attribute
+      var installed = !label.closest("div").find("input").is(':checked'); //This is reversed; probably because of Jquery Mobile clicking delays
+      //temp[optionId].installed = !label.closest("div").find("input").is(':checked'); //This is reversed; probably because of Jquery Mobile clicking delays
+      this.model.installOption(optionId, installed);
+      // this.model.set({options:temp});
+      // $.ajax({
+      //   dataType: "jsonp",
+      //   url: hls.server+"/cars/"+this.model.get('id')+"/update_option",
+      //   data:{installed:installed, option_id:optionId},
+      //   success:function(data){
+      //     console.log('installed option!');
+      //   },
+      //   error:function(error){
+      //     console.log('error');
+      //   },
+        
+      //});
+
+
     },
 
 

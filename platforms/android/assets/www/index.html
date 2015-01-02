@@ -27,10 +27,12 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <script type="text/javascript" src="cordova.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
-        <link rel="stylesheet" href="css/slicknav.css" />
         
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
+        
+
+        <link rel="stylesheet" href="css/slicknav.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>QRVIN.com Upload App</title>
 
         <script type="text/template" id="menu">
@@ -47,7 +49,7 @@
                   <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
                 <% } %>
-                  <li><a href="#exit" class="scroll" role="menuitem" tabindex="-1">Exit</a></li>
+                  
                 </ul>
               </div>
               <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
@@ -57,16 +59,19 @@
         <script type="text/template" id="welcome">
 
             <div data-role="header" class="no-back-button">
-            <h1>QRVIN</h1>
+              <h1 class="qrvin-title"><img src="img/qrvin.png"></h1>
             </div>
             <div data-role="content">
 
-                <button class="scan-vin">SCAN YOUR VIN NUMBER</button>
-                <a href="#vin" data-mini="true" data-role="button">TYPE VIN</a>
-                <a href="#select" data-mini="true" data-role="button">Select A Year</a>
-                <a href="#dms" data-mini="true" data-role="button">Send Cars to DMS</a>
-                
+                <button class="scan-vin" data-icon="carat-r" data-iconpos="right">SCAN THE VIN BARCODE <div><img src="img/button0.gif"></div></button>
+                <a href="#vin"  data-role="button" data-icon="carat-r" data-iconpos="right">TYPE VIN MANUALLY<div><img src="img/button1.gif"></div></a>
+                <a href="#select" data-role="button" data-icon="carat-r" data-iconpos="right">Select A Year, Make, & Model <div><img src="img/button2.gif"></div></a>
+                <a href="#dms" data-role="button" data-icon="carat-r" data-iconpos="right">Upload Cars to DMS</a>
+                <!--<button id="check-brightness"> Check Brightness</button>-->
+                <button id="brightness-up" data-icon="arrow-u"> Brightness Up</button>
+                <button id="brightness-down" data-icon="arrow-d" data-iconpos="right"> Brightness Down</button>
             </div>
+
         </script>
 
         <script type="text/template" id="dms">
@@ -83,33 +88,31 @@
               <h1>Edit Installed Options</h1>
             </div>
             <div data-role="content">
-              <% //show all options list
-                  //var u = $("<ul data-role='listview' data-shadow='false'  data-corners='false'>");
+              <% 
+                  
                   var div = $("<div>");
                   var category = null;
                   var ul = $("");
-                  _.each(car.get('options'), function(i){
+
+                  for(var j=0; j< car.get('options').length; j++){
+                    var i = car.get('options')[j];
                     if(i.name != category){
                       category = i.name;
                       div.append(ul);
                       div.append("<h3>"+i.name+"</h3>");
                       ul = $("<ul data-role='controlgroup'>");
                     }
-                    ul.append("li><label><input type='checkbox'>"+i.value+"</label></li>");
-                          // var price = i.msrp ? i.msrp.highValue : 0;
-                          // price = (price == 0) ? "" : parseInt(price).formatMoney(0, '.', ',');
-                          // div.append("<li><span class='price'>"+price+"</span><span class='package'>"+i.value+"</span></li>"); 
-                                           
-                  });
+                    var price = i.msrp ? i.msrp.highValue : 0;
+                    price = (price == 0) ? "" : parseInt(price).formatMoney(0, '.', ',');
+                    var checked = i.installed ? "checked='checked'" : ""
+                    ul.append("<li data-option='"+j+"'><label><input type='checkbox' class='option' "+checked+">"+i.value+"<span class='price'>"+price+"</span></label></li>");
+                                                 
+                  }
                   div.append(ul);
               %>
+              
               <%= div.get(0).outerHTML%>
-                <h3>Category</h3>
-                <ul data-role="controlgroup">
-                <li><label><input type="checkbox">Acura</label></li>
-                <li><label><input type="checkbox">Acura</label></li>
-                <li><label><input type="checkbox">Acura</label></li>
-                </ul>
+           
             </div>
         </script>
 
@@ -120,7 +123,10 @@
           <form action="<%=hls.server%>/user_sessions/create.json">
             <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
             <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
-            <button data-mini="true">SUBMIT</button>
+            <%_.each(hls.user.cars.models, function(car){ %>
+              <input type="hidden" name="user_session[cars][]" value="<%=car.id%>">
+            <%});%>
+            <button>SUBMIT</button>
           </form>
         </script>      
 
@@ -203,18 +209,30 @@
             </div>        
         </script>
 
+        <script type="text/template" id="edit-car">
+            <div data-role="header">
+                <h1>Edit <%= car.description() %></h1>
+            </div>
+            <div data-role="content" id="content">
+              <a href="#cars/<%=car.id%>/edit/options" data-role="button" data-icon="carat-r" data-iconpos="right">Edit Installed Options</a>
+              <button data-icon="carat-r" data-iconpos="right" id="take-picture">TAKE A PICTURE</button>
+            </div>        
+        </script>
+
         <script type="text/template" id="car">
 
             <% if(!hls.user.loggedIn()){ %>
-              <a href="#login" data-mini="true" data-role="button">Log In to Save</a>
+              <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button">Log In to Save</a>
             <% } %>
-            <a data-mini="true" data-role="button" id="print_button_container">See Window Sticker</a>
+            <a data-role="button" id="print_button_container">See Window Sticker</a>
               <table data-role="table" id="my-table" data-mode="reflow">
                 <thead>
                   <tr>
+                    <th>VIN</th>
                     <%if (car.get('exterior_color')){%>
                     <th>Colors</th>
                     <% } %>
+
                     <th>Engine</th>
                     <th>Transmission</th>
                     <th>MSRP</th>
@@ -226,6 +244,7 @@
                 </thead>
                 <tbody>
                   <tr>
+                    <td><%=car.get('vin')%></td>
                     <%if (car.get('exterior_color')){%>
                     <td><%=car.get('exterior_color') || ""%> / <%=car.get('interior_color') || ""%></td>
                     <% } %>
@@ -243,20 +262,27 @@
              
 
                 <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false" data-collapsed="true" class="custom-centercollheader">
-                  <h2>See Installed Options (<%=car.getInstalledOptions().length%>)</h2>
+                  
                   <% //show installed options list
+                      var total = 0;
                       var u = $("<ul data-role='listview' data-shadow='false'  data-corners='false'>");
                       _.each(car.getInstalledOptions(), function(i){
                        
                           var price = i.msrp ? i.msrp.highValue : 0;
+                          total += parseInt(price);
                           price = (price == 0) ? "" : parseInt(price).formatMoney(0, '.', ',');
                           u.append("<li><span class='price'>"+price+"</span><span class='package'>"+i.value+"</span></li>"); 
                                            
                       });
+                      if(car.getInstalledOptions().length == 0){
+                        u.append("<li>(No installed options.)</li>");
+                      }
                       %>
-                      <%= u.get(0).outerHTML%>
+                  <h2>See Installed Options (<%=Math.round(total).formatMoney(0, '.', ',')%>)</h2>
+                  <%= u.get(0).outerHTML%>
                 </li>
-                <a href="#cars/<%=car.id%>/edit/options" data-role="button" data-icon="edit" data-iconpos="right">Edit Installed Options</a>
+                <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="carat-r" data-iconpos="right">Edit Car</a>
+                
               
 
         </script> 
@@ -271,7 +297,9 @@
         
         <script>
           window.hls = {};
-          hls.server = "http://localhost:3002"; //no trailing slash. Note that you can't google-print from local server
+          hls.server = "http://localhost:3000"; //no trailing slash. 
+          //Note that you can't google-print from local server.
+          //Note that you can't do CORS requests from local server
           //set hls.emulated to true to skip VIN scanning
           hls.emulated = false; //default value
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){
