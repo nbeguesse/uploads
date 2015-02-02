@@ -46,9 +46,11 @@
                   <li><a href="#login" class="scroll" role="menuitem" tabindex="-1">Login</a></li>
                   <li><a href="#signup" class="scroll" role="menuitem" tabindex="-1">Sign Up</a></li>
                 <% } else { %>
-                  <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
                 <% } %>
+                <%if(hls.user.cars.length > 0){%>
+                <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
+                <%}%>
                   
                 </ul>
               </div>
@@ -67,7 +69,11 @@
                 <a href="#vin"  data-role="button" data-icon="carat-r" data-iconpos="right">TYPE VIN MANUALLY<div><img src="img/button1.gif"></div></a>
                 <a href="#select" data-role="button" data-icon="carat-r" data-iconpos="right">Select A Year, Make, & Model <div><img src="img/button2.gif"></div></a>
                 <a href="#dms" data-role="button" data-icon="carat-r" data-iconpos="right">Upload Cars to DMS</a>
-                <!--<button id="check-brightness"> Check Brightness</button>-->
+                <%if((hls.server.indexOf("localhost") > 0) && (!hls.emulated)){%>
+                  <div><small>Using local server</small></div>
+                <%}%>
+                <div style="height:2em;"><!-- Padding div so brightness buttons do not overlap--> </div>
+                
                 <button id="brightness-up" data-icon="arrow-u"> Brightness Up</button>
                 <button id="brightness-down" data-icon="arrow-d" data-iconpos="right"> Brightness Down</button>
             </div>
@@ -83,38 +89,6 @@
             </div>
         </script>
 
-        <script type="text/template" id="edit-options">
-            <div data-role="header">
-              <h1>Edit Installed Options</h1>
-            </div>
-            <div data-role="content">
-              <% 
-                  
-                  var div = $("<div>");
-                  var category = null;
-                  var ul = $("");
-
-                  for(var j=0; j< car.get('options').length; j++){
-                    var i = car.get('options')[j];
-                    if(i.name != category){
-                      category = i.name;
-                      div.append(ul);
-                      div.append("<h3>"+i.name+"</h3>");
-                      ul = $("<ul data-role='controlgroup'>");
-                    }
-                    var price = i.msrp ? i.msrp.highValue : 0;
-                    price = (price == 0) ? "" : parseInt(price).formatMoney(0, '.', ',');
-                    var checked = i.installed ? "checked='checked'" : ""
-                    ul.append("<li data-option='"+j+"'><label><input type='checkbox' class='option' "+checked+">"+i.value+"<span class='price'>"+price+"</span></label></li>");
-                                                 
-                  }
-                  div.append(ul);
-              %>
-              
-              <%= div.get(0).outerHTML%>
-           
-            </div>
-        </script>
 
         <script type="text/template" id="login">  
             <div data-role="header">
@@ -168,8 +142,41 @@
             <div data-role="content">
             <form id="vin-form" action="<%=hls.server%>/cars/vin">
                 <input type="text" id="car_vin" name="car[vin]" placeholder="VIN Number">
+                <%if(hls.user.loggedIn()){ %>
+                   <input type="hidden" name="single_access_token" value="<%=hls.user.get('single_access_token')%>">
+                <%}%>
                 <button>GO</button>
             </form>
+            </div>
+        </script>
+
+        <script type="text/template" id="image">
+           <%
+            var models = image.car.images.models;
+            var index = _.indexOf(models, image);
+           %>
+            <div data-role="header">
+
+                <h1>Viewing Image <%=index+1%> of <%=models.length%></h1>
+
+            </div>
+            <div data-role="content">
+              <div>
+                <img src="<%=image.get('file_url')%>">
+              </div>
+
+              <div data-role="controlgroup" data-type="horizontal">
+
+                <%var model = (index > 0) ? models[index-1] : models[models.length-1]%>
+                <a href="#cars/<%=image.car.id%>/images/<%=model.id%>" data-role="button" data-icon="carat-l">Prev</a>
+               
+                <button data-icon="delete" data-iconpos="notext" id="delete-image">Delete</button>
+
+                <%model = (index < image.car.images.models.length-1) ? models[index+1] : models[0]%>
+                <a href="#cars/<%=image.car.id%>/images/<%=model.id%>" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>
+              
+              </div>
+              <a href="#cars/<%=image.car.id%>/edit" data-role="button" data-inline="true" data-mini="true">Back to Car</a>
             </div>
         </script>
 
@@ -214,17 +221,28 @@
                 <h1>Edit <%= car.description() %></h1>
             </div>
             <div data-role="content" id="content">
-              <a href="#cars/<%=car.id%>/edit/options" data-role="button" data-icon="carat-r" data-iconpos="right">Edit Installed Options</a>
+              
               <button data-icon="carat-r" data-iconpos="right" id="take-picture">TAKE A PICTURE</button>
+              <%var loading = false;%>
+              <%_.each(car.images.models, function(image){ %>
+                <%if(image.isNew()){%>
+                  <img src="<%=image.get('thumbnail')%>" class="thumbnail" style="opacity:0.5">
+                  <%loading = true; %>
+                <%} else {%>
+                  <a href="#cars/<%=car.id%>/images/<%=image.id%>"><img src="<%=image.get('thumbnail')%>" class="thumbnail"></a>
+                <% } %>
+              <% }); %>
+              <%if(loading){%>
+                <div><small>Saving image...</small></div>
+              <% } %>
+              <div><a href="#cars/<%=car.id%>" data-role="button" data-inline="true" data-mini="true">Back to My Cars</a></div>
+
             </div>        
         </script>
 
         <script type="text/template" id="car">
 
-            <% if(!hls.user.loggedIn()){ %>
-              <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button">Log In to Save</a>
-            <% } %>
-            <a data-role="button" id="print_button_container">See Window Sticker</a>
+            <a data-role="button" id="print_button_container" data-icon="carat-r" data-iconpos="right">Window Sticker</a>
               <table data-role="table" id="my-table" data-mode="reflow">
                 <thead>
                   <tr>
@@ -260,7 +278,7 @@
               </table>
               <p></p>
              
-
+                
                 <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false" data-collapsed="true" class="custom-centercollheader">
                   
                   <% //show installed options list
@@ -274,14 +292,45 @@
                           u.append("<li><span class='price'>"+price+"</span><span class='package'>"+i.value+"</span></li>"); 
                                            
                       });
-                      if(car.getInstalledOptions().length == 0){
-                        u.append("<li>(No installed options.)</li>");
-                      }
+
                       %>
-                  <h2>See Installed Options (<%=Math.round(total).formatMoney(0, '.', ',')%>)</h2>
+                  <h2>Installed Options (<%=Math.round(total).formatMoney(0, '.', ',')%>)</h2>
                   <%= u.get(0).outerHTML%>
                 </li>
-                <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="carat-r" data-iconpos="right">Edit Car</a>
+
+                <% if(!hls.user.loggedIn()){ %>
+                  <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button">Log In to save</a>
+                <% } %>
+                 
+                <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false" data-collapsed="false" class="custom-centercollheader">
+                  
+                  <% //show installed options list
+                  var div = $("<div>");
+                  var category = null;
+                  var ul = $("");
+
+                  for(var j=0; j< car.get('options').length; j++){
+                    var i = car.get('options')[j];
+                    if(i.name != category){
+                      category = i.name;
+                      div.append(ul);
+                      div.append("<h3>"+i.name+"</h3>");
+                      ul = $("<ul data-role='controlgroup'>");
+                    }
+                    var price = i.msrp ? i.msrp.highValue : 0;
+                    price = (price == 0) ? "" : parseInt(price).formatMoney(0, '.', ',');
+                    var checked = i.installed ? "checked='checked'" : ""
+                    ul.append("<li data-option='"+j+"'><label><input type='checkbox' class='option' "+checked+">"+i.value+"<span class='price'>"+price+"</span></label></li>");
+                                                 
+                  }
+                  div.append(ul);
+
+                      %>
+                  <!--<h2>Code Guide</h2>-->
+                  <%= div.get(0).outerHTML%>
+                </li>
+                 <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="carat-r" data-iconpos="right">Add Pictures</a>
+                
                 
               
 
@@ -293,11 +342,11 @@
         <script src="js/vendor/underscore-min.js"></script>
         <script src="js/vendor/backbone-min.js"></script>
         <script src="js/vendor/json2.js"></script> 
-        <script src="js/vendor/cloudprintgadget.js"></script>
+        <!--<script src="js/vendor/cloudprintgadget.js"></script>-->
         
         <script>
           window.hls = {};
-          hls.server = "http://localhost:3000"; //no trailing slash. 
+          hls.server = "http://qrvin.com"; //no trailing slash. 
           //Note that you can't google-print from local server.
           //Note that you can't do CORS requests from local server
           //set hls.emulated to true to skip VIN scanning

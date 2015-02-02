@@ -13,13 +13,13 @@ hls.Camera = hls.Model.extend({
       this.success = options.success;     
       if(!hls.emulated){
 
-        //if (cordova.plugins.zbarScanner && navigator.userAgent.match(/iPhone|iPad|iPod/i)) { // We must make sure it's triggered ONLY for iOS
+        if (cordova.plugins.zbarScanner && navigator.userAgent.match(/iPhone|iPad|iPod/i)) { // We must make sure it's triggered ONLY for iOS
 
-                cordova.plugins.zbarScanner.scan( this.scanSuccess, this.scanError ); //Zbar for ios only
+          cordova.plugins.zbarScanner.scan( this.scanSuccess, this.scanError ); //Zbar for ios only
 
-        //} else {
-        //  cordova.plugins.barcodeScanner.scan( this.scanSuccess, this.scanError ); //ZXING Scanner for Android and ioS
-        //}
+        } else {
+          cordova.plugins.barcodeScanner.scan( this.scanSuccess, this.scanError ); //ZXING Scanner for Android and ioS
+        }
       } else {
         
         alert('Barcode API not supported. Using sample data.');
@@ -44,7 +44,7 @@ hls.Camera = hls.Model.extend({
       }
     },
     cameraSuccess:function(data){
-      var image = new hls.Image({file_url:data});
+      var image = new hls.Image({file_url:data, thumbnail:data});
       app.currentPage.model.images.add(image);
     },
     cameraError:function(message){
@@ -55,14 +55,13 @@ hls.Camera = hls.Model.extend({
       if(!result.cancelled){
         if(result.text.length == 17) {
           console.log('we got a vin!');
-         // if(this.success){ this.success(result.text); }// doesn't work
           app.currentPage.scanSuccess(result.text);
         } else if(result.text.indexOf("http://v.ford.com") == 0){
           var vin = hls.util.gup("v",result.text);
            app.currentPage.scanSuccess(vin);
         } else {
           //fail silently; alert box causes program freeze in ios
-          //alert("The VIN was only partially scanned. Please be sure to fit the entire barcode inside the window, and use a high pixel-density camera.");
+          //alert("The VIN was only partially scanned.");
         }
       }
     },
@@ -85,18 +84,20 @@ hls.Car = hls.Model.extend({
       if(this.isNew()){
         return hls.server+"/cars";
       } else {
-        return hls.server+"/cars/"+this.get('id'); //not used yet
+        return hls.server+"/cars/"+this.get('id'); //not used. requires CORS and such
       }
     },
     initialize:function(){
 
-      if(this.isNew()){
-        this.showLink = "#cars/0";
-        this.editLink = "#cars/0/edit";
+      if(this.isNew()){ 
+        //never used!
+        //this.showLink = "#cars/0";
+        //this.editLink = "#cars/0/edit";
       } else {
         this.showLink = "#cars/"+(this.get('id'));
         this.editLink = "#cars/"+(this.get('id'))+"/edit";
-        this.pdfLink = hls.server+"/cars/"+this.get('id')+"/cloudprint"
+        this.printLink = hls.server+"/cars/"+this.get('id')+"/cloudprint"
+        this.pdfLink = hls.server+"/cars/"+this.get('id')+"/window_sticker.html"
       }
       this.images = new hls.ImageList(this.get('image_files')); 
       this.images.car = this;
@@ -112,14 +113,7 @@ hls.Car = hls.Model.extend({
       $.ajax({
         dataType: "jsonp",
         url: hls.server+"/cars/"+this.get('id')+"/update_option",
-        data:{installed:installed, option_id:optionId},
-        success:function(data){
-          console.log('installed option!');
-        },
-        error:function(error){
-          console.log('error');
-        },
-        
+        data:{installed:installed, option_id:optionId}
       });
     },
 
@@ -177,14 +171,7 @@ hls.Car = hls.Model.extend({
       }
       return out
     },
-    // _syncImages:function(){
-    //   console.log('in sync images');
-    //   _.each(this.images.models, function(image){
-    //     if(image.isNew()){
-    //       image.save();
-    //     }
-    //   });
-    // },
+
 });
 hls.Image = hls.Model.extend({
     url:function(){
@@ -193,7 +180,6 @@ hls.Image = hls.Model.extend({
     initialize:function(){
         return this;
     },
-
     save: function(fileEntry){
       console.log('in image save');
       var imageURI = this.get('file_url');
@@ -213,9 +199,12 @@ hls.Image = hls.Model.extend({
       }
     },
     win:function(r){
-      alert("Image Uploaded.");
-      if(JSON.parse(r.response).error){
-        alert("Upload Error: " + JSON.parse(r.response).error);
+      data = JSON.parse(r.response);
+      if(data.error){
+        alert("Upload Error: " + data.error);
+      } else {
+        //save new image path and thumbnail path
+        hls.user.cars.get(data.car_id).images.get(data.id).set(data);
       }
     },
     fail:function(error){
@@ -228,12 +217,10 @@ hls.UserModel = hls.Model.extend({
     initialize:function(){
         this.cars = new hls.CarList(); 
         this.cars.user = this;
-   
-        this.bind('change:id',this.cars.update, this.cars); //save temp cars on login
         return this;
     },
     getFileKey:function(){
-      return "user";
+      return "user2";
     },
     //get the current car(may or may not be blank)
     get_curr_car:function(){
@@ -281,6 +268,17 @@ hls.UserModel = hls.Model.extend({
         window.localStorage.setItem(this.getFileKey(), JSON.stringify(attributes));
         console.log('wrote to file');
       }
+    },
+    shouldSync:function(){
+      if(!this.loggedIn()){
+        return false;
+      }
+      return this.get('last_synced_at') != (new Date()).yyyymmdd();
+    },
+    update:function(data){
+      this.set(data.user);
+      this.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary 
+      this.saveToFile();
     },
 
 });

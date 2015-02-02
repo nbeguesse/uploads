@@ -7,14 +7,14 @@ hls.CarList = hls.Collection.extend({
     return hls.server+"/users/"+this.user.id+"/cars.json";
   },
   model:hls.Car,
-  update:function(){
-    _.each(this.models, function(car){
-      if(car.isNew()){
-        car.save();
-      }
-    });
-    //this.fetch({remove:false});
-  },
+  // update:function(){
+  //   _.each(this.models, function(car){
+  //     if(car.isNew()){
+  //       car.save();
+  //     }
+  //   });
+
+  // },
 });
 hls.ImageList = hls.Collection.extend({
   model:hls.Image,
@@ -23,11 +23,20 @@ hls.ImageList = hls.Collection.extend({
   },
   initialize:function(){
     this.bind('add', this._add, this);
+    this.bind('remove', this._remove, this);
     return this;
   },
   _add:function(image){
     image.car = this.car;
-    image.save();
+    image.save(); //this will upload image to server
+  },
+  _remove:function(image){
+    console.log('removing image....');
+     $.ajax({
+      dataType: "jsonp",
+      url: hls.server+"/cars/"+image.car.id+"/images/"+image.id+"/delete.js",
+      data:{}
+    });
   }
 
 });
