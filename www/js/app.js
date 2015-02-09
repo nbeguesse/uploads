@@ -38,7 +38,9 @@ hls.View = Backbone.View.extend({
               hls.user.cars.set([data.car], {remove:false});
               hls.user.saveToFile();
             } else {
-              app.navigate(hls.user.cars.where({vin: data.car.vin})[0].showLink, true);
+              //app.navigate(hls.user.cars.where({vin: data.car.vin})[0].showLink, true);
+              //don't use app.navigate since we might already be on the cars page
+              app.cars(hls.user.cars.where({vin: data.car.vin})[0].id);
             }
           }
           if(success){ 
@@ -561,6 +563,7 @@ hls.AppRouter = Backbone.Router.extend({
 
 $(document).ready(function () {
     hls.user = new hls.UserModel();
+    hls.store = new hls.Store();
 
     hls.camera = new hls.Camera();
     app = new hls.AppRouter();
@@ -573,4 +576,5 @@ $(document).ready(function () {
 
 });
 document.addEventListener('deviceready', function(){ hls.user.loadFromFile(); } , false);
+document.addEventListener('deviceready', function(){ hls.store.initStore(); } , false);
 

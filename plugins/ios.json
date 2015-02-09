@@ -72,7 +72,8 @@
                             "xml": "true",
                             "count": 1
                         }
-                    ]
+                    ],
+                    "StoreKit.framework": []
                 }
             },
             "config.xml": {
