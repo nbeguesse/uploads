@@ -237,6 +237,12 @@ hls.Car = hls.Model.extend({
       }
       return out
     },
+    shouldShowWindowSticker:function(){
+      if (!hls.use_in_app_purchases){
+        return true;
+      }
+      return this.get("is_paid?");
+    },
 
 });
 hls.Image = hls.Model.extend({

@@ -38,7 +38,7 @@ hls.View = Backbone.View.extend({
               hls.user.cars.set([data.car], {remove:false});
               hls.user.saveToFile();
             } else {
-              //app.navigate(hls.user.cars.where({vin: data.car.vin})[0].showLink, true);
+              //old: app.navigate(hls.user.cars.where({vin: data.car.vin})[0].showLink, true);
               //don't use app.navigate since we might already be on the cars page
               app.cars(hls.user.cars.where({vin: data.car.vin})[0].id);
             }

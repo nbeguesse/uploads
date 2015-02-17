@@ -243,9 +243,9 @@
         </script>
 
         <script type="text/template" id="car">
-            <%if(car.get("is_paid?")){%>
+            <%if(car.shouldShowWindowSticker()){%>
               <a data-role="button" id="print_button_container" data-icon="carat-r" data-iconpos="right">Window Sticker</a>
-              <% } %>
+            <% } %>
               <table data-role="table" id="my-table" data-mode="reflow">
                 <thead>
                   <tr>
@@ -284,7 +284,7 @@
                 </tbody>
               </table>
               <p></p>
-                <%if(car.get("is_paid?")){%>
+                <%if(car.shouldShowWindowSticker()){%>
                   <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false" data-collapsed="true" class="custom-centercollheader">
                     <% //show installed options list
                         var total = 0;
@@ -327,9 +327,14 @@
                   </li>
               <% } else { %>
                   <% if(!hls.user.loggedIn()){ %>
-                    <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button" data-theme="r">Log in to purchase complete details</a>
+                    <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button" data-theme="r">Log in to unlock complete details</a>
                   <% } else {%>
-                    <button data-theme="r">Unlock complete details for $2</button>
+                    <!-- show the store button! -->
+                    <% if(hls.store.get('state')=="ready"){ %>
+                      <button data-theme="r"><%=hls.store.get('title')%></button>
+                    <%} else {%>
+                      <button data-theme="r"><%=hls.store.get('state')%></button>
+                    <%}%>
                   <% } %>
               <% } %>
               <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="carat-r" data-iconpos="right">Add Pictures</a>
@@ -349,10 +354,11 @@
         
         <script>
           window.hls = {};
-          hls.server = "http://localhost:3000"; //no trailing slash. 
+          hls.server = "http://qrvin.com"; //no trailing slash. 
           //Note that you can't google-print from local server.
           //Note that you can't do CORS requests from local server
           //set hls.emulated to true to skip VIN scanning
+          hls.use_in_app_purchases = true;
           hls.emulated = false; //default value
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){
             hls.emulated = true;

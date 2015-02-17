@@ -78,6 +78,13 @@ module.exports = [
         ]
     },
     {
+        "file": "plugins/cc.fovea.cordova.purchase/www/store-android.js",
+        "id": "cc.fovea.cordova.purchase.InAppBillingPlugin",
+        "clobbers": [
+            "store"
+        ]
+    },
+    {
         "file": "plugins/org.apache.cordova.file/www/DirectoryEntry.js",
         "id": "org.apache.cordova.file.DirectoryEntry",
         "clobbers": [
@@ -234,6 +241,7 @@ module.exports.metadata =
     "org.apache.cordova.file-transfer": "0.4.8",
     "org.apache.cordova.camera": "0.3.4",
     "cordova.plugin.Brightness": "0.1.0",
+    "cc.fovea.cordova.purchase": "3.10.1",
     "org.apache.cordova.file": "1.3.2"
 }
 // BOTTOM OF METADATA

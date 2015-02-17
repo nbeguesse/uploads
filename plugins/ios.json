@@ -73,7 +73,12 @@
                             "count": 1
                         }
                     ],
-                    "StoreKit.framework": []
+                    "StoreKit.framework": [
+                        {
+                            "xml": "false",
+                            "count": 1
+                        }
+                    ]
                 }
             },
             "config.xml": {
@@ -114,6 +119,10 @@
                         {
                             "xml": "<feature name=\"Brightness\"><param name=\"ios-package\" value=\"Brightness\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"InAppPurchase\"><param name=\"ios-package\" value=\"InAppPurchase\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -150,6 +159,9 @@
             "PACKAGE_NAME": "com.hls.qrvin"
         },
         "cordova.plugin.Brightness": {
+            "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "cc.fovea.cordova.purchase": {
             "PACKAGE_NAME": "com.hls.qrvin"
         }
     },

@@ -35,6 +35,10 @@
                         {
                             "xml": "<feature name=\"Brightness\"><param name=\"android-package\" value=\"org.apache.cordova.plugin.Brightness.BrightnessPlugin\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"InAppBillingPlugin\"><param name=\"android-package\" value=\"com.smartmobilesoftware.inappbilling.InAppBillingPlugin\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -76,6 +80,10 @@
                         },
                         {
                             "xml": "<uses-feature android:name=\"android.hardware.camera\" android:required=\"false\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.android.vending.BILLING\" />",
                             "count": 1
                         }
                     ]
@@ -565,7 +573,12 @@
             },
             "res/values/billing_key_param.xml": {
                 "parents": {
-                    "/*": []
+                    "/*": [
+                        {
+                            "xml": "<string name=\"billing_key_param\">$BILLING_KEY</string>",
+                            "count": 1
+                        }
+                    ]
                 }
             }
         }
@@ -590,6 +603,9 @@
             "PACKAGE_NAME": "com.hls.qrvin"
         },
         "cordova.plugin.Brightness": {
+            "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "cc.fovea.cordova.purchase": {
             "PACKAGE_NAME": "com.hls.qrvin"
         }
     },

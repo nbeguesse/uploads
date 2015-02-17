@@ -27,6 +27,9 @@
     <feature name="Brightness">
         <param name="android-package" value="org.apache.cordova.plugin.Brightness.BrightnessPlugin" />
     </feature>
+    <feature name="InAppBillingPlugin">
+        <param name="android-package" value="com.smartmobilesoftware.inappbilling.InAppBillingPlugin" />
+    </feature>
     <name>QRVin</name>
     <description>
         QRVin is the fastest way to get your vehicle's description, original price, and option packages.
