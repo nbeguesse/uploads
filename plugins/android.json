@@ -562,6 +562,11 @@
                         }
                     ]
                 }
+            },
+            "res/values/billing_key_param.xml": {
+                "parents": {
+                    "/*": []
+                }
             }
         }
     },

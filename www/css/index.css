@@ -66,3 +66,35 @@ span.package {
 img.thumbnail {
  height:78px;
 }
+
+/* Red button theme for JQuery Mobile
+ * - Use data-theme="r" for red versions of the default JQuery Mobile Buttons.
+ ******************************************************************************************/
+
+.ui-page-theme-a .ui-btn-r:hover {
+    border: 1px solid #721414;
+    background: #AB2525;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 -1px 1px #000;
+    background-image: -moz-linear-gradient(top, #C54E4E, #AB2525);
+    background-image: -webkit-gradient(linear,left top,left bottom,
+        color-stop(0, #C54E4E),
+        color-stop(1, #AB2525));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#C54E4E', EndColorStr='#AB2525')";
+}
+
+.ui-page-theme-a .ui-btn-r {
+    border: 1px solid #6E0000;
+    background: #B64B4B;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 -1px 1px #000;
+    background-image: -moz-linear-gradient(top, 
+        #D47272, 
+        #B64B4B);
+    background-image: -webkit-gradient(linear,left top,left bottom,
+        color-stop(0, #D47272),
+        color-stop(1, #B64B4B));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#D47272', EndColorStr='#B64B4B')";
+}

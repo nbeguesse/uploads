@@ -3,8 +3,74 @@ hls.ImageList = null;
 
 hls.Model = Backbone.Model.extend({
 
+});
+
+hls.Store = hls.Model.extend({
+   defaults:{
+     state:"Store Not Available.",
+     productId:"cc.fovea.purchase.consumable2",
+   },  
+  initStore:function(){
+    if (!window.store) {
+        console.log('Store not available');
+        return;
+    } 
+    store.register({
+        id:    this.get('productId'),
+        alias: 'car vin',
+        type:   store.CONSUMABLE
+    });
+    // Log all errors
+    store.error(function(error) {
+        console.log('ERROR ' + error.code + ': ' + error.message);
+    });
+    // When any product gets updated, refresh the HTML.
+    store.when("product").updated(function (p) {
+        if (!p.loaded) {
+          this.set({state:"Loading..."});
+        } else if (!p.valid) {
+          this.set({state:"Please try again later."});
+        } else if (p.valid && p.canPurchase) {
+          this.set({state:"ready", title:p.title, description:p.description});
+        }
+    });
+    // When purchase of an extra life is approved,
+    // deliver it... by displaying logs in the console.
+    store.when("product").approved(function (order) {
+        console.log("You got an EXTRA LIFE!");
+        //update the car
+        var car = hls.user.cars.get(this.get('carId'));
+        //notify the server
+        app.currentPage.getUrl(car.payLink, {
+
+          data:hls.util.accessToken({transaction:order.transaction}),
+          success: function(data){
+            //car is updated and page reloaded in getUrl
+            console.log('in order success');
+            order.finish();
+            console.log('order finished.');
+
+            //TODO: update local transaction list
+          }
+         });
+    });
+    store.when("product").refunded(function (order) {
+    });
+    //
+    // Note that the "ready" function will be called immediately if the store
+    // is already ready.
+    // store.ready(function() {
+    //   //hide loading indicator
+    // });
+    store.refresh();
+  },
+  order:function(carId){
+    this.set({carId:carId});
+    store.order(this.get('productId'));
+  }
 
 });
+
 hls.Camera = hls.Model.extend({
     initialize:function(){
         return this;
@@ -96,7 +162,7 @@ hls.Car = hls.Model.extend({
       } else {
         this.showLink = "#cars/"+(this.get('id'));
         this.editLink = "#cars/"+(this.get('id'))+"/edit";
-        this.printLink = hls.server+"/cars/"+this.get('id')+"/cloudprint"
+        this.payLink = hls.server+"/cars/"+this.get('id')+"/mobile_pay"
         this.pdfLink = hls.server+"/cars/"+this.get('id')+"/window_sticker.html"
       }
       this.images = new hls.ImageList(this.get('image_files')); 
@@ -249,7 +315,7 @@ hls.UserModel = hls.Model.extend({
       this.set(data.user);
       this.cars.set(data.user.cars, {remove:false});
       //reload the homepage using changePage instead of app.navigate since we are already on the homepage
-      app.changePage(new hls.WelcomeView());
+      app.welcome();
       console.log('got from file')
     },
     loggedIn:function(){
@@ -258,7 +324,7 @@ hls.UserModel = hls.Model.extend({
     logout:function(){
       window.localStorage.clear();
       hls.user = new hls.UserModel();
-      app.changePage(new hls.WelcomeView());
+      app.welcome();
     },
     saveToFile:function(){
       if(this.loggedIn()){
