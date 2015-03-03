@@ -27,32 +27,17 @@ hls.Store = hls.Model.extend({
     // When any product gets updated, refresh the HTML.
     store.when("product").updated(function (p) {
         if (!p.loaded) {
-          this.set({state:"Loading..."});
+          window.hls.store.set({state:"Loading..."});
         } else if (!p.valid) {
-          this.set({state:"Please try again later."});
+          window.hls.store.set({state:"Please try again later."});
         } else if (p.valid && p.canPurchase) {
-          this.set({state:"ready", title:p.title, description:p.description});
+          window.hls.store.set({state:"ready", title:p.title, description:p.description});
         }
     });
     // When purchase of an extra life is approved,
     // deliver it... by displaying logs in the console.
     store.when("product").approved(function (order) {
-        console.log("You got an EXTRA LIFE!");
-        //update the car
-        var car = hls.user.cars.get(this.get('carId'));
-        //notify the server
-        app.currentPage.getUrl(car.payLink, {
-
-          data:hls.util.accessToken({transaction:order.transaction}),
-          success: function(data){
-            //car is updated and page reloaded in getUrl
-            console.log('in order success');
-            order.finish();
-            console.log('order finished.');
-
-            //TODO: update local transaction list
-          }
-         });
+      hls.store.approveProduct(order);
     });
     store.when("product").refunded(function (order) {
     });
@@ -64,9 +49,31 @@ hls.Store = hls.Model.extend({
     // });
     store.refresh();
   },
+  approveProduct:function(order){
+      if(hls.user.loggedIn()){
+        //update the car
+        var car = hls.user.cars.getTransactionCar();
+        //notify the server
+        app.currentPage.getUrl(car.payLink, {
+
+          data:hls.util.addAccessToken({transaction:order.transaction}),
+          success: function(data){
+            //car is updated and page reloaded in getUrl
+
+            order.finish();
+            alert('finished transaction');
+            //TODO: update local transaction list?
+          }
+         });
+      } else {
+        alert('Please log in to complete pending transactions.');
+      }
+  },
   order:function(carId){
-    this.set({carId:carId});
-    store.order(this.get('productId'));
+    //this.set({carId:carId});
+    hls.user.cars.setPendingTransaction(carId);
+    hls.user.saveToFile(); //save the pending car in case purchase is interrupted.
+    window.store.order(this.get('productId'));
   }
 
 });
@@ -145,6 +152,7 @@ hls.Car = hls.Model.extend({
      style:null,
      style_id:null,
      image_files:[],
+     pending_transaction:false,
    },
     url: function(){
       if(this.isNew()){

@@ -7,14 +7,13 @@ hls.CarList = hls.Collection.extend({
     return hls.server+"/users/"+this.user.id+"/cars.json";
   },
   model:hls.Car,
-  // update:function(){
-  //   _.each(this.models, function(car){
-  //     if(car.isNew()){
-  //       car.save();
-  //     }
-  //   });
-
-  // },
+  setPendingTransaction: function(carId){
+    this.get(carId).set('pending_transaction',true);
+  },
+  getTransactionCar: function(){
+    return this.where({pending_transaction:true})[0];
+    
+  },
 });
 hls.ImageList = hls.Collection.extend({
   model:hls.Image,

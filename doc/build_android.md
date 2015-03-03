@@ -1,3 +1,5 @@
+Increase version number in www/config.xml, platforms/android/AndroidManifest.xml
+
 From the root directory:
 
 `cordova build android`

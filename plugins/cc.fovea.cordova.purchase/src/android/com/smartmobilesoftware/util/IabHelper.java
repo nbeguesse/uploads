@@ -861,6 +861,8 @@ public class IabHelper {
                 String purchaseData = purchaseDataList.get(i);
                 String signature = signatureList.get(i);
                 String sku = ownedSkus.get(i);
+                logDebug("mSignatureBase64 is: " + mSignatureBase64);
+                mSignatureBase64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg+CJWLGqNnvZQpy0Esgau8o1RyDwAfOk9AV79ih0XIc5t788J5Nf9KAEHdLhTyDy9BbP8s546EN5H57vutyrmdASswdXhEyLOn7+2V4bbtReRxEcT3JlYSg2CfDtmRsOfIDJ/B5yEweFb8/CA4bmEPP0oh0+n0Qpk1XfWGQda4XtidGlzCqJsEJB4Hnku1QOU5ZlepC5e6XaOGlKf1CUz+1Hn8PjMZQLBQ+lrOrJfokqBvd8fOJbbvzznyQfFkaIixcruY1ILeg2D92Yl5Mf9YlQJyiWobpLAmEtJLHYoA5Rm95TXKmNrvTB7+H/HcjEeT0HmWgFk4b2hwVLVHLr1QIDAQAB";
                 if (Security.verifyPurchase(mSignatureBase64, purchaseData, signature)) {
                     logDebug("Sku is owned: " + sku);
                     Purchase purchase = new Purchase(itemType, purchaseData, signature);

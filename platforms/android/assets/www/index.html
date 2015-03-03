@@ -331,9 +331,9 @@
                   <% } else {%>
                     <!-- show the store button! -->
                     <% if(hls.store.get('state')=="ready"){ %>
-                      <button data-theme="r"><%=hls.store.get('title')%></button>
+                      <button data-theme="r" id="buy-vin"><%=hls.store.get('title')%></button>
                     <%} else {%>
-                      <button data-theme="r"><%=hls.store.get('state')%></button>
+                      <button data-theme="r" disabled="disabled"><%=hls.store.get('state')%></button>
                     <%}%>
                   <% } %>
               <% } %>
