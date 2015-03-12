@@ -15,6 +15,7 @@ hls.CarList = hls.Collection.extend({
     
   },
 });
+
 hls.ImageList = hls.Collection.extend({
   model:hls.Image,
   url:function(){
@@ -38,4 +39,7 @@ hls.ImageList = hls.Collection.extend({
     });
   }
 
+});
+hls.PaymentList = hls.Collection.extend({
+  model:hls.Payment,
 });

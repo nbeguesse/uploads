@@ -34,12 +34,15 @@ hls.Store = hls.Model.extend({
           window.hls.store.set({state:"ready", title:p.title, description:p.description});
         }
     });
-    // When purchase of an extra life is approved,
-    // deliver it... by displaying logs in the console.
     store.when("product").approved(function (order) {
       hls.store.approveProduct(order);
     });
     store.when("product").refunded(function (order) {
+      //In-app billing does not allow users to send a refund request to Google Play. 
+      //Refunds for in-app purchases must be directed to you (the application developer). 
+      //You can then process the refund through your Google Wallet merchant account. 
+      //When you do this, Google Play receives a refund notification from Google Wallet, 
+      //and Google Play sends a refund message to your application.
     });
     //
     // Note that the "ready" function will be called immediately if the store
@@ -53,24 +56,24 @@ hls.Store = hls.Model.extend({
       if(hls.user.loggedIn()){
         //update the car
         var car = hls.user.cars.getTransactionCar();
+        if( _.isUndefined(car)){
+          order.finish();
+          return true;
+        }
         //notify the server
         app.currentPage.getUrl(car.payLink, {
 
-          data:hls.util.addAccessToken({transaction:order.transaction}),
+          data:hls.util.addAccessToken({transaction:order.transaction, price:order.price}),
           success: function(data){
-            //car is updated and page reloaded in getUrl
 
             order.finish();
-            alert('finished transaction');
-            //TODO: update local transaction list?
           }
          });
       } else {
-        alert('Please log in to complete pending transactions.');
+        //alert('Please log in to complete pending transactions.');
       }
   },
   order:function(carId){
-    //this.set({carId:carId});
     hls.user.cars.setPendingTransaction(carId);
     hls.user.saveToFile(); //save the pending car in case purchase is interrupted.
     window.store.order(this.get('productId'));
@@ -293,10 +296,14 @@ hls.Image = hls.Model.extend({
     }
 });
 
+hls.Payment = hls.Model.extend({
+});
+
 hls.UserModel = hls.Model.extend({
     initialize:function(){
         this.cars = new hls.CarList(); 
         this.cars.user = this;
+        this.payments = new hls.PaymentList();
         return this;
     },
     getFileKey:function(){
@@ -328,6 +335,7 @@ hls.UserModel = hls.Model.extend({
       var data = JSON.parse(value);
       this.set(data.user);
       this.cars.set(data.user.cars, {remove:false});
+      this.payments.set(data.user.payments);
       //reload the homepage using changePage instead of app.navigate since we are already on the homepage
       app.welcome();
       console.log('got from file')
@@ -345,6 +353,7 @@ hls.UserModel = hls.Model.extend({
         var attributes = {user:this.attributes};
         //rewrite the user's car attribute to make sure it's the latest
         attributes.user.cars = _.map(this.cars.models, function(car){ return car.attributes; });
+        attributes.user.payments = _.map(this.payments.models, function(payment){ return payment.attributes; });
         window.localStorage.setItem(this.getFileKey(), JSON.stringify(attributes));
         console.log('wrote to file');
       }
@@ -358,6 +367,7 @@ hls.UserModel = hls.Model.extend({
     update:function(data){
       this.set(data.user);
       this.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary 
+      this.payments.set(data.user.payments);
       this.saveToFile();
     },
 

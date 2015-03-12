@@ -257,7 +257,8 @@ hls.LoginView = hls.View.extend({
     _login:function(e){
         this.submitForm($(e.currentTarget), function(data){
             hls.user.update(data);
-            app.navigate("cars/list", true); 
+            app.navigate("cars/list", true);
+
         });
         return false;
     },

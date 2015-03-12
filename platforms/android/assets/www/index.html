@@ -43,15 +43,19 @@
 
                 <ul class="slicknav_nav slicknav_hidden" style="display: none;" aria-hidden="true" role="menu">
                 <li><a href="#" class="scroll" role="menuitem" tabindex="-1">Add A Car</a></li>
+                <%if(hls.user.cars.length > 0){%>
+                  <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
+                <% } %>
                 <% if(!hls.user.loggedIn()){ %>
                   <li><a href="#login" class="scroll" role="menuitem" tabindex="-1">Login</a></li>
                   <li><a href="#signup" class="scroll" role="menuitem" tabindex="-1">Sign Up</a></li>
                 <% } else { %>
+                  <% if(hls.user.payments.length > 0){ %>
+                    <li><a href="#payments" class="scroll" role="menuitem" tabindex="-1">My Orders</a></li>  
+                  <% } %>
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
                 <% } %>
-                <%if(hls.user.cars.length > 0){%>
-                <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
-                <%}%>
+
                   
                 </ul>
               </div>
@@ -70,7 +74,7 @@
                 <a href="#vin"  data-role="button" data-icon="carat-r" data-iconpos="right">TYPE VIN MANUALLY<div><img src="img/button1.gif"></div></a>
                 <a href="#select" data-role="button" data-icon="carat-r" data-iconpos="right">Select A Year, Make, & Model <div><img src="img/button2.gif"></div></a>
                 <a href="#dms" data-role="button" data-icon="carat-r" data-iconpos="right">Upload Cars to DMS</a>
-                <%if((hls.server.indexOf("localhost") > 0) && (!hls.emulated)){%>
+                <%if(hls.server.indexOf("localhost") > 0){%>
                   <div><small>Using local server</small></div>
                 <%}%>
                 <div style="height:2em;"><!-- Padding div so brightness buttons do not overlap--> </div>
@@ -357,15 +361,15 @@
           hls.server = "http://qrvin.com"; //no trailing slash. 
           //Note that you can't google-print from local server.
           //Note that you can't do CORS requests from local server
-          //set hls.emulated to true to skip VIN scanning
+          
           hls.use_in_app_purchases = true;
           hls.emulated = false; //default value
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){
+            //set hls.emulated to true to skip VIN scanning
             hls.emulated = true;
           }
 
         </script>
-        <!--<script src="js/vendor/barcodescanner.js"></script><!-- ZXING Scanner. only needed for ios -->
         <script src="js/utilities.js"></script>
         <script src="js/models.js"></script>
         <script src="js/collections.js"></script>
