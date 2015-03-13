@@ -99,26 +99,32 @@
             <div data-role="header">
                 <h1>LOGIN</h1>
             </div>
-          <form action="<%=hls.server%>/user_sessions/create.json">
-            <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
-            <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
-            <%_.each(hls.user.cars.models, function(car){ %>
-              <input type="hidden" name="user_session[cars][]" value="<%=car.id%>">
-            <%});%>
-            <button>SUBMIT</button>
-          </form>
+            <div data-role="content">
+              <form action="<%=hls.server%>/user_sessions/create.json">
+                <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
+                <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
+                <%_.each(hls.user.cars.models, function(car){ %>
+                  <input type="hidden" name="user_session[cars][]" value="<%=car.id%>">
+                <%});%>
+                <button data-icon="carat-r" data-iconpos="right">SUBMIT</button>
+              </form>
+              <a href="#signup"  data-icon="carat-r" data-iconpos="right" data-role="button">Create New User</a>
+          </div>
         </script>      
 
         <script type="text/template" id="signup">  
             <div data-role="header">
-                <h1>REGISTER NEW USER</h1>
+                <h1>CREATE NEW USER</h1>
             </div>
           <form action="<%=hls.server%>/users/create.json">
-            <input type="text" name="user_session[first_name]" placeholder="First Name" data-mini="true">
-            <input type="text" name="user_session[last_name]" placeholder="Last Name" data-mini="true">
-            <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
-            <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
-            <button data-mini="true">SUBMIT</button>
+            <input type="text" name="user[first_name]" placeholder="First Name" data-mini="true">
+            <input type="text" name="user[last_name]" placeholder="Last Name" data-mini="true">
+            <input type="email" name="user[email]" placeholder="Email" data-mini="true">
+            <input type="password" name="user[password]" placeholder="Password" data-mini="true">
+            <%_.each(hls.user.cars.models, function(car){ %>
+              <input type="hidden" name="user[temp_cars][]" value="<%=car.id%>">
+            <%});%>
+            <button data-icon="carat-r" data-iconpos="right">SUBMIT</button>
           </form>
         </script> 
 
@@ -331,7 +337,7 @@
                   </li>
               <% } else { %>
                   <% if(!hls.user.loggedIn()){ %>
-                    <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button" data-theme="r">Log in to unlock complete details</a>
+                    <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button">Log in to unlock code guide</a>
                   <% } else {%>
                     <!-- show the store button! -->
                     <% if(hls.store.get('state')=="ready"){ %>
@@ -341,7 +347,7 @@
                     <%}%>
                   <% } %>
               <% } %>
-              <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="carat-r" data-iconpos="right">Add Pictures</a>
+             <!-- <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="carat-r" data-iconpos="right">Add Pictures</a>-->
                 
                 
               
@@ -362,8 +368,8 @@
           //Note that you can't google-print from local server.
           //Note that you can't do CORS requests from local server
           
-          hls.use_in_app_purchases = true;
-          hls.emulated = false; //default value
+          hls.use_in_app_purchases = true; //set this to false to make every car free
+          hls.emulated = false; 
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){
             //set hls.emulated to true to skip VIN scanning
             hls.emulated = true;

@@ -34,14 +34,16 @@ hls.View = Backbone.View.extend({
           $.mobile.loading('hide'); //hide jquery mobile spinner
           console.log("Got data:",data);
           if(data.car){
-            if(hls.user.cars.where({vin: data.car.vin}).length == 0){ //skip duplicate cars
+            var matching_cars = hls.user.cars.where({vin: data.car.vin}); 
+            if(matching_cars.length == 0){ //don't duplicate cars
               hls.user.cars.set([data.car], {remove:false});
-              hls.user.saveToFile();
             } else {
-              //old: app.navigate(hls.user.cars.where({vin: data.car.vin})[0].showLink, true);
-              //don't use app.navigate since we might already be on the cars page
-              app.cars(hls.user.cars.where({vin: data.car.vin})[0].id);
+              //update car with new info
+              var car = matching_cars[0];
+              car.set(data.car);
+              app.cars(car.id); //don't use app.navigate since we might already be on the cars page
             }
+            hls.user.saveToFile();
           }
           if(success){ 
             success(data); 
@@ -160,11 +162,19 @@ hls.CarView = hls.View.extend({
       'click #print_button_container':'_print',
       'click label': '_save',
       'touchstart label': '_save',
+      'click #buy-vin':'_buy',
+    },
+    initialize:function(){
+      hls.store.bind('change:state',this._render, this);
+      return this;
     },
     render:function (eventName) {
       var template = _.template($('#car').html(),{car:this.model});
       $(this.el).html(template);
       return this;
+    },
+    _buy:function(e){
+      hls.store.order(this.model.id);
     },
     _print:function(e){
       console.log('in print');
@@ -251,7 +261,8 @@ hls.LoginView = hls.View.extend({
     _login:function(e){
         this.submitForm($(e.currentTarget), function(data){
             hls.user.update(data);
-            app.navigate("cars/list", true); 
+            app.navigate("cars/list", true);
+
         });
         return false;
     },

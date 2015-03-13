@@ -164,6 +164,10 @@ hls.CarView = hls.View.extend({
       'touchstart label': '_save',
       'click #buy-vin':'_buy',
     },
+    initialize:function(){
+      hls.store.bind('change:state',this._render, this);
+      return this;
+    },
     render:function (eventName) {
       var template = _.template($('#car').html(),{car:this.model});
       $(this.el).html(template);

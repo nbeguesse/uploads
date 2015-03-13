@@ -362,8 +362,8 @@
           //Note that you can't google-print from local server.
           //Note that you can't do CORS requests from local server
           
-          hls.use_in_app_purchases = true;
-          hls.emulated = false; //default value
+          hls.use_in_app_purchases = true; //set this to false to make every car free
+          hls.emulated = false; 
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){
             //set hls.emulated to true to skip VIN scanning
             hls.emulated = true;

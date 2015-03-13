@@ -61,9 +61,10 @@ hls.Store = hls.Model.extend({
           return true;
         }
         //notify the server
+        var price = order.price.replace("$","");
         app.currentPage.getUrl(car.payLink, {
 
-          data:hls.util.addAccessToken({transaction:order.transaction, price:order.price}),
+          data:hls.util.addAccessToken({transaction:order.transaction, price:price}),
           success: function(data){
 
             order.finish();
@@ -156,6 +157,7 @@ hls.Car = hls.Model.extend({
      style_id:null,
      image_files:[],
      pending_transaction:false,
+     "is_paid?":false,
    },
     url: function(){
       if(this.isNew()){
