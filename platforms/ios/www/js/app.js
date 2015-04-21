@@ -69,7 +69,11 @@ hls.View = Backbone.View.extend({
         data:data,
         success:function(data){
             if(data.errors){
-              alert(data.errors);
+              if(data.errors == "INVALID_LOGIN"){ //token gone
+                hls.user.logout();
+              } else { //validation errors
+                alert(data.errors);
+              }
             } else {
               success(data);
             }
@@ -215,25 +219,7 @@ hls.EditCarView = hls.View.extend({
     },
 });
 
-// hls.EditOptionsView = hls.View.extend({
-//     template:"#edit-options",
-//     events: {
-//       'click label': '_save',
-//       'touchstart label': '_save',
-//     },
-//     render:function (eventName) {
-//       var template = _.template($(this.template).html(),{car:this.model});
-//       $(this.el).html(template);
-//       return this;
-//     },
-//     _save:function(e){
 
-//       var label = $(e.currentTarget);
-//       var optionId = label.closest("li").attr('data-option');
-//       var installed = !label.closest("div").find("input").is(':checked'); //This is reversed; probably because of Jquery Mobile clicking delays
-//       this.model.installOption(optionId, installed);
-//     },
-// });
 
 hls.ImageView = hls.View.extend({
     template:"#image",
@@ -354,13 +340,17 @@ hls.VinView = hls.View.extend({
       'submit form': '_createCar',      
     },  
     _createCar:function(e){
+      if(!hls.user.loggedIn()){
+        alert("Please signup to continue decoding vehicles. It takes 10 seconds!");
+        return false;
+      }
       var form = $(e.currentTarget);
        this.submitForm(form, function(data){
          if(data && data.car){
          //car data is automatically synced in getURL 
           app.navigate(hls.user.cars.get(data.car.id).showLink, true);
           //redirect to car page!!
-         }
+         } 
        });
        return false;
     },
@@ -545,7 +535,7 @@ hls.AppRouter = Backbone.Router.extend({
           this.currentPage.remove(); 
         }
         this.currentPage = page;
-        //this.currentPage.checkShouldSync();
+        this.currentPage.checkShouldSync();
     },
     carExists:function(id){
         var car = hls.user.cars.get(id); //find car in carlist

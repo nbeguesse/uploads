@@ -33,7 +33,7 @@
 
         <link rel="stylesheet" href="css/slicknav.css" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>QRVIN.com Upload App</title>
+        <title>MonroneyLabels.com Mobile</title>
 
         <!-- Dropdown menu -->
         <script type="text/template" id="menu">
@@ -66,10 +66,9 @@
         <!-- Homepage -->
         <script type="text/template" id="welcome">
             <div data-role="header" class="no-back-button">
-              <h1 class="qrvin-title"><img src="img/qrvin.png"></h1>
+              <h1 class="qrvin-title"><img src="img/monroneylabels.png"></h1>
             </div>
             <div data-role="content">
-
                 <button class="scan-vin" data-icon="carat-r" data-iconpos="right">SCAN THE VIN BARCODE <div><img src="img/button0.gif"></div></button>
                 <a href="#vin"  data-role="button" data-icon="carat-r" data-iconpos="right">TYPE VIN MANUALLY<div><img src="img/button1.gif"></div></a>
                 <a href="#select" data-role="button" data-icon="carat-r" data-iconpos="right">Select A Year, Make, & Model <div><img src="img/button2.gif"></div></a>
@@ -99,26 +98,32 @@
             <div data-role="header">
                 <h1>LOGIN</h1>
             </div>
-          <form action="<%=hls.server%>/user_sessions/create.json">
-            <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
-            <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
-            <%_.each(hls.user.cars.models, function(car){ %>
-              <input type="hidden" name="user_session[cars][]" value="<%=car.id%>">
-            <%});%>
-            <button>SUBMIT</button>
-          </form>
+            <div data-role="content">
+              <form action="<%=hls.server%>/user_sessions/create.json">
+                <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
+                <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
+                <%_.each(hls.user.cars.models, function(car){ %>
+                  <input type="hidden" name="user_session[cars][]" value="<%=car.id%>">
+                <%});%>
+                <button data-icon="carat-r" data-iconpos="right">SUBMIT</button>
+              </form>
+              <a href="#signup"  data-icon="carat-r" data-iconpos="right" data-role="button">Create New User</a>
+          </div>
         </script>      
 
         <script type="text/template" id="signup">  
             <div data-role="header">
-                <h1>REGISTER NEW USER</h1>
+                <h1>CREATE NEW USER</h1>
             </div>
           <form action="<%=hls.server%>/users/create.json">
-            <input type="text" name="user_session[first_name]" placeholder="First Name" data-mini="true">
-            <input type="text" name="user_session[last_name]" placeholder="Last Name" data-mini="true">
-            <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
-            <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
-            <button data-mini="true">SUBMIT</button>
+            <input type="text" name="user[first_name]" placeholder="First Name" data-mini="true">
+            <input type="text" name="user[last_name]" placeholder="Last Name" data-mini="true">
+            <input type="email" name="user[email]" placeholder="Email" data-mini="true">
+            <input type="password" name="user[password]" placeholder="Password" data-mini="true">
+            <%_.each(hls.user.cars.models, function(car){ %>
+              <input type="hidden" name="user[temp_cars][]" value="<%=car.id%>">
+            <%});%>
+            <button data-icon="carat-r" data-iconpos="right">SUBMIT</button>
           </form>
         </script> 
 
@@ -146,7 +151,7 @@
             </div>
             <div data-role="content">
             <form id="vin-form" action="<%=hls.server%>/cars/vin">
-                <input type="text" id="car_vin" name="car[vin]" placeholder="VIN Number">
+                <input type="text" id="car_vin" name="car[vin]" placeholder="VIN Number" data-role="none">
                 <%if(hls.user.loggedIn()){ %>
                    <input type="hidden" name="single_access_token" value="<%=hls.user.get('single_access_token')%>">
                 <%}%>
@@ -250,41 +255,24 @@
             <%if(car.shouldShowWindowSticker()){%>
               <a data-role="button" id="print_button_container" data-icon="carat-r" data-iconpos="right">Window Sticker</a>
             <% } %>
-              <table data-role="table" id="my-table" data-mode="reflow">
-                <thead>
-                  <tr>
-                    <th>VIN</th>
-                    <%if (car.get('exterior_color')){%>
-                      <th>Colors</th>
-                    <% } %>
+              <table data-role="" id="my-table">
 
-                    <th>Engine</th>
-                    <th>Transmission</th>
-                    <%if (car.get('msrp_price')){%>
-                      <th>MSRP</th>
-                      <%if(car.getWasNewPrice()){%>
-                        <th>WAS NEW</th>
-                      <%}%>
-                    <%}%>
-
-                  </tr>
-                </thead>
                 <tbody>
-                  <tr>
-                    <td><%=car.get('vin')%></td>
+                  
+                    <tr><th>VIN</th><td><%=car.get('vin')%></td></tr>
                     <%if (car.get('exterior_color')){%>
-                      <td><%=car.get('exterior_color') || ""%> / <%=car.get('interior_color') || ""%></td>
+                      <tr><th>Colors</th><td><%=car.get('exterior_color') || ""%> / <%=car.get('interior_color') || ""%></td></tr>
                     <% } %>
-                    <td><%=car.get('engine')%></td>
-                    <td><%=car.get('transmission')%></td>
+                    <tr><th>Engine</th><td><%=car.get('engine')%></td></tr>
+                    <tr><th>Transmission</th><td><%=car.get('transmission')%></td></tr>
                     <%if (car.get('msrp_price')){%>
-                      <td><%=car.get('msrp_price').formatMoney()%></td>
+                      <tr><th>BASE MSRP</th><td><%=car.get('msrp_price').formatMoney()%></td></tr>
                       <%if(car.getWasNewPrice()){%>
-                        <td><%=car.getWasNewPrice().formatMoney()%></td>
+                        <tr><th>With Options</th><td><%=car.getWasNewPrice().formatMoney()%></td></tr>
                       <%}%>
                     <%}%>
-                    </td>
-                  </tr>
+                    
+                 
                 </tbody>
               </table>
               <p></p>
@@ -331,7 +319,7 @@
                   </li>
               <% } else { %>
                   <% if(!hls.user.loggedIn()){ %>
-                    <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button" data-theme="r">Log in to unlock complete details</a>
+                    <a href="#login"  data-icon="carat-r" data-iconpos="right" data-role="button">Log in to unlock code guide</a>
                   <% } else {%>
                     <!-- show the store button! -->
                     <% if(hls.store.get('state')=="ready"){ %>
@@ -341,7 +329,7 @@
                     <%}%>
                   <% } %>
               <% } %>
-              <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="carat-r" data-iconpos="right">Add Pictures</a>
+             <!-- <a href="#cars/<%=car.id%>/edit" data-role="button" data-icon="carat-r" data-iconpos="right">Add Pictures</a>-->
                 
                 
               
@@ -358,7 +346,7 @@
         
         <script>
           window.hls = {};
-          hls.server = "http://qrvin.com"; //no trailing slash. 
+          hls.server = "http://monroneylabels.com"; //no trailing slash. 
           //Note that you can't google-print from local server.
           //Note that you can't do CORS requests from local server
           

@@ -157,6 +157,7 @@ hls.Car = hls.Model.extend({
      style_id:null,
      image_files:[],
      pending_transaction:false,
+     "is_paid?":false,
    },
     url: function(){
       if(this.isNew()){

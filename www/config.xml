@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.hls.qrvin" version="1.0.10" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>QRVin</name>
+<widget id="com.hls.ml" version="1.0.11" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>MonroneyLabels</name>
     <description>
-        QRVin is the fastest way to get your vehicle's description, original price, and option packages.
+        MonroneyLabels is the fastest way to get your vehicle's description, original price, and option packages.
     </description>
-    <author email="info@highlinesale.com" href="http://qrvin.com">
-        QRVin Team
+    <author email="info@highlinesale.com" href="http://monroneylabels.com">
+        MonroneyLabels Team
     </author>
     <preference name="permissions" value="none" />
     <preference name="phonegap-version" value="3.5.0" />
