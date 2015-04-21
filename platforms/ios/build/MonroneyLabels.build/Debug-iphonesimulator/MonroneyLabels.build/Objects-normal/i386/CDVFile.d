@@ -1,0 +1,25 @@
+dependencies: \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/QRVin/Plugins/org.apache.cordova.file/CDVFile.m \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDV.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVAvailability.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVPlugin.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVPluginResult.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/NSMutableArray+QueueAdditions.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVCommandDelegate.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVInvokedUrlCommand.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVViewController.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVCommandQueue.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVWhitelist.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVScreenOrientationDelegate.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVURLProtocol.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVDebug.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVLocalStorage.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVTimer.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/NSArray+Comparisons.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/NSData+Base64.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/NSDictionary+Extensions.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/UIDevice+Extensions.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVJSON.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/QRVin/Plugins/org.apache.cordova.file/CDVFile.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/QRVin/Plugins/org.apache.cordova.file/CDVLocalFilesystem.h \
+  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/QRVin/Plugins/org.apache.cordova.file/CDVAssetLibraryFilesystem.h

@@ -1,0 +1,125 @@
+a {
+    text-transform:uppercase;
+}
+div[data-role=content] {
+  text-align:center;
+}
+.ui-header h1.qrvin-title {
+  padding:5px 0 0 0;
+}
+
+.ui-nosvg div .ui-icon-back:after {
+  background-image: url(../img/back-white.png);
+}
+.ui-nosvg div .ui-icon-bars:after {
+    background-image: url(../img/bars-white.png);
+}
+.no-back-button .back {
+  visibility:hidden;
+}
+span.price {
+    float:right;
+    display:inline-block;
+}
+span.package {
+    width:85%;
+    display:inline-block;
+    white-space:normal;
+}
+.custom-centercollheader {
+    list-style:none !important;
+}
+.custom-centercollheader a{
+    text-align: center !important;
+    padding-right: 2.5em !important;
+}
+.ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit, html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit {
+    background-image:url(../img/sheetmetal.png);
+    color:white;
+/*    border-bottom: 3px solid #c4d3d8;*/
+    height:56px;
+    background-size:cover;
+}
+.ui-btn, label.ui-btn {
+    font-weight:inherit;
+
+}
+.ui-page-theme-a a, html .ui-bar-a a, html .ui-body-a a, html body .ui-group-theme-a a {
+    font-weight:inherit;
+}
+/*.ui-page-theme-a .ui-btn, html .ui-bar-a .ui-btn, html .ui-body-a .ui-btn, html body .ui-group-theme-a .ui-btn, html head + body .ui-btn.ui-btn-a, .ui-page-theme-a .ui-btn:visited, html .ui-bar-a .ui-btn:visited, html .ui-body-a .ui-btn:visited, html body .ui-group-theme-a .ui-btn:visited, html head + body .ui-btn.ui-btn-a:visited {*/
+.ui-page-theme-a .ui-btn, .ui-page-theme-a .ui-btn:visited{
+
+    color: #25a2c7;
+}
+.ui-page-theme-a .ui-header .ui-btn{ 
+    color: black;
+}
+.ui-page-theme-a ul.ui-listview .ui-btn{ 
+    color: black;
+}
+
+#brightness-up {
+ position:absolute; bottom: 0; left:0; width:49%;
+}
+#brightness-down {
+ position:absolute; bottom: 0; right:0; width:49%;
+}
+img.thumbnail {
+ height:78px;
+}
+
+/* Red button theme for JQuery Mobile
+ * - Use data-theme="r" for red versions of the default JQuery Mobile Buttons.
+ ******************************************************************************************/
+
+.ui-page-theme-a .ui-btn-r:hover {
+    border: 1px solid #721414;
+    background: #AB2525;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 -1px 1px #000;
+    background-image: -moz-linear-gradient(top, #C54E4E, #AB2525);
+    background-image: -webkit-gradient(linear,left top,left bottom,
+        color-stop(0, #C54E4E),
+        color-stop(1, #AB2525));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#C54E4E', EndColorStr='#AB2525')";
+}
+
+.ui-page-theme-a .ui-btn-r {
+    border: 1px solid #6E0000;
+    background: #B64B4B;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 -1px 1px #000;
+    background-image: -moz-linear-gradient(top, 
+        #D47272, 
+        #B64B4B);
+    background-image: -webkit-gradient(linear,left top,left bottom,
+        color-stop(0, #D47272),
+        color-stop(1, #B64B4B));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#D47272', EndColorStr='#B64B4B')";
+}
+table#my-table {
+  text-align:left
+}
+table#my-table th {
+  padding:0.5em 0.5em 0.5em 0;
+  text-transform:uppercase;
+  white-space:nowrap;
+  vertical-align:top;
+}
+.ui-header .ui-title{
+  color:black;
+}
+#car_vin {
+    background: url("../img/big-vin-placeholder.png") no-repeat scroll 0 0 transparent;
+    border: medium none;
+    font-family: monospace;
+    font-size: 19px;
+    height: 26px;
+    letter-spacing: 20px;
+    padding: 1px 0 0 6px;
+    text-transform: uppercase;
+    width: 530px;
+}
