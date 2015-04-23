@@ -131,8 +131,7 @@ hls.CarListView = hls.View.extend({
       $(this.el).trigger("create");
     },
     onRemove:function(){
-      $(window).unbind('throttledresize');
-      $(window).unbind('orientationchange');
+      app.addOrientationHandler();
     },
     render:function (eventName) {
       var splitView = hls.util.shouldSplitView({}); //returns true if split-screen
@@ -535,6 +534,7 @@ hls.AppRouter = Backbone.Router.extend({
           this.currentPage.remove(); 
         }
         this.currentPage = page;
+        app.orientationHandler();
         this.currentPage.checkShouldSync();
     },
     carExists:function(id){
@@ -558,6 +558,22 @@ hls.AppRouter = Backbone.Router.extend({
         navigator.app.exitApp();
       }
     },
+    addOrientationHandler:function(){
+      //reset window bindings
+      $(window).unbind('throttledresize');
+      $(window).unbind('orientationchange');
+      $(window).bind('orientationchange', app.orientationHandler);
+      $(window).bind('throttledresize', app.orientationHandler);
+    },
+    orientationHandler:function(){
+      if($(window).width() > 500){
+         $(".long_header").show();
+        $(".short_header").hide();
+      } else {
+        $(".long_header").hide();
+        $(".short_header").show();
+      }
+    },
 
 });
 
@@ -568,6 +584,7 @@ $(document).ready(function () {
 
     hls.camera = new hls.Camera();
     app = new hls.AppRouter();
+    app.addOrientationHandler();
     Backbone.history.start();
     //set the phone's backbutton so it always goes to the previous page
     document.addEventListener( "backbutton", function(){ app.goBack(); }, false );

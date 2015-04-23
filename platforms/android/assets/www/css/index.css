@@ -34,9 +34,11 @@ span.package {
     padding-right: 2.5em !important;
 }
 .ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit, html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit {
-    background-image:url(../img/carbonfiber.png);
+    background-image:url(../img/sheetmetal.png);
     color:white;
-    border-bottom: 3px solid #c4d3d8;
+/*    border-bottom: 3px solid #c4d3d8;*/
+    height:46px;
+    background-size:cover;
 }
 .ui-btn, label.ui-btn {
     font-weight:inherit;
@@ -97,4 +99,35 @@ img.thumbnail {
         color-stop(0, #D47272),
         color-stop(1, #B64B4B));
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#D47272', EndColorStr='#B64B4B')";
+}
+table#my-table {
+  text-align:left
+}
+table#my-table th {
+  padding:0.5em 0.5em 0.5em 0;
+  text-transform:uppercase;
+  white-space:nowrap;
+  vertical-align:top;
+}
+.ui-header .ui-title{
+  color:black;
+}
+#car_vin {
+    background: url("../img/big-vin-placeholder.png") no-repeat scroll 0 0 transparent;
+    border: medium none;
+    font-family: monospace;
+    font-size: 19px;
+    height: 26px;
+    letter-spacing: 20px;
+    padding: 1px 0 0 6px;
+    text-transform: uppercase;
+    width: 530px;
+}
+.short_header{
+    color: #9E0018;
+    padding-top: 10px;
+    display:inline-block;
+}
+.ui-header .ui-title, .ui-footer .ui-title {
+  overflow:inherit;
 }

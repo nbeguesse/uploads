@@ -12,3 +12,11 @@ To run on iOS:
 	2. open platforms/ios/QRVin.xcodeproj
 	3. Then choose the device and hit the play button.
 
+Hybrid App Features:
+	- Daily sync with server.
+	- Sign up new user in-app
+	- In-app Purchases if car is not available
+	- View window sticker and print window sticker
+	- Changes views based on phone/tablet size
+	- (Uploading images was commented out)
+

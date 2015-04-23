@@ -37,7 +37,7 @@ span.package {
     background-image:url(../img/sheetmetal.png);
     color:white;
 /*    border-bottom: 3px solid #c4d3d8;*/
-    height:56px;
+    height:46px;
     background-size:cover;
 }
 .ui-btn, label.ui-btn {
@@ -122,4 +122,12 @@ table#my-table th {
     padding: 1px 0 0 6px;
     text-transform: uppercase;
     width: 530px;
+}
+.short_header{
+    color: #9E0018;
+    padding-top: 10px;
+    display:inline-block;
+}
+.ui-header .ui-title, .ui-footer .ui-title {
+  overflow:inherit;
 }
