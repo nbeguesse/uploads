@@ -1,3 +1,3 @@
 dependencies: \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVConfigParser.m \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVConfigParser.h
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVConfigParser.m \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVConfigParser.h

@@ -1,3 +1,3 @@
 dependencies: \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVUserAgentUtil.m \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVUserAgentUtil.h
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVUserAgentUtil.m \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVUserAgentUtil.h

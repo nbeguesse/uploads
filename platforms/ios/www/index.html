@@ -47,7 +47,7 @@
                   <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                 <% } %>
                 <% if(!hls.user.loggedIn()){ %>
-                  <li><a href="#login" class="scroll" role="menuitem" tabindex="-1">Login</a></li>
+                  <li><a href="#login" class="scroll" role="menuitem" tabindex="-1">Log in</a></li>
                   <li><a href="#signup" class="scroll" role="menuitem" tabindex="-1">Sign Up</a></li>
                 <% } else { %>
                   <% if(hls.user.payments.length > 0){ %>
@@ -277,7 +277,7 @@
               </table>
               <p></p>
                 <%if(car.shouldShowWindowSticker()){%>
-                  <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false" data-collapsed="true" class="custom-centercollheader">
+                  <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="false" data-collapsed="false" class="custom-centercollheader">
                     <% //show installed options list
                         var total = 0;
                         var u = $("<ul data-role='listview' data-shadow='false'  data-corners='false'>");
