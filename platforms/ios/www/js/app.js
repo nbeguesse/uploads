@@ -535,7 +535,7 @@ hls.AppRouter = Backbone.Router.extend({
         }
         this.currentPage = page;
         app.orientationHandler();
-        this.currentPage.checkShouldSync();
+        //this.currentPage.checkShouldSync();
     },
     carExists:function(id){
         var car = hls.user.cars.get(id); //find car in carlist

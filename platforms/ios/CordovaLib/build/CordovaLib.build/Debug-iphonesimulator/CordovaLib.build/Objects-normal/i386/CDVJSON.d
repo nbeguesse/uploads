@@ -1,3 +1,3 @@
 dependencies: \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVJSON.m \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVJSON.h
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVJSON.m \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVJSON.h

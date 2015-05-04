@@ -1,8 +1,8 @@
 dependencies: \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVPlugin.m \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVPlugin.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVPluginResult.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/NSMutableArray+QueueAdditions.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVCommandDelegate.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVAvailability.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/CDVInvokedUrlCommand.h
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVPlugin.m \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVPlugin.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVPluginResult.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/NSMutableArray+QueueAdditions.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVCommandDelegate.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVAvailability.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/CDVInvokedUrlCommand.h

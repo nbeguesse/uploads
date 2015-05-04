@@ -1,11 +1,11 @@
 dependencies: \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/QRVin/Plugins/cc.fovea.cordova.purchase/InAppPurchase.m \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/QRVin/Plugins/cc.fovea.cordova.purchase/InAppPurchase.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVPlugin.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVPluginResult.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/NSMutableArray+QueueAdditions.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVCommandDelegate.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVAvailability.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/CDVInvokedUrlCommand.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/build/emulator/include/Cordova/NSData+Base64.h \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/QRVin/Plugins/cc.fovea.cordova.purchase/SKProduct+LocalizedPrice.h
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/QRVin/Plugins/cc.fovea.cordova.purchase/InAppPurchase.m \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/QRVin/Plugins/cc.fovea.cordova.purchase/InAppPurchase.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/build/emulator/include/Cordova/CDVPlugin.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/build/emulator/include/Cordova/CDVPluginResult.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/build/emulator/include/Cordova/NSMutableArray+QueueAdditions.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/build/emulator/include/Cordova/CDVCommandDelegate.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/build/emulator/include/Cordova/CDVAvailability.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/build/emulator/include/Cordova/CDVInvokedUrlCommand.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/build/emulator/include/Cordova/NSData+Base64.h \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/QRVin/Plugins/cc.fovea.cordova.purchase/SKProduct+LocalizedPrice.h

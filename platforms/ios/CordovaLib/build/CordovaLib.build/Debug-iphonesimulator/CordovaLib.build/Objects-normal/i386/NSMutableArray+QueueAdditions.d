@@ -1,3 +1,3 @@
 dependencies: \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/NSMutableArray+QueueAdditions.m \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/CordovaLib/Classes/NSMutableArray+QueueAdditions.h
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/NSMutableArray+QueueAdditions.m \
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/CordovaLib/Classes/NSMutableArray+QueueAdditions.h

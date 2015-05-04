@@ -1,2 +1,2 @@
 dependencies: \
-  /Users/nicolebeguesse/Desktop/uploads/platforms/ios/QRVin/main.m
+  /Volumes/HD/Users/nicolebeguesse/Documents/uploads/platforms/ios/QRVin/main.m
