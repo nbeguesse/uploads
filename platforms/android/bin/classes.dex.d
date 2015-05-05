@@ -32,6 +32,7 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/classes/com/hls/qrvin/R.class \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/classes/com/phonegap/helloworld/HelloWorld.class \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/classes/com/phonegap/plugins/barcodescanner/BarcodeScanner.class \
+/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/classes/com/qrvin/HelloWorld.class \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/classes/com/smartmobilesoftware/inappbilling/InAppBillingPlugin$1.class \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/classes/com/smartmobilesoftware/inappbilling/InAppBillingPlugin$2.class \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/classes/com/smartmobilesoftware/inappbilling/InAppBillingPlugin$3.class \

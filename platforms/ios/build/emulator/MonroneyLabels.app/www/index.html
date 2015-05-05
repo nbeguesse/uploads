@@ -42,20 +42,18 @@
                 <a class="menubutton ui-btn-right ui-link ui-btn ui-icon-bars ui-btn-icon-right ui-shadow ui-corner-all" data-icon="bars" href="javascript:void(0)" data-role="button" role="button" style="position:relative; float:right; margin-bottom:0.7em">Menu</a>
 
                 <ul class="slicknav_nav slicknav_hidden" style="display: none;" aria-hidden="true" role="menu">
-                <li><a href="#" class="scroll" role="menuitem" tabindex="-1">Add A Car</a></li>
-                <%if(hls.user.cars.length > 0){%>
-                  <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
-                <% } %>
+                
+              
                 <% if(!hls.user.loggedIn()){ %>
                   <li><a href="#login" class="scroll" role="menuitem" tabindex="-1">Log in</a></li>
                   <li><a href="#signup" class="scroll" role="menuitem" tabindex="-1">Sign Up</a></li>
                 <% } else { %>
-                  <% if(hls.user.payments.length > 0){ %>
-                    <li><a href="#payments" class="scroll" role="menuitem" tabindex="-1">My Orders</a></li>  
+                  <li><a href="#" class="scroll" role="menuitem" tabindex="-1">Add A Car</a></li>
+                  <%if(hls.user.cars.length > 0){%>
+                    <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                   <% } %>
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
                 <% } %>
-
                   
                 </ul>
               </div>
@@ -95,8 +93,8 @@
 
 
         <script type="text/template" id="login">  
-            <div data-role="header">
-                <h1>LOGIN</h1>
+            <div data-role="header" class="no-back-button">
+              <h1 class="qrvin-title"><span class="short_header">MonroneyLabels</span><img class="long_header" src="img/monroneylabels.png"></h1>
             </div>
             <div data-role="content">
               <form action="<%=hls.server%>/user_sessions/create.json">
@@ -105,7 +103,7 @@
                 <%_.each(hls.user.cars.models, function(car){ %>
                   <input type="hidden" name="user_session[cars][]" value="<%=car.id%>">
                 <%});%>
-                <button data-icon="carat-r" data-iconpos="right">SUBMIT</button>
+                <button data-icon="carat-r" data-iconpos="right">LOG IN</button>
               </form>
               <a href="#signup"  data-icon="carat-r" data-iconpos="right" data-role="button">Create New User</a>
           </div>
@@ -323,7 +321,7 @@
                   <% } else {%>
                     <!-- show the store button! -->
                     <% if(hls.store.get('state')=="ready"){ %>
-                      <button data-theme="r" id="buy-vin"><%=hls.store.get('title')%></button>
+                      <button data-theme="r" id="buy-vin">Unlock Code Guide</button>
                     <%} else {%>
                       <button data-theme="r" disabled="disabled"><%=hls.store.get('state')%></button>
                     <%}%>

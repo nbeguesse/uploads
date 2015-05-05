@@ -246,7 +246,7 @@ hls.LoginView = hls.View.extend({
     _login:function(e){
         this.submitForm($(e.currentTarget), function(data){
             hls.user.update(data);
-            app.navigate("cars/list", true);
+            app.welcome();
 
         });
         return false;
@@ -431,7 +431,7 @@ hls.AppRouter = Backbone.Router.extend({
 
     carsList:function(){
       if(hls.user.cars.models.length == 0){
-        this.changePage(new hls.WelcomeView());
+        this.welcome();
         return;
       } 
       
@@ -518,6 +518,10 @@ hls.AppRouter = Backbone.Router.extend({
       this.changePage(new hls.VinView({}));
     },
     welcome:function () {
+      if(!hls.user.loggedIn()){
+        this.login();
+        return;
+      } 
         this.changePage(new hls.WelcomeView());
         
     },

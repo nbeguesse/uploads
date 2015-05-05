@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C926052C6244EE991D371A /* CDVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B5ACF8FA6354336AC0636C8 /* CDVFileTransfer.m */; };
 		02548769BAD2445BBBBAEB51 /* ZBarScannerController.m in Sources */ = {isa = PBXBuildFile; fileRef = C370CD250173480AB1E31BA1 /* ZBarScannerController.m */; };

@@ -1,4 +1,4 @@
-Increase version number in www/config.xml, platforms/android/AndroidManifest.xml (app package is com.hls.qrvin)
+Increase version number in www/config.xml (app package is com.hls.qrvin)
 
 From the root directory:
 
