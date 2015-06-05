@@ -176,6 +176,7 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/vendor/cloudprintgadget.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/vendor/jquery-1.10.2.min.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/vendor/jquery-1.7.1.min.js \
+/Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/vendor/jquery.jsonp-2.4.0.min.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/vendor/jquery.mobile-1.4.1.min.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/vendor/jquery.slicknav.min.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/vendor/json2.js \
