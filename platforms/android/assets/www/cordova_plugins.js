@@ -250,8 +250,7 @@ module.exports.metadata =
     "cordova.plugin.Brightness": "0.1.0",
     "cc.fovea.cordova.purchase": "3.10.1",
     "com.adobe.plugins.GAPlugin": "2.4.0",
-    "org.apache.cordova.file": "1.3.2",
-    "com.google.playservices": "19.0.0"
+    "org.apache.cordova.file": "1.3.2"
 }
 // BOTTOM OF METADATA
 });

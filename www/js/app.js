@@ -538,7 +538,9 @@ hls.AppRouter = Backbone.Router.extend({
 
         var hash = top.location.hash == "" ? "/login" : top.location.hash.replace("#","/");
         ga('send', 'pageview', {'page': hash});
-        gaPlugin.trackPage( function(){}, function(){}, hash);
+        if(gaPlugin){
+          gaPlugin.trackPage( function(){}, function(){}, hash);
+        }
 
     },
     carExists:function(id){

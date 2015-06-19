@@ -140,6 +140,4 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/classes/org/apache/cordova/plugin/Brightness/BrightnessPlugin$SetTask.class \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/classes/org/apache/cordova/plugin/Brightness/BrightnessPlugin.class \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/dexedLibs/classes-aa9541143e69de317e9e7e61f6fc751e.jar \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/dexedLibs/libGoogleAnalyticsV2-3974da1f0149073b67a86dae9da81f12.jar \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/dexedLibs/com.google.zxing.client.android.captureactivity-ba51865cc006dc76d5488785f3ecd73a.jar \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/dexedLibs/google-play-services-9188af07e38a2416bcad711dc338a883.jar \

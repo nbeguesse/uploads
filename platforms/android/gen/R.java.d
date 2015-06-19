@@ -60,7 +60,6 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/values/dimens.xml \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/values/ids.xml \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/values/strings.xml \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/res/values/version.xml \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/values-ar/strings.xml \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/values-bg/strings.xml \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/values-ca/strings.xml \
