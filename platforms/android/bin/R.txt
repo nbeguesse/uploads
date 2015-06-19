@@ -62,6 +62,7 @@ int id status_view 0x7f0a0016
 int id time_text_view 0x7f0a000f
 int id type_text_view 0x7f0a000e
 int id viewfinder_view 0x7f0a000a
+int integer google_play_services_version 0x7f0b0000
 int layout bookmark_picker_list_item 0x7f030000
 int layout capture 0x7f030001
 int layout encode 0x7f030002
@@ -71,9 +72,9 @@ int layout search_book_contents 0x7f030005
 int layout search_book_contents_header 0x7f030006
 int layout search_book_contents_list_item 0x7f030007
 int layout share 0x7f030008
-int menu capture 0x7f0b0000
-int menu encode 0x7f0b0001
-int menu history 0x7f0b0002
+int menu capture 0x7f0c0000
+int menu encode 0x7f0c0001
+int menu history 0x7f0c0002
 int raw beep 0x7f050000
 int string app_name 0x7f070001
 int string app_picker_name 0x7f070002

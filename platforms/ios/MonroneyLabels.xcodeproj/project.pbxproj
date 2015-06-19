@@ -67,6 +67,12 @@
 		E7E95BEFBEA64E6BBF7B3816 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F20FBB8355A744C2B4ED119D /* libiconv.dylib */; };
 		ED5BB18E58A748E6B72BA017 /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24210A8DB83D4A6886DA5D44 /* libzbar.a */; };
 		F2D6D60E760F43718E998057 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E5C1637AC8E46B1B31E411F /* CoreMedia.framework */; };
+		19E06AD255B24A9CB8D5BD5B /* GAPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C3C3CE76FF4F8D81793F7D /* GAPlugin.m */; };
+		322AA2904AF9404E95121A25 /* libGoogleAnalyticsServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B14F7D02D5DF41A99393ACA2 /* libGoogleAnalyticsServices.a */; };
+		7F574ACECA514C6292F2720E /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 752BB6FC89D7443BA6520065 /* libsqlite3.dylib */; };
+		B9BF7EA9028D46CF827C8C94 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1761B683920B43ADB0679027 /* libz.dylib */; };
+		4C94E7A7C1E447FC90170DEF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33584FF4E6FB49ECA74E76F7 /* CoreData.framework */; };
+		477444651FA645898C20DB71 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBFD4A59659C48159521832B /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -196,6 +202,19 @@
 		F1FAF9CB66F64DDE99F8A12F /* CDVJpegHeaderWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVJpegHeaderWriter.h; path = org.apache.cordova.camera/CDVJpegHeaderWriter.h; sourceTree = "<group>"; };
 		F20FBB8355A744C2B4ED119D /* libiconv.dylib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = QRVin/config.xml; sourceTree = "<group>"; };
+		77C3C3CE76FF4F8D81793F7D /* GAPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "GAPlugin.m"; path = "com.adobe.plugins.GAPlugin/GAPlugin.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		B14F7D02D5DF41A99393ACA2 /* libGoogleAnalyticsServices.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libGoogleAnalyticsServices.a"; path = "MonroneyLabels/Plugins/com.adobe.plugins.GAPlugin/libGoogleAnalyticsServices.a"; sourceTree = "<group>"; fileEncoding = 4; };
+		FFDC98B2FEC047CF8B36EB17 /* GAI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GAI.h"; path = "com.adobe.plugins.GAPlugin/GAI.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		7625AC8D06A740F7A82F0EB5 /* GAIDictionaryBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GAIDictionaryBuilder.h"; path = "com.adobe.plugins.GAPlugin/GAIDictionaryBuilder.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		64F1A5700865454E807B13A4 /* GAIFields.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GAIFields.h"; path = "com.adobe.plugins.GAPlugin/GAIFields.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		75543A13A2B5448FACC53938 /* GAILogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GAILogger.h"; path = "com.adobe.plugins.GAPlugin/GAILogger.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		0603A43C10EC4CEB9C25FCE5 /* GAITrackedViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GAITrackedViewController.h"; path = "com.adobe.plugins.GAPlugin/GAITrackedViewController.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		200A3BAE6A1645009A14CB0B /* GAITracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GAITracker.h"; path = "com.adobe.plugins.GAPlugin/GAITracker.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		084B6BB042904427A2DC79A5 /* GAPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GAPlugin.h"; path = "com.adobe.plugins.GAPlugin/GAPlugin.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		752BB6FC89D7443BA6520065 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsqlite3.dylib"; path = "usr/lib/libsqlite3.dylib"; sourceTree = SDKROOT; fileEncoding = 4; };
+		1761B683920B43ADB0679027 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libz.dylib"; path = "usr/lib/libz.dylib"; sourceTree = SDKROOT; fileEncoding = 4; };
+		33584FF4E6FB49ECA74E76F7 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreData.framework"; path = "System/Library/Frameworks/CoreData.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		FBFD4A59659C48159521832B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +237,11 @@
 				F2D6D60E760F43718E998057 /* CoreMedia.framework in Frameworks */,
 				B4F1AF50C719470EBC721210 /* UIKit.framework in Frameworks */,
 				409CEA30EE0C476A8E161995 /* StoreKit.framework in Frameworks */,
+				322AA2904AF9404E95121A25 /* libGoogleAnalyticsServices.a in Frameworks */,
+				7F574ACECA514C6292F2720E /* libsqlite3.dylib in Frameworks */,
+				B9BF7EA9028D46CF827C8C94 /* libz.dylib in Frameworks */,
+				4C94E7A7C1E447FC90170DEF /* CoreData.framework in Frameworks */,
+				477444651FA645898C20DB71 /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +346,13 @@
 				4E5C1637AC8E46B1B31E411F /* CoreMedia.framework */,
 				5C3AB04B765C4319B5268D39 /* UIKit.framework */,
 				31E96ECC3F244922891DCD39 /* StoreKit.framework */,
+				248F75396C4446B0B16035A9 /* libGoogleAnalyticsServices.a */,
+				2ABCEDD41FFF47EE9D3C2C0F /* libGoogleAnalyticsServices.a */,
+				B14F7D02D5DF41A99393ACA2 /* libGoogleAnalyticsServices.a */,
+				752BB6FC89D7443BA6520065 /* libsqlite3.dylib */,
+				1761B683920B43ADB0679027 /* libz.dylib */,
+				33584FF4E6FB49ECA74E76F7 /* CoreData.framework */,
+				FBFD4A59659C48159521832B /* SystemConfiguration.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -391,6 +422,14 @@
 				EA811266C88549BFA3F2F109 /* SKProduct+LocalizedPrice.m */,
 				D25326ED3E504673B864A32F /* InAppPurchase.h */,
 				E027C8A14A684611962C5A41 /* SKProduct+LocalizedPrice.h */,
+				77C3C3CE76FF4F8D81793F7D /* GAPlugin.m */,
+				FFDC98B2FEC047CF8B36EB17 /* GAI.h */,
+				7625AC8D06A740F7A82F0EB5 /* GAIDictionaryBuilder.h */,
+				64F1A5700865454E807B13A4 /* GAIFields.h */,
+				75543A13A2B5448FACC53938 /* GAILogger.h */,
+				0603A43C10EC4CEB9C25FCE5 /* GAITrackedViewController.h */,
+				200A3BAE6A1645009A14CB0B /* GAITracker.h */,
+				084B6BB042904427A2DC79A5 /* GAPlugin.h */,
 			);
 			name = Plugins;
 			path = QRVin/Plugins;
@@ -609,6 +648,7 @@
 				58ACF917E344401D9EFD05D8 /* Brightness.m in Sources */,
 				B3ABC6C0E3804D2D9B07BAD3 /* InAppPurchase.m in Sources */,
 				DF8319058B544C5FB09B4920 /* SKProduct+LocalizedPrice.m in Sources */,
+				19E06AD255B24A9CB8D5BD5B /* GAPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -678,6 +718,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/QRVin/Plugins/com.collectme.zbarScanner\"",
 					"\"$(SRCROOT)/QRVin/Plugins/com.collectme.zbarScanner\"",
+					"\"$(SRCROOT)/MonroneyLabels/Plugins/com.adobe.plugins.GAPlugin\"",
 				);
 				OTHER_LDFLAGS = (
 					"-weak_framework",
@@ -717,6 +758,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/QRVin/Plugins/com.collectme.zbarScanner\"",
 					"\"$(SRCROOT)/QRVin/Plugins/com.collectme.zbarScanner\"",
+					"\"$(SRCROOT)/MonroneyLabels/Plugins/com.adobe.plugins.GAPlugin\"",
 				);
 				OTHER_LDFLAGS = (
 					"-weak_framework",

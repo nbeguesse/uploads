@@ -85,6 +85,13 @@ module.exports = [
         ]
     },
     {
+        "file": "plugins/com.adobe.plugins.GAPlugin/www/GAPlugin.js",
+        "id": "com.adobe.plugins.GAPlugin.GAPlugin",
+        "clobbers": [
+            "GAPlugin"
+        ]
+    },
+    {
         "file": "plugins/org.apache.cordova.file/www/DirectoryEntry.js",
         "id": "org.apache.cordova.file.DirectoryEntry",
         "clobbers": [
@@ -242,6 +249,7 @@ module.exports.metadata =
     "org.apache.cordova.camera": "0.3.4",
     "cordova.plugin.Brightness": "0.1.0",
     "cc.fovea.cordova.purchase": "3.10.1",
+    "com.adobe.plugins.GAPlugin": "2.4.0",
     "org.apache.cordova.file": "1.3.2"
 }
 // BOTTOM OF METADATA

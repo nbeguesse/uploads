@@ -90,6 +90,9 @@ public final class R {
         public static final int type_text_view=0x7f0a000e;
         public static final int viewfinder_view=0x7f0a000a;
     }
+    public static final class integer {
+        public static final int google_play_services_version=0x7f0b0000;
+    }
     public static final class layout {
         public static final int bookmark_picker_list_item=0x7f030000;
         public static final int capture=0x7f030001;
@@ -102,9 +105,9 @@ public final class R {
         public static final int share=0x7f030008;
     }
     public static final class menu {
-        public static final int capture=0x7f0b0000;
-        public static final int encode=0x7f0b0001;
-        public static final int history=0x7f0b0002;
+        public static final int capture=0x7f0c0000;
+        public static final int encode=0x7f0c0001;
+        public static final int history=0x7f0c0002;
     }
     public static final class raw {
         public static final int beep=0x7f050000;

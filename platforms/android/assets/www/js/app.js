@@ -51,8 +51,7 @@ hls.View = Backbone.View.extend({
         },
         error:function(xOptions, textStatus){
           $.mobile.loading('hide'); 
-          console.log(xOptions); //useless.
-          alert('Please try again later.');
+          //alert('Please try again later.'); Fail silently! If the Starbucks connection is bad, this will happen a lot!
         },
       });
     },
@@ -535,7 +534,12 @@ hls.AppRouter = Backbone.Router.extend({
         }
         this.currentPage = page;
         app.orientationHandler();
-        app.checkShouldSync();
+        //app.checkShouldSync();
+
+        var hash = top.location.hash == "" ? "/login" : top.location.hash.replace("#","/");
+        ga('send', 'pageview', {'page': hash});
+        gaPlugin.trackPage( function(){}, function(){}, hash);
+
     },
     carExists:function(id){
         var car = hls.user.cars.get(id); //find car in carlist
@@ -609,4 +613,7 @@ $(document).ready(function () {
 });
 document.addEventListener('deviceready', function(){ hls.user.loadFromFile(); } , false);
 document.addEventListener('deviceready', function(){ hls.store.initStore(); } , false);
-
+document.addEventListener('deviceready', function(){ 
+    gaPlugin = window.plugins.gaPlugin;
+    gaPlugin.init(function(){}, function(){}, "UA-19475111-7", 10);
+ } , false);

@@ -39,6 +39,10 @@
                         {
                             "xml": "<feature name=\"InAppBillingPlugin\"><param name=\"android-package\" value=\"com.smartmobilesoftware.inappbilling.InAppBillingPlugin\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"GAPlugin\"><param name=\"android-package\" value=\"com.adobe.plugins.GAPlugin\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -66,6 +70,10 @@
                         },
                         {
                             "xml": "<activity android:label=\"@string/share_name\" android:name=\"com.google.zxing.client.android.HelpActivity\"><intent-filter><action android:name=\"android.intent.action.VIEW\" /><category android:name=\"android.intent.category.DEFAULT\" /></intent-filter></activity>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<meta-data android:name=\"com.google.android.gms.version\" android:value=\"@integer/google_play_services_version\" />",
                             "count": 1
                         }
                     ],
@@ -607,10 +615,16 @@
         },
         "cc.fovea.cordova.purchase": {
             "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "com.adobe.plugins.GAPlugin": {
+            "PACKAGE_NAME": "com.qrvin"
         }
     },
     "dependent_plugins": {
         "org.apache.cordova.file": {
+            "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "com.google.playservices": {
             "PACKAGE_NAME": "com.hls.qrvin"
         }
     }

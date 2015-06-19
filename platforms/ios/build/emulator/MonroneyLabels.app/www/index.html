@@ -52,6 +52,7 @@
                   <%if(hls.user.cars.length > 0){%>
                     <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                   <% } %>
+                  <!--<li><a href="#" class="scroll" role="menuitem" tabindex="-1" id="syncme">Sync</a></li>-->
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
                 <% } %>
                   
@@ -298,6 +299,13 @@
 
                     for(var j=0; j< car.get('options').length; j++){
                       var i = car.get('options')[j];
+                      console.log(i.name);
+                      if(i.name == "EMISSION"){
+                        continue;
+                      }
+                      if(i.name == "EMISSIONS"){
+                        continue;
+                      }
                       if(i.name != category){
                         category = i.name;
                         div.append(ul);
@@ -337,10 +345,10 @@
         <script src="js/vendor/jquery-1.7.1.min.js"></script>
         <script src="js/jqm-config.js"></script>
         <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>
+        <script src="js/vendor/jquery.jsonp-2.4.0.min.js"></script><!-- needed to handle 500 errors-->
         <script src="js/vendor/underscore-min.js"></script>
         <script src="js/vendor/backbone-min.js"></script>
         <script src="js/vendor/json2.js"></script> 
-        <!--<script src="js/vendor/cloudprintgadget.js"></script>-->
         
         <script>
           window.hls = {};

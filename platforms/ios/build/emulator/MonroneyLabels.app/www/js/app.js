@@ -25,9 +25,9 @@ hls.View = Backbone.View.extend({
         options.data = hls.util.addAccessToken(options.data)
       }
       $.mobile.loading( 'show', {text: '', textVisible: true, theme: 'z', html: ""}); //show jquery mobile spinner
-      $.ajax({
+      $.jsonp({
         dataType: "jsonp",
-        url: url,
+        url: url+"?callback=?", //see jquery-jsonp.js
         data:options.data,
         //type:options.type, //JSONP always GET!
         success:function(data){
@@ -49,10 +49,10 @@ hls.View = Backbone.View.extend({
             success(data); 
           }
         },
-        error:function(error){
-          console.log('error');
+        error:function(xOptions, textStatus){
+          $.mobile.loading('hide'); 
+          //alert('Please try again later.'); Fail silently! If the Starbucks connection is bad, this will happen a lot!
         },
-        
       });
     },
     render:function (eventName) { //default render uses default template
@@ -89,20 +89,6 @@ hls.View = Backbone.View.extend({
          $(this.el).trigger("create"); //trigger Jquery Mobile styling
     },
     onRemove:function(){
-    },
-    checkShouldSync:function(){
-      if(hls.user.loggedIn()){
-        if(hls.user.shouldSync()){
-          var data = hls.util.addAccessToken({});
-          this.getUrl(hls.server+"/cars/list.json",{
-            data:data,
-            success:function(data){
-              hls.user.update(data);
-            }
-          });
-         
-        }
-      }
     },
 });
 
@@ -350,6 +336,10 @@ hls.VinView = hls.View.extend({
           app.navigate(hls.user.cars.get(data.car.id).showLink, true);
           //redirect to car page!!
          } 
+         if (data.errors){
+          console.log(data);
+          alert(data.errors);
+         }
        });
        return false;
     },
@@ -420,6 +410,11 @@ hls.AppRouter = Backbone.Router.extend({
         // Handle back button img throughout the application
         $('a.back').live('click', function(event) {
             app.goBack();
+            return false;
+        });
+        $('#syncme').live('click', function(event) {
+            console.log('synced');
+            app.checkShouldSync();
             return false;
         });
         $("a.menubutton").live('click',function(e){
@@ -539,7 +534,7 @@ hls.AppRouter = Backbone.Router.extend({
         }
         this.currentPage = page;
         app.orientationHandler();
-        //this.currentPage.checkShouldSync();
+        app.checkShouldSync();
     },
     carExists:function(id){
         var car = hls.user.cars.get(id); //find car in carlist
@@ -576,6 +571,20 @@ hls.AppRouter = Backbone.Router.extend({
       } else {
         $(".long_header").hide();
         $(".short_header").show();
+      }
+    },
+    checkShouldSync:function(){
+      if(hls.user.loggedIn()){
+        if(hls.user.shouldSync()){
+          var data = hls.util.addAccessToken({});
+          app.currentPage.getUrl(hls.server+"/cars/list.json",{
+            data:data,
+            success:function(data){
+              hls.user.update(data);
+            }
+          });
+         
+        }
       }
     },
 

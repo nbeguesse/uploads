@@ -78,6 +78,31 @@
                             "xml": "false",
                             "count": 1
                         }
+                    ],
+                    "SystemConfiguration.framework": [
+                        {
+                            "xml": "false",
+                            "count": 1
+                        }
+                    ],
+                    "CoreData.framework": [
+                        {
+                            "xml": "false",
+                            "count": 1
+                        }
+                    ],
+                    "libz.dylib": [
+                        {
+                            "xml": "false",
+                            "count": 1
+                        }
+                    ],
+                    "libsqlite3.0.dylib": [],
+                    "libsqlite3.dylib": [
+                        {
+                            "xml": "false",
+                            "count": 1
+                        }
                     ]
                 }
             },
@@ -123,6 +148,10 @@
                         {
                             "xml": "<feature name=\"InAppPurchase\"><param name=\"ios-package\" value=\"InAppPurchase\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"GAPlugin\"><param name=\"ios-package\" value=\"GAPlugin\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -163,6 +192,9 @@
         },
         "cc.fovea.cordova.purchase": {
             "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "com.adobe.plugins.GAPlugin": {
+            "PACKAGE_NAME": "com.qrvin"
         }
     },
     "dependent_plugins": {
