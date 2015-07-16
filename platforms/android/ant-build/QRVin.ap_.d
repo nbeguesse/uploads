@@ -183,7 +183,6 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/vendor/json2.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/vendor/underscore-min.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/cc.fovea.cordova.purchase \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/com.adobe.plugins.GAPlugin \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/com.collectme.zbarScanner \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/com.phonegap.plugins.barcodescanner \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/cordova.plugin.Brightness \
@@ -194,8 +193,6 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/org.apache.cordova.inappbrowser \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/cc.fovea.cordova.purchase/www \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/cc.fovea.cordova.purchase/www/store-android.js \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/com.adobe.plugins.GAPlugin/www \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/com.adobe.plugins.GAPlugin/www/GAPlugin.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/com.collectme.zbarScanner/www \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/com.collectme.zbarScanner/www/zbarscanner.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/plugins/com.phonegap.plugins.barcodescanner/www \

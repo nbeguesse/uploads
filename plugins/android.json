@@ -39,10 +39,6 @@
                         {
                             "xml": "<feature name=\"InAppBillingPlugin\"><param name=\"android-package\" value=\"com.smartmobilesoftware.inappbilling.InAppBillingPlugin\" /></feature>",
                             "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"GAPlugin\"><param name=\"android-package\" value=\"com.adobe.plugins.GAPlugin\" /></feature>",
-                            "count": 1
                         }
                     ]
                 }
@@ -611,9 +607,6 @@
         },
         "cc.fovea.cordova.purchase": {
             "PACKAGE_NAME": "com.hls.qrvin"
-        },
-        "com.adobe.plugins.GAPlugin": {
-            "PACKAGE_NAME": "com.qrvin"
         }
     },
     "dependent_plugins": {

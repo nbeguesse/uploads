@@ -53,6 +53,7 @@
                     <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
                   <% } %>
                   <!--<li><a href="#" class="scroll" role="menuitem" tabindex="-1" id="syncme">Sync</a></li>-->
+                  <li><a href="#feedback" class="scroll" role="menuitem" tabindex="-1">Feedback</a>
                   <li><a href="#logout" class="scroll" role="menuitem" tabindex="-1">Logout</a></li>
                 <% } %>
                   
@@ -92,13 +93,54 @@
             </div>
         </script>
 
+        <script type="text/template" id="feedback">
+            <div data-role="header">
+              <h1>Feedback</h1>
+            </div>
+            <div data-role="content">
+              Do you like this app?
+              <a href="#feedback-yes" data-role="button">Yes</a>
+              <a href="#feedback-no" data-role="button">No</a>
+            </div>
+        </script>
+
+        <script type="text/template" id="feedback-yes">
+            <div data-role="header">
+              <h1>Feedback</h1>
+            </div>
+            <div data-role="content">
+              <div>Thanks!</div> 
+              <div>We&rsquo;d love it if you&rsquo;d leave a positive review for us on the App Store!</div>
+              <%if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) { %>
+                <a href="#" onclick="window.open(encodeURI('https://itunes.apple.com/us/app/monroneylabels/id977283589?ls=1&mt=8'), '_system')" data-role="button">Go to App Store</a>   
+              <% } else { %>
+                <a href="#" onclick="window.open(encodeURI('https://play.google.com/store/apps/details?id=com.hls.qrvin'), '_system')" data-role="button" data-icon="carat-r" data-iconpos="right">Go to App Store</a> 
+              <% } %>          
+            </div>
+        </script>
+
+        <script type="text/template" id="feedback-no">
+            <div data-role="header">
+              <h1>Feedback</h1>
+            </div>
+            <div data-role="content">
+              We&rsquo;re sorry to hear that. Please leave a short message indicating what you didn&rsquo;t like:
+              <form action="<%=hls.server%>/pages/dealer_message.json">
+                <input type="text" placeholder="Name" name="form[name]"  data-mini="true">
+                <input type="text" placeholder="Email" name="form[email]"  data-mini="true">
+                <textarea placeholder="Message:" name="form[message]"></textarea>
+                <button data-icon="carat-r" data-iconpos="right">SUBMIT</button>
+              </form>
+            </div>
+        </script>
+
 
         <script type="text/template" id="login">  
             <div data-role="header" class="no-back-button">
               <h1 class="qrvin-title"><span class="short_header">MonroneyLabels</span><img class="long_header" src="img/monroneylabels.png"></h1>
             </div>
             <div data-role="content">
-              <form action="<%=hls.server%>/user_sessions/create.json">
+              <form action="<%=hls.httpsserver%>/user_sessions/create.json">
                 <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
                 <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
                 <%_.each(hls.user.cars.models, function(car){ %>
@@ -353,6 +395,7 @@
         <script>
           window.hls = {};
           hls.server = "http://monroneylabels.com"; //no trailing slash. 
+          hls.httpsserver = "https://monroneylabels.com"; //no trailing slash. 
           //Note that you can't google-print from local server.
           //Note that you can't do CORS requests from local server
           
@@ -362,26 +405,29 @@
             //set hls.emulated to true to skip VIN scanning
             hls.emulated = true;
           }
-          window.gaPlugin = null;
+          window.ga = null;
         </script>
         <script src="js/utilities.js"></script>
         <script src="js/models.js"></script>
         <script src="js/collections.js"></script>
         <script src="js/app.js"></script>
   <script type="text/javascript">
+
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','js/vendor/analytics.js','ga');
-  var ua = 'UA-19475111-8';
-  var clientID = '92bf24a5-20e5-4181-9778-2835f28c52d8';
-  // if (!hls.emulated){
-  //   clientID = device.uuid;
+
+  // window.clientID = '92bf24a5-20e5-4181-9778-2835f28c52d8';
+  // if (hls.user.loggedIn()){
+  //   clientID = hls.user.id;
   // }
-  ga('create', ua, {'storage': 'none','clientId': clientID});
-  ga('set','checkProtocolTask',null);
-  ga('set','checkStorageTask',null);
-  ga('send', 'pageview', {'page': '/'});
+  // ga('create', ua, {'storage': 'none','clientId': clientID});
+  // ga('set','checkProtocolTask',null);
+  // ga('set','checkStorageTask',null);
+  // ga('send', 'pageview', {'page': '/'});
+
+
 </script>
 
     </head>
