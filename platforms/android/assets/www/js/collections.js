@@ -12,7 +12,9 @@ hls.CarList = hls.Collection.extend({
   },
   getTransactionCar: function(){
     return this.where({pending_transaction:true})[0];
-    
+  },
+  comparator:function(car){
+    return -car.id;
   },
 });
 

@@ -572,14 +572,18 @@ hls.AppRouter = Backbone.Router.extend({
         app.checkShouldSync();
 
         var hash = top.location.hash == "" ? "/login" : top.location.hash.replace("#","/");
+        //Google Analytics
         if(ga){
           ga('send', 'pageview', {'page': hash});
         }
-        // dataLayer.push({
-        //   'event':'VirtualPageview',
-        //   'virtualPageURL':hash,
-        //   'virtualPageTitle' : $("head title").text()
-        //   });
+        //Google Tag Manager
+        if(dataLayer){
+        dataLayer.push({
+          'event':'VirtualPageview',
+          'virtualPageURL':hash,
+          'virtualPageTitle' : $("head title").text()
+          });
+        }
 
 
     },
