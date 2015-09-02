@@ -81,9 +81,9 @@
                 <button id="brightness-up" data-icon="arrow-u"> Brightness Up</button>
                 <button id="brightness-down" data-icon="arrow-d" data-iconpos="right"> Brightness Down</button>
             </div>
-
         </script>
 
+        <!-- upload to DMS -->
         <script type="text/template" id="dms">
             <div data-role="header">
               <h1>DMS</h1>
@@ -93,6 +93,7 @@
             </div>
         </script>
 
+        <!-- Give Feedback -->
         <script type="text/template" id="feedback">
             <div data-role="header">
               <h1>Feedback</h1>
@@ -104,6 +105,7 @@
             </div>
         </script>
 
+        <!-- Feedback-yes -->
         <script type="text/template" id="feedback-yes">
             <div data-role="header">
               <h1>Feedback</h1>
@@ -119,6 +121,7 @@
             </div>
         </script>
 
+        <!-- Feedback-no -->
         <script type="text/template" id="feedback-no">
             <div data-role="header">
               <h1>Feedback</h1>
@@ -134,7 +137,7 @@
             </div>
         </script>
 
-
+        <!-- Login page -->
         <script type="text/template" id="login">  
             <div data-role="header" class="no-back-button">
               <h1 class="qrvin-title"><span class="short_header">MonroneyLabels</span><img class="long_header" src="img/monroneylabels.png"></h1>
@@ -149,9 +152,13 @@
                 <button data-icon="carat-r" data-iconpos="right">LOG IN</button>
               </form>
               <a href="#signup"  data-icon="carat-r" data-iconpos="right" data-role="button">Create New User</a>
+              <%if(hls.server.indexOf("localhost") > 0){%>
+                <div><small>Using local server</small></div>
+              <%}%>
           </div>
         </script>      
 
+        <!-- Create New User Page -->
         <script type="text/template" id="signup">  
             <div data-role="header">
                 <h1>CREATE NEW USER</h1>
@@ -168,6 +175,88 @@
           </form>
         </script> 
 
+        <!-- Search Page -->
+        <script type="text/template" id="search">
+            <div data-role="header">
+              <h1>Search My Cars</h1>
+            </div>
+            <div data-role="content">
+              <form class="search-table" action="<%=hls.user.getCarsLink()%>">
+                <table data-role="">
+                  <tbody>
+                      <tr><th>VIN</th><td><input type="text" name="car[vin]" style="text-transform:uppercase"></td></tr>
+                      <tr><th>Year</th><td>
+                        <select name="car[year]">
+                          <option value="">Select Year</option>
+                          <%for(var i=new Date().getFullYear()+1; i > 1980; i--){ %>
+                            <option><%=i%></option>
+                          <%}%>
+                        </select>
+                      </td></tr>
+                      <tr><th>Make</th><td>
+                        <select name="car[make]">
+                          <option value="">Select Make</option>
+                          <option value="Acura">Acura</option>
+                          <option value="Alfa Romeo">Alfa Romeo</option>
+                          <option value="Aston Martin">Aston Martin</option>
+                          <option value="Audi">Audi</option>
+                          <option value="Bentley">Bentley</option>
+                          <option value="BMW">BMW</option>
+                          <option value="Buick">Buick</option>
+                          <option value="Cadillac">Cadillac</option>
+                          <option value="Chevrolet">Chevrolet</option>
+                          <option value="Chrysler">Chrysler</option>
+                          <option value="Dodge">Dodge</option>
+                          <option value="Ferrari">Ferrari</option>
+                          <option value="FIAT">FIAT</option>
+                          <option value="Ford">Ford</option>
+                          <option value="Freightliner">Freightliner</option>
+                          <option value="GMC">GMC</option>
+                          <option value="Honda">Honda</option>
+                          <option value="Hyundai">Hyundai</option>
+                          <option value="Infiniti">Infiniti</option>
+                          <option value="Isuzu">Isuzu</option>
+                          <option value="Jaguar">Jaguar</option>
+                          <option value="Jeep">Jeep</option>
+                          <option value="Kia">Kia</option>
+                          <option value="Lamborghini">Lamborghini</option>
+                          <option value="Land Rover">Land Rover</option>
+                          <option value="Lexus">Lexus</option>
+                          <option value="Lincoln">Lincoln</option>
+                          <option value="Maserati">Maserati</option>
+                          <option value="Mazda">Mazda</option>
+                          <option value="McLaren">McLaren</option>
+                          <option value="Mercedes-Benz">Mercedes-Benz</option>
+                          <option value="MINI">MINI</option>
+                          <option value="Mitsubishi">Mitsubishi</option>
+                          <option value="Nissan">Nissan</option>
+                          <option value="Porsche">Porsche</option>
+                          <option value="Ram">Ram</option>
+                          <option value="Rolls-Royce">Rolls-Royce</option>
+                          <option value="Scion">Scion</option>
+                          <option value="Smart">Smart</option>
+                          <option value="Subaru">Subaru</option>
+                          <option value="Tesla">Tesla</option>
+                          <option value="Toyota">Toyota</option>
+                          <option value="Volkswagen">Volkswagen</option>
+                          <option value="Volvo">Volvo</option>
+                        </select>
+                      </td></tr>
+                      <tr><th>Model</th><td><input type="text" name="car[model]"></td></tr>
+                      <tr>
+                        <th>Interested</th><td><div class="favorite-icon"></div></td>
+                      </tr>
+                      
+                   
+                  </tbody>
+                </table>
+                <button>GO</button>
+                <input type='hidden' name="car[favorite]" id="fav-checkbox">
+              </form>
+            </div>
+        </script>
+
+        <!-- Select a Year, Make, Model, Style -->
         <script type="text/template" id="selector">
             <div data-role="header">
                 <h1><%=car.description()%></h1>
@@ -185,7 +274,7 @@
             </div>
         </script>
 
-
+        <!-- Enter VIN Page -->
         <script type="text/template" id="vin">
             <div data-role="header">
                 <h1>Enter VIN</h1>
@@ -193,14 +282,12 @@
             <div data-role="content">
             <form id="vin-form" action="<%=hls.server%>/cars/vin">
                 <input type="text" id="car_vin" name="car[vin]" placeholder="VIN Number" data-role="none">
-                <%if(hls.user.loggedIn()){ %>
-                   <input type="hidden" name="single_access_token" value="<%=hls.user.get('single_access_token')%>">
-                <%}%>
                 <button>GO</button>
             </form>
             </div>
         </script>
 
+        <!-- View Image (not used) -->
         <script type="text/template" id="image">
            <%
             var models = image.car.images.models;
@@ -231,31 +318,36 @@
             </div>
         </script>
 
+        <!-- Carlist Page -->
         <script type="text/template" id="carlist">
             <div data-role="header">
-                <h1>MY CARS</h1>
+                <h1>MY CARS<% if (hls.user.cars.total != cars.total){%> (SEARCH RESULTS)<%}%></h1>
             </div>
             <div data-role="content">
               <%if(splitView){%> 
                 <div class="ui-grid-a">
                 <div class="ui-block-a" style="width:25%; padding-top:10px;">
+              <% } %>
+                  <!-- car list -->
                   <ul data-role="listview">
-                  <%_.each(user.cars.models, function(car){ %>
-                    <li data-icon="arrow-r"><a href="javascript:void(0)" data-role="button" class="split-view-button" data-car-id="<%=car.id%>"><%=car.description()%></a></li>
+                  <%_.each(cars.models, function(car){ %>
+                      <li><a href="<%=car.showLink%>" class="show-car" data-role="button" data-icon="<%=car.get('favorite') ? 'interested' : 'blank'%>" data-car-id="<%=car.id%>"><%=car.description()%></a></li>
                   <% }); %>
+                  <!-- show more button -->
+                  <%if (cars.length < cars.total){ %>
+                    <li data-icon="arrow-r"><a href="javascript:void(0)" data-role="button" class="show-more-button">Show More Cars</a></li>
+                  <%}%>
+                  <!-- search button -->
+                  <%if (hls.user.cars.length > 2){ %>
+                    <li data-icon="arrow-r"><a href="#search" data-role="button" class="search-button">Search...</a></li>
+                  <%}%>
                   </ul>
+               <%if(splitView){%> 
                   </div>
                   <div class="ui-block-b" style="margin-left:25px;"></div>
                 </div>
-
-              <% } else { %>
-
-                  <ul data-role="listview">
-                  <%_.each(user.cars.models, function(car){ %>
-                    <li data-icon="arrow-r"><a href="<%=car.showLink%>" data-role="button"><%=car.description()%></a></li>
-                  <% }); %>
-                </ul>
               <% } %>
+
             </div>
         </script>
 
@@ -268,6 +360,7 @@
             </div>        
         </script>
 
+        <!-- edit-car view is not used anywhere -->
         <script type="text/template" id="edit-car">
             <div data-role="header">
                 <h1>Edit <%= car.description() %></h1>
@@ -292,6 +385,7 @@
             </div>        
         </script>
 
+        <!-- Car View -->
         <script type="text/template" id="car">
             <%if(car.shouldShowWindowSticker()){%>
               <a data-role="button" id="print_button_container" data-icon="carat-r" data-iconpos="right">Window Sticker</a>
@@ -312,6 +406,9 @@
                         <tr><th>With Options</th><td><%=car.getWasNewPrice().formatMoney()%></td></tr>
                       <%}%>
                     <%}%>
+                    <tr>
+                      <th>Interested?</th><td><div class="favorite-icon <%=car.get('favorite') ? 'selected' : ''%>"></div></td>
+                    </tr>
                     
                  
                 </tbody>
@@ -342,10 +439,7 @@
                     for(var j=0; j< car.get('options').length; j++){
                       var i = car.get('options')[j];
                       console.log(i.name);
-                      if(i.name == "EMISSION"){
-                        continue;
-                      }
-                      if(i.name == "EMISSIONS"){
+                      if((i.name == "EMISSION")||(i.name == "EMISSIONS")){
                         continue;
                       }
                       if(i.name != category){
@@ -398,12 +492,15 @@
           hls.httpsserver = "https://monroneylabels.com"; //no trailing slash. 
           //Note that you can't google-print from local server.
           //Note that you can't do CORS requests from local server
+          hls.api_version = 2;
           
           hls.use_in_app_purchases = true; //set this to false to make every car free
           hls.emulated = false; 
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){
             //set hls.emulated to true to skip VIN scanning
             hls.emulated = true;
+            hls.server = "http://localhost:3000"; //no trailing slash. 
+            hls.httpsserver = "http://localhost:3000"; //no trailing slash.
           }
           window.ga = null;
         </script>

@@ -12,10 +12,6 @@ Select Target > General and change package name to com.qrvin. Change version num
 
 Product > Archive
 
-Select the archive (in organizer window) and choose "Validate..." then "Submit to App Store..."
+Select the archive (in organizer window) and choose "Validate..." then "Submit to App Store...". Should be 6 entitlements.
 
-Builds appear in App Store after a couple of minutes. Log in to iTunes Connect and publish the build.
-
-To make screenshots, open Firebug and do
-
-`window.open(top.location.href, "", "width=1136, height=600");`
+Builds appear in App Store after a couple of minutes. Log in to iTunes Connect, go to "My Apps" and click "New Store Version". Enter in the new version number. Scroll down to builds and submit the build you uploaded. Then save and submit for review.

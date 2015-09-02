@@ -205,6 +205,30 @@ hls.EditCarView = hls.View.extend({
 });
 
 
+hls.FeedbackView = hls.View.extend({
+    template:"#feedback",
+
+});
+hls.FeedbackNoView = hls.View.extend({
+    template:"#feedback-no",
+    events: {
+      'submit form': '_complain',
+    },
+    _complain:function(e){
+        this.submitForm($(e.currentTarget), function(data){
+            app.welcome();
+            alert("Feedback sent. Thank you!");
+
+        });
+        return false;
+    },
+
+});
+hls.FeedbackYesView = hls.View.extend({
+    template:"#feedback-yes",
+
+});
+
 
 hls.ImageView = hls.View.extend({
     template:"#image",
@@ -391,6 +415,9 @@ hls.AppRouter = Backbone.Router.extend({
         "":"welcome",
         "login":"login",
         "logout":"logout",
+        "feedback":"feedback",
+        "feedback-yes":"feedbackyes",
+        "feedback-no":"feedbackno",
         "vin":"vin",
         "cars/list":"carsList",
          "cars/:id":"cars",
@@ -402,7 +429,6 @@ hls.AppRouter = Backbone.Router.extend({
          "select/:year/:make_id/:make/:model_id/:model":"selectStyle",
          "select/:year/:make_id/:make/:model_id/:model/:style_id/:style":"selectCar",
          "signup":"signup",
-        // "cars/:id/edit/options":"editOptions",
          "cars/:id/images/:image_id":"image",
 
     },
@@ -414,7 +440,7 @@ hls.AppRouter = Backbone.Router.extend({
         });
         $('#syncme').live('click', function(event) {
             console.log('synced');
-            app.checkShouldSync();
+            app.sync();
             return false;
         });
         $("a.menubutton").live('click',function(e){
@@ -469,6 +495,15 @@ hls.AppRouter = Backbone.Router.extend({
           var car = hls.user.cars.get(id);
           this.changePage(new hls.EditCarView({model:car}));
         }
+    },    
+    feedback:function () {
+      this.changePage(new hls.FeedbackView());
+    },
+    feedbackyes:function () {
+      this.changePage(new hls.FeedbackYesView());
+    },
+    feedbackno:function () {
+      this.changePage(new hls.FeedbackNoView());
     },    
     // editOptions:function(id){
     //   if(this.carExists(id)){
@@ -535,6 +570,22 @@ hls.AppRouter = Backbone.Router.extend({
         this.currentPage = page;
         app.orientationHandler();
         app.checkShouldSync();
+
+        var hash = top.location.hash == "" ? "/login" : top.location.hash.replace("#","/");
+        //Google Analytics
+        if(ga){
+          ga('send', 'pageview', {'page': hash});
+        }
+        //Google Tag Manager
+        if(dataLayer){
+        dataLayer.push({
+          'event':'VirtualPageview',
+          'virtualPageURL':hash,
+          'virtualPageTitle' : $("head title").text()
+          });
+        }
+
+
     },
     carExists:function(id){
         var car = hls.user.cars.get(id); //find car in carlist
@@ -576,15 +627,20 @@ hls.AppRouter = Backbone.Router.extend({
     checkShouldSync:function(){
       if(hls.user.loggedIn()){
         if(hls.user.shouldSync()){
-          var data = hls.util.addAccessToken({});
-          app.currentPage.getUrl(hls.server+"/cars/list.json",{
-            data:data,
+          //var data = hls.util.addAccessToken({});
+          app.sync();
+         
+        }
+      }
+    },
+    sync:function(){
+      if(hls.user.loggedIn()){
+          app.currentPage.getUrl(hls.httpsserver+"/users/"+hls.user.id+"/cars/list.json",{
+            data:{},
             success:function(data){
               hls.user.update(data);
             }
           });
-         
-        }
       }
     },
 
@@ -608,4 +664,14 @@ $(document).ready(function () {
 });
 document.addEventListener('deviceready', function(){ hls.user.loadFromFile(); } , false);
 document.addEventListener('deviceready', function(){ hls.store.initStore(); } , false);
+document.addEventListener('deviceready', function(){ 
+  var clientID = '92bf24a5-20e5-4181-9778-2835f28c52d8'
+  if (!hls.emulated){
+    clientID = device.uuid;
+  }
+  ga('create', 'UA-19475111-8', {'storage': 'none','clientId': clientID});
+  ga('set','checkProtocolTask',null);
+  ga('set','checkStorageTask',null);
+  ga('send', 'pageview', {'page': '/'});
+ } , false);
 
