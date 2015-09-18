@@ -1,24 +1,4 @@
 <!DOCTYPE html>
-<!--
-    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
-
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
     <head>
         <meta charset="utf-8" />
@@ -51,6 +31,8 @@
                   <li><a href="#" class="scroll" role="menuitem" tabindex="-1">Add A Car</a></li>
                   <%if(hls.user.cars.length > 0){%>
                     <li><a href="#cars/list" class="scroll" role="menuitem" tabindex="-1">My Cars</a></li>
+                  <% } %><%if(hls.user.cars.length > 2){%>
+                    <li><a href="#search" class="scroll" role="menuitem" tabindex="-1">Search</a></li>
                   <% } %>
                   <!--<li><a href="#" class="scroll" role="menuitem" tabindex="-1" id="syncme">Sync</a></li>-->
                   <li><a href="#feedback" class="scroll" role="menuitem" tabindex="-1">Feedback</a>
@@ -146,9 +128,7 @@
               <form action="<%=hls.httpsserver%>/user_sessions/create.json">
                 <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
                 <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
-                <%_.each(hls.user.cars.models, function(car){ %>
-                  <input type="hidden" name="user_session[cars][]" value="<%=car.id%>">
-                <%});%>
+
                 <button data-icon="carat-r" data-iconpos="right">LOG IN</button>
               </form>
               <a href="#signup"  data-icon="carat-r" data-iconpos="right" data-role="button">Create New User</a>
@@ -194,63 +174,30 @@
                         </select>
                       </td></tr>
                       <tr><th>Make</th><td>
-                        <select name="car[make]">
+                        <select name="car[make]" id="car_make">
                           <option value="">Select Make</option>
-                          <option value="Acura">Acura</option>
-                          <option value="Alfa Romeo">Alfa Romeo</option>
-                          <option value="Aston Martin">Aston Martin</option>
-                          <option value="Audi">Audi</option>
-                          <option value="Bentley">Bentley</option>
-                          <option value="BMW">BMW</option>
-                          <option value="Buick">Buick</option>
-                          <option value="Cadillac">Cadillac</option>
-                          <option value="Chevrolet">Chevrolet</option>
-                          <option value="Chrysler">Chrysler</option>
-                          <option value="Dodge">Dodge</option>
-                          <option value="Ferrari">Ferrari</option>
-                          <option value="FIAT">FIAT</option>
-                          <option value="Ford">Ford</option>
-                          <option value="Freightliner">Freightliner</option>
-                          <option value="GMC">GMC</option>
-                          <option value="Honda">Honda</option>
-                          <option value="Hyundai">Hyundai</option>
-                          <option value="Infiniti">Infiniti</option>
-                          <option value="Isuzu">Isuzu</option>
-                          <option value="Jaguar">Jaguar</option>
-                          <option value="Jeep">Jeep</option>
-                          <option value="Kia">Kia</option>
-                          <option value="Lamborghini">Lamborghini</option>
-                          <option value="Land Rover">Land Rover</option>
-                          <option value="Lexus">Lexus</option>
-                          <option value="Lincoln">Lincoln</option>
-                          <option value="Maserati">Maserati</option>
-                          <option value="Mazda">Mazda</option>
-                          <option value="McLaren">McLaren</option>
-                          <option value="Mercedes-Benz">Mercedes-Benz</option>
-                          <option value="MINI">MINI</option>
-                          <option value="Mitsubishi">Mitsubishi</option>
-                          <option value="Nissan">Nissan</option>
-                          <option value="Porsche">Porsche</option>
-                          <option value="Ram">Ram</option>
-                          <option value="Rolls-Royce">Rolls-Royce</option>
-                          <option value="Scion">Scion</option>
-                          <option value="Smart">Smart</option>
-                          <option value="Subaru">Subaru</option>
-                          <option value="Tesla">Tesla</option>
-                          <option value="Toyota">Toyota</option>
-                          <option value="Volkswagen">Volkswagen</option>
-                          <option value="Volvo">Volvo</option>
+                          <%_.each(hls.data.makes, function(make){%>
+                            <option value="<%=make%>"><%=make%></option>
+                          <%});%>
                         </select>
                       </td></tr>
                       <tr><th>Model</th><td><input type="text" name="car[model]"></td></tr>
                       <tr>
                         <th>Interested</th><td><div class="favorite-icon"></div></td>
                       </tr>
-                      
+                      <%_.each(hls.data.features, function(feature){%>
+                        <tr>
+                          <td colspan="2"><label for="car_<%=feature['key']%>"><%=feature["name"]%></label>
+                          <input type="checkbox" name="car[f][]" value="<%=feature['key']%>" id="car_<%=feature['key']%>"></td>
+                        </tr>
+                      <%});%>
+                      <tr>
+                        <td colspan=2><button data-icon="search" data-iconpos="right">SEARCH</button></td>
+                      </tr>
                    
                   </tbody>
                 </table>
-                <button>GO</button>
+                
                 <input type='hidden' name="car[favorite]" id="fav-checkbox">
               </form>
             </div>
@@ -282,7 +229,7 @@
             <div data-role="content">
             <form id="vin-form" action="<%=hls.server%>/cars/vin">
                 <input type="text" id="car_vin" name="car[vin]" placeholder="VIN Number" data-role="none">
-                <button>GO</button>
+                <button class="submit-button">GO</button>
             </form>
             </div>
         </script>
@@ -337,10 +284,6 @@
                   <%if (cars.length < cars.total){ %>
                     <li data-icon="arrow-r"><a href="javascript:void(0)" data-role="button" class="show-more-button">Show More Cars</a></li>
                   <%}%>
-                  <!-- search button -->
-                  <%if (hls.user.cars.length > 2){ %>
-                    <li data-icon="arrow-r"><a href="#search" data-role="button" class="search-button">Search...</a></li>
-                  <%}%>
                   </ul>
                <%if(splitView){%> 
                   </div>
@@ -360,7 +303,7 @@
             </div>        
         </script>
 
-        <!-- edit-car view is not used anywhere -->
+        <!-- edit-car view (not used) -->
         <script type="text/template" id="edit-car">
             <div data-role="header">
                 <h1>Edit <%= car.description() %></h1>
@@ -479,7 +422,7 @@
         </script> 
 
         <script src="js/vendor/jquery-1.7.1.min.js"></script>
-        <script src="js/jqm-config.js"></script>
+        <script src="js/jqm-config.js"></script><!-- needed to make backbone.js and jQuery Mobile work together -->
         <script src="js/vendor/jquery.mobile-1.4.1.min.js"></script>
         <script src="js/vendor/jquery.jsonp-2.4.0.min.js"></script><!-- needed to handle 500 errors-->
         <script src="js/vendor/underscore-min.js"></script>
@@ -491,7 +434,8 @@
           hls.server = "http://monroneylabels.com"; //no trailing slash. 
           hls.httpsserver = "https://monroneylabels.com"; //no trailing slash. 
           //Note that you can't google-print from local server.
-          //Note that you can't do CORS requests from local server
+          //Note that you can't do CORS requests from local server.
+          //All requests are JSONP anyway
           hls.api_version = 2;
           
           hls.use_in_app_purchases = true; //set this to false to make every car free
@@ -499,8 +443,8 @@
           if (typeof(cordova) == "undefined" || (window.parent && window.parent.ripple)){
             //set hls.emulated to true to skip VIN scanning
             hls.emulated = true;
-            hls.server = "http://localhost:3000"; //no trailing slash. 
-            hls.httpsserver = "http://localhost:3000"; //no trailing slash.
+           // hls.server = "http://localhost:3000"; //no trailing slash. 
+           // hls.httpsserver = "http://localhost:3000"; //no trailing slash.
           }
           window.ga = null;
         </script>
@@ -508,17 +452,18 @@
         <script src="js/models.js"></script>
         <script src="js/collections.js"></script>
         <script src="js/app.js"></script>
-  <script type="text/javascript">
+        <script src="js/data.js"></script>
+        <script type="text/javascript">
 
-  <!-- Google Analytics -->
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','js/vendor/analytics.js','ga');
+        <!-- Google Analytics -->
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','js/vendor/analytics.js','ga');
 
 
 
-</script>
+      </script>
 
     </head>
     <body>

@@ -184,6 +184,15 @@ hls.Car = hls.Model.extend({
       
       return this;
     },
+    favorite:function(bool){
+      this.set({favorite:bool});
+      var action = bool ? "favorite" : "unfavorite"
+      //sync with server
+      $.ajax({
+        dataType: "jsonp",
+        url: hls.server+"/cars/"+this.get('id')+"/"+action+".json"
+      });
+    },
     installOption:function(optionId, installed){
       var temp = this.get('options'); 
       temp[optionId].installed = installed;
@@ -301,15 +310,33 @@ hls.Image = hls.Model.extend({
 hls.Payment = hls.Model.extend({
 });
 
+hls.Search = hls.Model.extend({
+    initialize:function(){
+        this.collection = new hls.CarList(); 
+        if(this.get('data')){
+          this.collection.paginate(this.get('data'));
+        }
+        return this;
+    },
+    hasCars:function(){
+      return this.collection.length > 0
+    },
+
+});
+
 hls.UserModel = hls.Model.extend({
     initialize:function(){
         this.cars = new hls.CarList(); 
         this.cars.user = this;
         this.payments = new hls.PaymentList();
+        this.search = new hls.Search();
         return this;
     },
+    getCarsLink:function(){
+      return hls.httpsserver+"/users/"+this.id+"/cars/list.json";
+    },
     getFileKey:function(){
-      return "user2";
+      return "08-31-2015";
     },
     //get the current car(may or may not be blank)
     get_curr_car:function(){
@@ -368,7 +395,6 @@ hls.UserModel = hls.Model.extend({
     },
     update:function(data){
       this.set(data.user);
-      this.cars.set(data.user.cars, {remove:false}); //this will download all cars and merge with temporary 
       this.payments.set(data.user.payments);
       this.saveToFile();
     },

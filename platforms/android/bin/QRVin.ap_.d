@@ -158,6 +158,7 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/img/button1.gif \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/img/button2.gif \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/img/carbonfiber.png \
+/Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/img/favorite.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/img/loading.gif \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/img/logo.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/img/monroneylabels.png \
@@ -165,6 +166,7 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/img/sheetmetal.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/app.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/collections.js \
+/Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/data.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/deviceready.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/jqm-config.js \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/assets/www/js/models.js \

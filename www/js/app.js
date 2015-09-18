@@ -82,8 +82,6 @@ hls.View = Backbone.View.extend({
 
 hls.CarListView = hls.View.extend({
     events: {
-      // 'click a.loading-gif':'_loadingGif',
-      // 'click .split-view-button':'_showCar',
       'click a.show-car':'_showCar',
       'click a.back':'_back',
       'click .show-more-button':'_showMore',
@@ -404,6 +402,7 @@ hls.VinView = hls.View.extend({
         return false;
       }
       var form = $(e.currentTarget);
+      $('.submit-button').attr("disabled", "disabled");
        this.submitForm(form, function(data){
          if(data && data.car){
          //car data is automatically synced in getURL 
@@ -411,7 +410,7 @@ hls.VinView = hls.View.extend({
           //redirect to car page!!
          } 
          if (data.errors){
-          console.log(data);
+          $(".submit-button").removeAttr("disabled");
           alert(data.errors);
          }
        });

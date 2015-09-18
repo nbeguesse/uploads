@@ -16,6 +16,13 @@ hls.CarList = hls.Collection.extend({
   comparator:function(car){
     return -car.id;
   },
+  paginate:function(data){
+    if(data.page){
+      this.page = parseInt(data.page);
+      this.total = data.total_cars;
+    }
+    this.set(data.user.cars, {remove:false});
+  },
 });
 
 hls.ImageList = hls.Collection.extend({

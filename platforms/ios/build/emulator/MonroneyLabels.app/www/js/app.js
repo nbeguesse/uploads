@@ -1,30 +1,13 @@
 
 $.support.cors = true;
 hls.View = Backbone.View.extend({
-    // postUrl:function(url, options){
-    //   var options = options;
-    //   options || (options = {});
-    //   var success = options.success;
-    //   if (hls.user.loggedIn()){ 
-    //     options.data = hls.util.addAccessToken(options.data)
-    //   }
-     
-    //   $.ajax({
-    //     dataType: "json",
-    //     url: url,
-    //     data:options.data,
-    //     type:"POST",
-        
-    //   });
-    // },
+
     getUrl:function(url, options){
-      var options = options;
       options || (options = {});
       var success = options.success;
-      if (hls.user.loggedIn()){ 
-        options.data = hls.util.addAccessToken(options.data)
-      }
-      $.mobile.loading( 'show', {text: '', textVisible: true, theme: 'z', html: ""}); //show jquery mobile spinner
+      options.data = hls.util.addAccessToken(options.data); 
+      
+      this.loadingGif(); //show jquery mobile spinner
       $.jsonp({
         dataType: "jsonp",
         url: url+"?callback=?", //see jquery-jsonp.js
@@ -55,6 +38,9 @@ hls.View = Backbone.View.extend({
         },
       });
     },
+    loadingGif:function(){
+       $.mobile.loading( 'show', {text: '', textVisible: true, theme: 'z', html: ""}); 
+    }, 
     render:function (eventName) { //default render uses default template
         var template = _.template($(this.template).html());
         $(this.el).html(template);
@@ -71,6 +57,7 @@ hls.View = Backbone.View.extend({
             if(data.errors){
               if(data.errors == "INVALID_LOGIN"){ //token gone
                 hls.user.logout();
+                alert("Please log in to continue.");
               } else { //validation errors
                 alert(data.errors);
               }
@@ -95,25 +82,34 @@ hls.View = Backbone.View.extend({
 
 hls.CarListView = hls.View.extend({
     events: {
-      'click .split-view-button':'_showCar',
+      // 'click a.loading-gif':'_loadingGif',
+      // 'click .split-view-button':'_showCar',
+      'click a.show-car':'_showCar',
       'click a.back':'_back',
+      'click .show-more-button':'_showMore',
     },
     initialize:function(){
       this.splitView = null;
       $(window).bind('orientationchange', this._orientationHandler);
       $(window).bind('throttledresize', this._orientationHandler);
+      if(this.model){
+        this.collection = this.model.collection;
+      } else {
+        this.collection = hls.user.cars;
+      }
+      this.collection.bind('add',this._render, this);
       return this;
     },
     showCar:function(carId){
-      var car = hls.user.cars.get(carId);
+      var car = this.collection.get(carId);
       var page = new hls.CarView({model:car});
       //render the carpage in memory before appending it
       page.render();
       $(this.el).find(".ui-block-b").html("").append($(page.el));
       
       //highlight the car in the list
-      $('.ui-block-a a').css("background-color", "none");
-      $('a[data-car-id='+carId+']').css("background-color","white"); 
+      $('.ui-block-a a').removeClass("selected");
+      $('a[data-car-id='+carId+']').addClass("selected"); 
       $(this.el).trigger("create");
     },
     onRemove:function(){
@@ -121,7 +117,7 @@ hls.CarListView = hls.View.extend({
     },
     render:function (eventName) {
       var splitView = hls.util.shouldSplitView({}); //returns true if split-screen
-      var template = _.template($('#carlist').html(),{user:hls.user, splitView:splitView});
+      var template = _.template($('#carlist').html(),{cars:this.collection, splitView:splitView});
       $(this.el).html(template);
       this.splitView = splitView; //save it so we know when to rerender
       return this;
@@ -140,9 +136,23 @@ hls.CarListView = hls.View.extend({
 
     },
     _showCar:function(e){
-      //only used in splitView. Find the car we clicked on and show it
-      var carId = $(e.target).attr("data-car-id");
-      this.showCar(carId);
+      if(this.splitView){
+        this.loadingGif();
+        var carId = $(e.target).attr("data-car-id");
+        setTimeout("app.currentPage.showCar("+carId+")",100); //this pause is necessary for the loading gif to appear
+      } else {
+        this.loadingGif();
+        var href = $(e.target).attr("href");
+        setTimeout("app.navigate('"+href+"', true); ",100); //this pause is necessary for the loading gif to appear
+      }
+      return false;
+    },
+    _showMore:function(e){
+      var data = {page:this.collection.page+1};
+      if (this.model){
+        data = hls.util.addParam(this.model.get('params'), data); //add search params if there are any
+      }
+      app.sync({data:data, cars:this.collection});
     },
 });
 
@@ -152,6 +162,7 @@ hls.CarView = hls.View.extend({
       'click label': '_save',
       'touchstart label': '_save',
       'click #buy-vin':'_buy',
+      'click .favorite-icon':'_checkFavorite',
     },
     initialize:function(){
       hls.store.bind('change:state',this._render, this);
@@ -160,20 +171,26 @@ hls.CarView = hls.View.extend({
     render:function (eventName) {
       var template = _.template($('#car').html(),{car:this.model});
       $(this.el).html(template);
+      $.mobile.loading( 'hide'); //hide jquery mobile spinner
       return this;
     },
     _buy:function(e){
       hls.store.order(this.model.id);
+    },
+    _checkFavorite:function(e){
+      var div = $(e.currentTarget);
+      div.toggleClass("selected");
+      this.model.favorite(!this.model.get('favorite'));
+
     },
     _print:function(e){
       console.log('in print');
       window.open(this.model.pdfLink, '_blank', 'location=no,enableViewPortScale=yes');
     },
     _save:function(e){
-      console.log('in save');
       var label = $(e.currentTarget);
       var optionId = label.closest("li").attr('data-option');
-      var installed = !label.closest("div").find("input").is(':checked'); //This is reversed; probably because of Jquery Mobile clicking delays
+      var installed = !label.closest("div").find("input").is(':checked'); //This is reversed; probably because of Jquery Mobile clicking delays?
       this.model.installOption(optionId, installed);
     },
 });
@@ -256,8 +273,41 @@ hls.LoginView = hls.View.extend({
     _login:function(e){
         this.submitForm($(e.currentTarget), function(data){
             hls.user.update(data);
+            hls.user.cars.paginate(data);
             app.welcome();
 
+        });
+        return false;
+    },
+});
+
+hls.SearchView = hls.View.extend({
+    template:"#search",
+    events: {
+      'submit form': '_search',
+      'click .favorite-icon':'_checkFavorite',
+    },
+    _checkFavorite:function(e){
+      var div = $(e.currentTarget);
+      var checkbox = $("#fav-checkbox");
+      if(checkbox.is(':checked')){
+        checkbox.prop("checked", false);
+        div.removeClass("selected");
+      } else {
+        checkbox.prop("checked", true);
+        div.addClass("selected");
+      }
+    },
+    _search:function(e){
+        var form = $(e.currentTarget);
+        this.submitForm(form, function(data){
+          hls.user.search = new hls.Search({params:form.serialize(), data:data});
+          if (hls.user.search.hasCars()){
+            app.navigate("search/results", true);
+          } else {
+            alert("We didn't find any matching cars! Please search again.");
+          }
+ 
         });
         return false;
     },
@@ -269,7 +319,7 @@ hls.SelectView = hls.View.extend({
       var car = this.model;
       this.array = []; //this will hold the list of options to choose from
       if (_.isNull(car.get('year'))) {
-        for(var i=new Date().getFullYear(); i > 1980; i--){
+        for(var i=new Date().getFullYear()+1; i > 1980; i--){
           this.array.push([i+"",""])
         }
       } 
@@ -423,6 +473,8 @@ hls.AppRouter = Backbone.Router.extend({
          "cars/:id":"cars",
          "cars/:id/edit":"editCar",
          "dms":"dms",
+         "search":"search",
+         "search/results":"searchResults",
          "select":"selectYear",
          "select/:year/":"selectMake",
          "select/:year/:make_id/:make":"selectModel",
@@ -438,11 +490,11 @@ hls.AppRouter = Backbone.Router.extend({
             app.goBack();
             return false;
         });
-        $('#syncme').live('click', function(event) {
-            console.log('synced');
-            app.sync();
-            return false;
-        });
+        // $('#syncme').live('click', function(event) {
+        //     console.log('synced');
+        //     app.sync({reset:true});
+        //     return false;
+        // });
         $("a.menubutton").live('click',function(e){
           $(".slicknav_hidden").toggle(); //show/hide the menu
         });
@@ -450,19 +502,19 @@ hls.AppRouter = Backbone.Router.extend({
     },
 
 
-    carsList:function(){
+    carsList:function(search){
       if(hls.user.cars.models.length == 0){
         this.welcome();
         return;
-      } 
-      
-      if(hls.user.cars.models.length != 1){
-        this.changePage(new hls.CarListView());
+      }
+      var collection = search ? search.collection : hls.user.cars;
+      if(collection.models.length > 1){
+        this.changePage(new hls.CarListView({model:search}));
       } else {
-        var car = hls.user.cars.models[0];
+        var car = collection.models[0];
         //automatically show first car if there's only one
         if(hls.util.shouldSplitView()){
-          this.changePage(new hls.CarListView());
+          this.changePage(new hls.CarListView({model:search}));
           this.currentPage.showCar(car.id);
         } else {
           this.changePage(new hls.SingleCarView({model:car}));
@@ -472,13 +524,13 @@ hls.AppRouter = Backbone.Router.extend({
     },
 
 
-    cars:function(id) {
-      if(this.carExists(id)){
-        var car = hls.user.cars.get(id); //find car in carlist
+    cars:function(id) { //shows a single car
+      if(car = this.carExists(id)){
 
         if(hls.util.shouldSplitView()){
-          //tablet view
-          this.changePage(new hls.CarListView());
+
+          this.changePage(new hls.CarListView({model:app.currentPage.model})); //redraw the carlist from the previous view if it exists
+
           this.currentPage.showCar(id);
 
         } else {
@@ -505,12 +557,6 @@ hls.AppRouter = Backbone.Router.extend({
     feedbackno:function () {
       this.changePage(new hls.FeedbackNoView());
     },    
-    // editOptions:function(id){
-    //   if(this.carExists(id)){
-    //     var car = hls.user.cars.get(id);
-    //     this.changePage(new hls.EditOptionsView({model:car}));
-    //   }
-    // },
     image:function(id, image_id){
       if(this.carExists(id)){
         var car = hls.user.cars.get(id);
@@ -524,6 +570,12 @@ hls.AppRouter = Backbone.Router.extend({
     },
     logout:function(){
       hls.user.logout();
+    },
+    search:function(){
+      this.changePage(new hls.SearchView());
+    },
+    searchResults:function(){
+      this.carsList(hls.user.search);
     },
     selectYear:function(){
       this.changePage(new hls.SelectView({model:new hls.Car()}));
@@ -570,31 +622,32 @@ hls.AppRouter = Backbone.Router.extend({
         this.currentPage = page;
         app.orientationHandler();
         app.checkShouldSync();
-
-        var hash = top.location.hash == "" ? "/login" : top.location.hash.replace("#","/");
-        //Google Analytics
-        if(ga){
-          ga('send', 'pageview', {'page': hash});
-        }
-        //Google Tag Manager
-        if(dataLayer){
-        dataLayer.push({
-          'event':'VirtualPageview',
-          'virtualPageURL':hash,
-          'virtualPageTitle' : $("head title").text()
-          });
+        if(!hls.emulated){
+          var hash = top.location.hash == "" ? "/login" : top.location.hash.replace("#","/");
+          //Google Analytics
+          if(ga){
+            ga('send', 'pageview', {'page': hash});
+          }
+          //Google Tag Manager
+          if(dataLayer){
+          dataLayer.push({
+            'event':'VirtualPageview',
+            'virtualPageURL':hash,
+            'virtualPageTitle' : $("head title").text()
+            });
+          }
         }
 
 
     },
     carExists:function(id){
-        var car = hls.user.cars.get(id); //find car in carlist
+        var car = hls.user.cars.get(id) || hls.user.search.collection.get(id); //find car in carlist
         //if it's not found, they need to login
         if(_.isUndefined(car)){ 
           app.navigate("login", true);
           return false;
         } 
-      return true;
+      return car;
     },    
     checkLoggedIn:function(){
       if(hls.user.loggedIn()){ return true; }
@@ -627,18 +680,25 @@ hls.AppRouter = Backbone.Router.extend({
     checkShouldSync:function(){
       if(hls.user.loggedIn()){
         if(hls.user.shouldSync()){
-          //var data = hls.util.addAccessToken({});
-          app.sync();
+          app.sync({reset:true});
          
         }
       }
     },
-    sync:function(){
+    sync:function(options){
+      options || (options = {});
+      var cars = options.cars || hls.user.cars;
       if(hls.user.loggedIn()){
-          app.currentPage.getUrl(hls.httpsserver+"/users/"+hls.user.id+"/cars/list.json",{
-            data:{},
+          app.currentPage.getUrl(hls.user.getCarsLink(),{
+            data:options.data,
             success:function(data){
+              if(options.reset){ 
+                //i.e. remove all the cars so the old cars aren't there anymore
+                cars.reset();
+              }
               hls.user.update(data);
+              cars.paginate(data);
+              
             }
           });
       }

@@ -131,3 +131,36 @@ table#my-table th {
 .ui-header .ui-title, .ui-footer .ui-title {
   overflow:inherit;
 }
+.ui-page-theme-a ul.ui-listview a.show-more-button, .ui-page-theme-a ul.ui-listview a.search-button {
+  color:#25a2c7;
+}
+.ui-page-theme-a .ui-block-a ul.ui-listview a.selected {
+  background-color:white;
+  color:gray;
+}
+.search-table {
+  width: 15em;
+  margin: 0 auto;
+}
+
+div.favorite-icon {
+  width:18px;
+  height:17px;
+  background-color:rgba(0, 0, 0, 0.3);
+  border-radius:5px;
+  margin: 10px 35%;
+}
+div.favorite-icon.selected {
+  background-image: url("../img/favorite.png");
+  background-color:transparent;  
+}
+.ui-icon-interested:after {
+  background-image: url("../img/favorite.png");
+  background-color:transparent;
+}
+.ui-icon-blank:after {
+  background-color:transparent;
+}
+.ui-listview .ui-btn-icon-left:after {
+    left: 1em;
+}
