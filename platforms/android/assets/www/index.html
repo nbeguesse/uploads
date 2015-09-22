@@ -128,9 +128,7 @@
               <form action="<%=hls.httpsserver%>/user_sessions/create.json">
                 <input type="email" name="user_session[email]" placeholder="Email" data-mini="true">
                 <input type="password" name="user_session[password]" placeholder="Password" data-mini="true">
-                <%_.each(hls.user.cars.models, function(car){ %>
-                  <input type="hidden" name="user_session[cars][]" value="<%=car.id%>">
-                <%});%>
+
                 <button data-icon="carat-r" data-iconpos="right">LOG IN</button>
               </form>
               <a href="#signup"  data-icon="carat-r" data-iconpos="right" data-role="button">Create New User</a>
@@ -231,7 +229,7 @@
             <div data-role="content">
             <form id="vin-form" action="<%=hls.server%>/cars/vin">
                 <input type="text" id="car_vin" name="car[vin]" placeholder="VIN Number" data-role="none">
-                <button>GO</button>
+                <button class="submit-button">GO</button>
             </form>
             </div>
         </script>
