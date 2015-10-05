@@ -147,18 +147,19 @@ hls.Camera = hls.Model.extend({
     },
 });
 hls.Car = hls.Model.extend({
-   defaults:{
-     year:null,
-     make:null,
-     make_id:null,
-     model:null,
-     model_id:null,
-     style:null,
-     style_id:null,
-     image_files:[],
-     pending_transaction:false,
-     "is_paid?":false,
-   },
+     //defaults are needed for SelectView
+     defaults:{
+      year:null,
+      make:null,
+      make_id:null,
+      model:null,
+      model_id:null,
+      style:null,
+      style_id:null,
+      image_files:[],
+      pending_transaction:false,
+      "is_paid?":false,
+    },
     url: function(){
       if(this.isNew()){
         return hls.server+"/cars";
@@ -167,11 +168,8 @@ hls.Car = hls.Model.extend({
       }
     },
     initialize:function(){
-
       if(this.isNew()){ 
         //never used!
-        //this.showLink = "#cars/0";
-        //this.editLink = "#cars/0/edit";
       } else {
         this.showLink = "#cars/"+(this.get('id'));
         this.editLink = "#cars/"+(this.get('id'))+"/edit";

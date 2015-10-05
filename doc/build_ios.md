@@ -8,9 +8,7 @@ Update www/config.xml with new version number and package "com.qrvin"
 
 Open platforms/ios/MonroneyLabels.xcodeproj
 
-Select Target > General and change package name to com.qrvin. Change version number if necessary.
-
-Product > Archive
+Select Product > Archive
 
 Select the archive (in organizer window) and choose "Validate..." then "Submit to App Store...". Should be 6 entitlements.
 

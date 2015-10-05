@@ -147,6 +147,19 @@ hls.Camera = hls.Model.extend({
     },
 });
 hls.Car = hls.Model.extend({
+     //defaults are needed for SelectView
+     defaults:{
+      year:null,
+      make:null,
+      make_id:null,
+      model:null,
+      model_id:null,
+      style:null,
+      style_id:null,
+      image_files:[],
+      pending_transaction:false,
+      "is_paid?":false,
+    },
     url: function(){
       if(this.isNew()){
         return hls.server+"/cars";

@@ -489,11 +489,11 @@ hls.AppRouter = Backbone.Router.extend({
             app.goBack();
             return false;
         });
-        // $('#syncme').live('click', function(event) {
-        //     console.log('synced');
-        //     app.sync({reset:true});
-        //     return false;
-        // });
+        $('#syncme').live('click', function(event) {
+            console.log('synced');
+            app.sync({reset:true});
+            return false;
+        });
         $("a.menubutton").live('click',function(e){
           $(".slicknav_hidden").toggle(); //show/hide the menu
         });
@@ -693,7 +693,9 @@ hls.AppRouter = Backbone.Router.extend({
             success:function(data){
               if(options.reset){ 
                 //i.e. remove all the cars so the old cars aren't there anymore
-                cars.reset();
+                if(data.user.cars){
+                  cars.reset();
+                }
               }
               hls.user.update(data);
               cars.paginate(data);
