@@ -164,6 +164,7 @@ hls.CarView = hls.View.extend({
     },
     initialize:function(){
       hls.store.bind('change:state',this._render, this);
+      this.model.bind('change:is_paid?',this._render, this);
       return this;
     },
     render:function (eventName) {
