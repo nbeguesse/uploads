@@ -70,6 +70,9 @@ hls.Store = hls.Model.extend({
             order.finish();
           }
          });
+        //fallback
+        car.set({"is_paid?":true}); //We only need this because ios-store fails callback sometimes
+        hls.user.saveToFile();
       } else {
         //alert('Please log in to complete pending transactions.');
       }
@@ -173,7 +176,8 @@ hls.Car = hls.Model.extend({
       } else {
         this.showLink = "#cars/"+(this.get('id'));
         this.editLink = "#cars/"+(this.get('id'))+"/edit";
-        this.payLink = hls.server+"/cars/"+this.get('id')+"/mobile_pay"
+        //this.payLink = hls.server+"/cars/"+this.get('id')+"/mobile_pay"
+        this.payLink = hls.server+"/users/"+hls.user.id+"/cars/"+this.get('id')+"/mobile_pay";
         this.pdfLink = hls.server+"/cars/"+this.get('id')+"/window_sticker.html"
       }
       this.images = new hls.ImageList(this.get('image_files')); 

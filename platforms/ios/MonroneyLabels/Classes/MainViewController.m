@@ -19,7 +19,7 @@
 
 //
 //  MainViewController.h
-//  QRVin
+//  MonroneyLabels
 //
 //  Created by ___FULLUSERNAME___ on ___DATE___.
 //  Copyright ___ORGANIZATIONNAME___ ___YEAR___. All rights reserved.
@@ -83,10 +83,7 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -147,17 +144,7 @@
     return [super getCommandInstance:className];
 }
 
-/*
-   NOTE: this will only inspect execute calls coming explicitly from native plugins,
-   not the commandQueue (from JavaScript). To see execute calls from JavaScript, see
-   MainCommandQueue below
-*/
-- (BOOL)execute:(CDVInvokedUrlCommand*)command
-{
-    return [super execute:command];
-}
-
-- (NSString*)pathForResource:(NSString*)resourcepath;
+- (NSString*)pathForResource:(NSString*)resourcepath
 {
     return [super pathForResource:resourcepath];
 }

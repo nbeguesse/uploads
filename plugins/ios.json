@@ -9,92 +9,99 @@
                 "parents": {
                     "ImageIO.framework": [
                         {
-                            "xml": "true",
+                            "xml": true,
                             "count": 1
                         }
                     ],
                     "CoreLocation.framework": [
                         {
-                            "xml": "false",
+                            "xml": false,
                             "count": 1
                         }
                     ],
                     "CoreGraphics.framework": [
                         {
-                            "xml": "false",
-                            "count": 3
+                            "xml": false,
+                            "count": 4
                         }
                     ],
                     "AssetsLibrary.framework": [
                         {
-                            "xml": "false",
+                            "xml": false,
                             "count": 4
                         }
                     ],
                     "MobileCoreServices.framework": [
                         {
-                            "xml": "false",
-                            "count": 2
-                        }
-                    ],
-                    "libiconv.dylib": [
-                        {
-                            "xml": "false",
+                            "xml": false,
                             "count": 2
                         }
                     ],
                     "AVFoundation.framework": [
                         {
-                            "xml": "false",
+                            "xml": false,
+                            "count": 3
+                        }
+                    ],
+                    "UIKit.framework": [
+                        {
+                            "xml": true,
+                            "count": 1
+                        }
+                    ],
+                    "libiconv.dylib": [
+                        {
+                            "xml": false,
                             "count": 2
                         }
                     ],
                     "CoreVideo.framework": [
                         {
-                            "xml": "false",
+                            "xml": false,
                             "count": 2
                         }
                     ],
                     "QuartzCore.framework": [
                         {
-                            "xml": "false",
+                            "xml": false,
                             "count": 2
+                        }
+                    ],
+                    "CoreImage.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "AudioToolbox.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
                         }
                     ],
                     "CoreMedia.framework": [
                         {
-                            "xml": "false",
-                            "count": 1
-                        }
-                    ],
-                    "UIKit.framework": [
-                        {
-                            "xml": "true",
+                            "xml": false,
                             "count": 1
                         }
                     ],
                     "StoreKit.framework": [
                         {
-                            "xml": "false",
+                            "xml": false,
                             "count": 1
                         }
-                    ],
-                    "SystemConfiguration.framework": [],
-                    "CoreData.framework": [],
-                    "libz.dylib": [],
-                    "libsqlite3.0.dylib": [],
-                    "libsqlite3.dylib": []
+                    ]
                 }
             },
             "config.xml": {
                 "parents": {
                     "/*": [
                         {
-                            "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
+                            "xml": "<feature name=\"Camera\"><param name=\"ios-package\" value=\"CDVCamera\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>",
+                            "xml": "<preference name=\"CameraUsesGeolocation\" value=\"false\" />",
                             "count": 1
                         },
                         {
@@ -102,7 +109,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"ZBarScanner\"><param name=\"ios-package\" value=\"ZBarScanner\" /></feature>",
+                            "xml": "<preference name=\"AndroidPersistentFileLocation\" value=\"Internal\" />",
                             "count": 1
                         },
                         {
@@ -114,15 +121,19 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Camera\"><param name=\"ios-package\" value=\"CDVCamera\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<preference name=\"CameraUsesGeolocation\" value=\"false\" />",
+                            "xml": "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>",
                             "count": 1
                         },
                         {
                             "xml": "<feature name=\"Brightness\"><param name=\"ios-package\" value=\"Brightness\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ZBarScanner\"><param name=\"ios-package\" value=\"ZBarScanner\" /></feature>",
                             "count": 1
                         },
                         {
@@ -145,34 +156,36 @@
         }
     },
     "installed_plugins": {
-        "com.phonegap.plugins.barcodescanner": {
-            "PACKAGE_NAME": "com.phonegap.helloworld"
-        },
-        "org.apache.cordova.inappbrowser": {
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.hls.qrvin"
         },
-        "org.apache.cordova.device": {
+        "cordova-plugin-camera": {
             "PACKAGE_NAME": "com.hls.qrvin"
         },
-        "com.collectme.zbarScanner": {
+        "cordova-plugin-device": {
             "PACKAGE_NAME": "com.hls.qrvin"
         },
-        "org.apache.cordova.file-transfer": {
+        "cordova-plugin-file": {
             "PACKAGE_NAME": "com.hls.qrvin"
         },
-        "org.apache.cordova.camera": {
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.hls.qrvin"
         },
         "cordova.plugin.Brightness": {
+            "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "phonegap-plugin-barcodescanner": {
+            "PACKAGE_NAME": "com.hls.qrvin"
+        },
+        "com.collectme.zbarScanner": {
             "PACKAGE_NAME": "com.hls.qrvin"
         },
         "cc.fovea.cordova.purchase": {
             "PACKAGE_NAME": "com.hls.qrvin"
         }
     },
-    "dependent_plugins": {
-        "org.apache.cordova.file": {
-            "PACKAGE_NAME": "com.hls.qrvin"
-        }
-    }
+    "dependent_plugins": {}
 }

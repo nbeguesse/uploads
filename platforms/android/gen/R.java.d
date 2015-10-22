@@ -1,14 +1,11 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/gen/com/hls/qrvin/R.java \
- : /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable/icon_old.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable/launcher_icon.png \
+ : /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable/share_via_barcode.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable/shopper_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-hdpi/ic_action_next_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-hdpi/ic_action_previous_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-hdpi/ic_action_remove.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-hdpi/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-hdpi/icon_old.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-hdpi/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-hdpi/shopper_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-land-hdpi/screen.png \
@@ -16,13 +13,10 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-land-mdpi/screen.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-land-xhdpi/screen.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-ldpi/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-ldpi/icon_old.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-mdpi/ic_action_next_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-mdpi/ic_action_previous_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-mdpi/ic_action_remove.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-mdpi/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-mdpi/icon_old.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-mdpi/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-port-hdpi/screen.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-port-ldpi/screen.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-port-mdpi/screen.png \
@@ -31,12 +25,10 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xhdpi/ic_action_previous_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xhdpi/ic_action_remove.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xhdpi/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xhdpi/icon_old.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xhdpi/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xxhdpi/ic_action_next_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xxhdpi/ic_action_previous_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xxhdpi/ic_action_remove.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xxhdpi/icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/drawable-xxhdpi/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/layout/bookmark_picker_list_item.xml \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/layout/capture.xml \
@@ -91,8 +83,6 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/values-zh-rTW/strings.xml \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/xml/config.xml \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/res/xml/preferences.xml \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable/icon_old.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable/share_via_barcode.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable/shopper_icon.png \
@@ -100,7 +90,6 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-hdpi/ic_action_previous_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-hdpi/ic_action_remove.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-hdpi/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-hdpi/icon_old.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-hdpi/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-hdpi/shopper_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-land-hdpi/screen.png \
@@ -108,13 +97,10 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-land-mdpi/screen.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-land-xhdpi/screen.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-ldpi/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-ldpi/icon_old.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-mdpi/ic_action_next_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-mdpi/ic_action_previous_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-mdpi/ic_action_remove.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-mdpi/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-mdpi/icon_old.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-mdpi/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-port-hdpi/screen.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-port-ldpi/screen.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-port-mdpi/screen.png \
@@ -123,11 +109,9 @@
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xhdpi/ic_action_previous_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xhdpi/ic_action_remove.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xhdpi/icon.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xhdpi/icon_old.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xhdpi/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xxhdpi/ic_action_next_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xxhdpi/ic_action_previous_item.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xxhdpi/ic_action_remove.png \
-/Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xxhdpi/icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/res/drawable-xxhdpi/launcher_icon.png \
 /Users/nicolebeguesse/Documents/uploads/platforms/android/bin/AndroidManifest.xml \

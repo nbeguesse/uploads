@@ -17,14 +17,19 @@ hls.View = Backbone.View.extend({
           $.mobile.loading('hide'); //hide jquery mobile spinner
           console.log("Got data:",data);
           if(data.car){
-            var matching_cars = hls.user.cars.where({vin: data.car.vin}); 
-            if(matching_cars.length == 0){ //don't duplicate cars
-              hls.user.cars.set([data.car], {remove:false});
+            if (data.car.vin){
+              var matching_cars = hls.user.cars.where({vin: data.car.vin}); 
+              if(matching_cars.length == 0){ //don't duplicate cars
+                hls.user.cars.set([data.car], {remove:false});
+              } else {
+                //update car with new info
+                var car = matching_cars[0];
+                car.set(data.car);
+                app.cars(car.id); //don't use app.navigate since we might already be on the cars page
+              }
             } else {
-              //update car with new info
-              var car = matching_cars[0];
-              car.set(data.car);
-              app.cars(car.id); //don't use app.navigate since we might already be on the cars page
+              //no vin!
+              hls.user.cars.set([data.car], {remove:false});
             }
             hls.user.saveToFile();
           }

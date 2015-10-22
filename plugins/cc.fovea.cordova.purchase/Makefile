@@ -24,6 +24,7 @@ build: sync-android test-js
 	@echo "- Preprocess"
 	@node_modules/.bin/preprocess src/js/store-ios.js src/js | node_modules/.bin/uglifyjs -b > www/store-ios.js
 	@node_modules/.bin/preprocess src/js/store-android.js src/js | node_modules/.bin/uglifyjs -b > www/store-android.js
+	@node_modules/.bin/preprocess src/js/store-windows.js src/js | node_modules/.bin/uglifyjs -b > www/store-windows.js
 	@echo "- Done"
 	@echo ""
 
@@ -77,8 +78,8 @@ doc-contrib: test-js
 doc: doc-api doc-contrib
 
 sync-android:
-	@rsync -qrv git_modules/android_iap/v3/src/android/ src/android
-	@cp git_modules/android_iap/v3/www/inappbilling.js src/js/platforms/android-bridge.js
+	@#rsync -qrv git_modules/android_iap/v3/src/android/ src/android
+	@#cp git_modules/android_iap/v3/www/inappbilling.js src/js/platforms/android-bridge.js
 
 clean:
 	@find . -name '*~' -exec rm '{}' ';'

@@ -105,7 +105,7 @@ public class IabHelper {
     String mPurchasingItemType;
 
     // Public key for verifying signature, in base64 encoding
-    String mSignatureBase64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg+CJWLGqNnvZQpy0Esgau8o1RyDwAfOk9AV79ih0XIc5t788J5Nf9KAEHdLhTyDy9BbP8s546EN5H57vutyrmdASswdXhEyLOn7+2V4bbtReRxEcT3JlYSg2CfDtmRsOfIDJ/B5yEweFb8/CA4bmEPP0oh0+n0Qpk1XfWGQda4XtidGlzCqJsEJB4Hnku1QOU5ZlepC5e6XaOGlKf1CUz+1Hn8PjMZQLBQ+lrOrJfokqBvd8fOJbbvzznyQfFkaIixcruY1ILeg2D92Yl5Mf9YlQJyiWobpLAmEtJLHYoA5Rm95TXKmNrvTB7+H/HcjEeT0HmWgFk4b2hwVLVHLr1QIDAQAB";
+    String mSignatureBase64 = null;
 
     // Billing API response codes
     public static final int BILLING_RESPONSE_RESULT_OK = 0;
@@ -169,7 +169,7 @@ public class IabHelper {
      */
     public IabHelper(Context ctx, String base64PublicKey) {
         mContext = ctx.getApplicationContext();
-        //mSignatureBase64 = base64PublicKey;
+        mSignatureBase64 = base64PublicKey;
         logDebug("IAB helper created.");
     }
 
@@ -889,14 +889,14 @@ public class IabHelper {
     }
 
     int querySkuDetails(String itemType, Inventory inv, List<String> moreSkus)
-                                throws RemoteException, JSONException {
+            throws RemoteException, JSONException {
         logDebug("Querying SKU details.");
         ArrayList<String> skuList = new ArrayList<String>();
         skuList.addAll(inv.getAllOwnedSkus(itemType));
         if (moreSkus != null) {
-			logDebug("moreSkus: Building SKUs List");
+            logDebug("moreSkus: Building SKUs List");
             for (String sku : moreSkus) {
-				logDebug("moreSkus: "+sku);
+                logDebug("moreSkus: " + sku);
                 if (!skuList.contains(sku)) {
                     skuList.add(sku);
                 }
@@ -908,34 +908,41 @@ public class IabHelper {
             return BILLING_RESPONSE_RESULT_OK;
         }
 
-        Bundle querySkus = new Bundle();
-        querySkus.putStringArrayList(GET_SKU_DETAILS_ITEM_LIST, skuList);
-        Bundle skuDetails = mService.getSkuDetails(3, mContext.getPackageName(),
-                itemType, querySkus);
+        // Split the SKUs into slices of maximum 20 entries before querying them to prevent 
+        // "Input Error: skusBundle array associated with key ITEM_ID_LIST cannot contain more than 20 items."
+        while (skuList.size() > 0) {
+            ArrayList<String> skuSubList = new ArrayList<String>(
+                    skuList.subList(0, Math.min(19, skuList.size())));
+            skuList.removeAll(skuSubList);
 
-        if (!skuDetails.containsKey(RESPONSE_GET_SKU_DETAILS_LIST)) {
-            int response = getResponseCodeFromBundle(skuDetails);
-            if (response != BILLING_RESPONSE_RESULT_OK) {
-                logDebug("getSkuDetails() failed: " + getResponseDesc(response));
-                return response;
+            Bundle querySkus = new Bundle();
+            querySkus.putStringArrayList(GET_SKU_DETAILS_ITEM_LIST, skuSubList);
+            Bundle skuDetails = mService.getSkuDetails(3,
+                    mContext.getPackageName(), itemType, querySkus);
+
+            if (!skuDetails.containsKey(RESPONSE_GET_SKU_DETAILS_LIST)) {
+                int response = getResponseCodeFromBundle(skuDetails);
+                if (response != BILLING_RESPONSE_RESULT_OK) {
+                    logDebug("getSkuDetails() failed: "
+                            + getResponseDesc(response));
+                    return response;
+                } else {
+                    logError("getSkuDetails() returned a bundle with neither an error nor a detail list.");
+                    return ERR_BAD_RESPONSE;
+                }
             }
-            else {
-                logError("getSkuDetails() returned a bundle with neither an error nor a detail list.");
-                return ERR_BAD_RESPONSE;
+
+            ArrayList<String> responseList = skuDetails
+                    .getStringArrayList(RESPONSE_GET_SKU_DETAILS_LIST);
+
+            for (String thisResponse : responseList) {
+                SkuDetails d = new SkuDetails(itemType, thisResponse);
+                logDebug("Got sku details: " + d);
+                inv.addSkuDetails(d);
             }
-        }
-
-        ArrayList<String> responseList = skuDetails.getStringArrayList(
-                RESPONSE_GET_SKU_DETAILS_LIST);
-
-        for (String thisResponse : responseList) {
-            SkuDetails d = new SkuDetails(itemType, thisResponse);
-            logDebug("Got sku details: " + d);
-            inv.addSkuDetails(d);
         }
         return BILLING_RESPONSE_RESULT_OK;
     }
-
 
     void consumeAsyncInternal(final List<Purchase> purchases,
                               final OnConsumeFinishedListener singleListener,
