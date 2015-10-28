@@ -29,7 +29,9 @@ hls.View = Backbone.View.extend({
               }
             } else {
               //no vin!
-              hls.user.cars.set([data.car], {remove:false});
+              hls.user.cars.set([data.car], {remove:false}); //add car
+              //$.mobile.loading('hide');
+              app.cars(data.car.id) 
             }
             hls.user.saveToFile();
           }
@@ -97,9 +99,10 @@ hls.CarListView = hls.View.extend({
       $(window).bind('throttledresize', this._orientationHandler);
       if(this.model){
         this.collection = this.model.collection;
-      } else {
-        this.collection = hls.user.cars;
-      }
+      } //else {
+      //  this.collection = hls.user.cars;
+      //}
+      this.collection = this.collection || hls.user.cars;
       this.collection.bind('add',this._render, this);
       return this;
     },
